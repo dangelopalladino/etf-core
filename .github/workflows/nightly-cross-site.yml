@@ -1,0 +1,58 @@
+name: Nightly cross-site Playwright
+
+on:
+  schedule:
+    # 08:00 UTC = ~03:00 ET / ~00:00 PT — low traffic.
+    - cron: '0 8 * * *'
+  workflow_dispatch:
+
+jobs:
+  cross-site:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run cross-site flows
+        env:
+          SIX_ID_URL: ${{ vars.SIX_ID_URL || 'https://www.6identities.com' }}
+          ETFFRAMEWORK_URL: ${{ vars.ETFFRAMEWORK_URL || 'https://etfframework.com' }}
+          CROSS_SITE_FULL_FLOW: ${{ vars.CROSS_SITE_FULL_FLOW || '0' }}
+        run: npx playwright test
+
+      - name: Upload report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 14
+
+      - name: Notify on consecutive failures
+        if: failure()
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          OPS_EMAIL: ${{ vars.OPS_EMAIL || 'dangelopalladino.17@gmail.com' }}
+        run: |
+          if [ -z "$RESEND_API_KEY" ]; then
+            echo "RESEND_API_KEY missing — skipping notification."
+            exit 0
+          fi
+          curl -sX POST 'https://api.resend.com/emails' \
+            -H "Authorization: Bearer $RESEND_API_KEY" \
+            -H 'Content-Type: application/json' \
+            -d '{
+              "from": "Cross-Site Watcher <support@mail.6identities.com>",
+              "to": ["'"$OPS_EMAIL"'"],
+              "subject": "🔴 Nightly cross-site Playwright failed",
+              "html": "<p>The nightly cross-site Playwright run failed. Check the GitHub Actions run for details: <a href=\"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\">View run</a></p>"
+            }'

@@ -1,0 +1,138 @@
+{
+  "name": "@dangelopalladino/etf-core",
+  "version": "1.0.0",
+  "description": "Shared business logic, design tokens, UI primitives, and commerce/analytics/SEO infrastructure for 6identities.com and etfframework.com.",
+  "type": "module",
+  "private": false,
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "restricted"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dangelopalladino/etf-core.git"
+  },
+  "files": [
+    "dist",
+    "CHANGELOG.md",
+    "README.md"
+  ],
+  "exports": {
+    "./tokens": {
+      "types": "./dist/tokens/index.d.ts",
+      "import": "./dist/tokens/index.mjs",
+      "require": "./dist/tokens/index.cjs"
+    },
+    "./tokens/shared": {
+      "types": "./dist/tokens/shared.d.ts",
+      "import": "./dist/tokens/shared.mjs",
+      "require": "./dist/tokens/shared.cjs"
+    },
+    "./tokens/6id": {
+      "types": "./dist/tokens/6id.d.ts",
+      "import": "./dist/tokens/6id.mjs",
+      "require": "./dist/tokens/6id.cjs"
+    },
+    "./tokens/etfframework": {
+      "types": "./dist/tokens/etfframework.d.ts",
+      "import": "./dist/tokens/etfframework.mjs",
+      "require": "./dist/tokens/etfframework.cjs"
+    },
+    "./ui-server": {
+      "types": "./dist/ui-server/index.d.ts",
+      "import": "./dist/ui-server/index.mjs",
+      "require": "./dist/ui-server/index.cjs"
+    },
+    "./ui-client": {
+      "types": "./dist/ui-client/index.d.ts",
+      "import": "./dist/ui-client/index.mjs",
+      "require": "./dist/ui-client/index.cjs"
+    },
+    "./content": {
+      "types": "./dist/content/index.d.ts",
+      "import": "./dist/content/index.mjs",
+      "require": "./dist/content/index.cjs"
+    },
+    "./commerce": {
+      "types": "./dist/commerce/index.d.ts",
+      "import": "./dist/commerce/index.mjs",
+      "require": "./dist/commerce/index.cjs"
+    },
+    "./commerce/webhook": {
+      "types": "./dist/commerce/webhook.d.ts",
+      "import": "./dist/commerce/webhook.mjs",
+      "require": "./dist/commerce/webhook.cjs"
+    },
+    "./commerce/priceMap": {
+      "types": "./dist/commerce/priceMap.d.ts",
+      "import": "./dist/commerce/priceMap.mjs",
+      "require": "./dist/commerce/priceMap.cjs"
+    },
+    "./analytics": {
+      "types": "./dist/analytics/index.d.ts",
+      "import": "./dist/analytics/index.mjs",
+      "require": "./dist/analytics/index.cjs"
+    },
+    "./seo": {
+      "types": "./dist/seo/index.d.ts",
+      "import": "./dist/seo/index.mjs",
+      "require": "./dist/seo/index.cjs"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "clean": "rm -rf dist",
+    "lint": "eslint src",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prepublishOnly": "npm run clean && npm run build",
+    "e2e:cross-site": "playwright test"
+  },
+  "peerDependencies": {
+    "@ant-design/icons": ">=6",
+    "@react-pdf/renderer": ">=4",
+    "@supabase/supabase-js": ">=2",
+    "antd": ">=6",
+    "jose": ">=5",
+    "next": ">=16",
+    "pdf-lib": ">=1",
+    "react": ">=19",
+    "react-dom": ">=19",
+    "resend": ">=4",
+    "stripe": ">=18"
+  },
+  "peerDependenciesMeta": {
+    "@react-pdf/renderer": {
+      "optional": true
+    },
+    "pdf-lib": {
+      "optional": true
+    },
+    "resend": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@ant-design/icons": "^6.1.1",
+    "@playwright/test": "^1.59.1",
+    "@supabase/supabase-js": "^2.103.0",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "antd": "^6.3.5",
+    "eslint": "^9",
+    "jose": "^5.10.0",
+    "next": "^16.2.2",
+    "pdf-lib": "^1.17.1",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "resend": "^6.10.0",
+    "server-only": "^0.0.1",
+    "stripe": "^21.0.1",
+    "tsup": "^8.3.0",
+    "typescript": "^5",
+    "vitest": "^2.1.0"
+  }
+}

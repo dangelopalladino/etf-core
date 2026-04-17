@@ -1,0 +1,61 @@
+name: Publish to GitHub Packages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://npm.pkg.github.com
+          scope: '@dangelopalladino'
+
+      - run: npm ci
+
+      - run: npm run lint
+
+      - run: npm run typecheck
+
+      - run: npm test
+
+      - run: npm run build
+
+      - name: Determine version bump from commit prefix
+        id: bump
+        run: |
+          msg=$(git log -1 --pretty=%B)
+          if echo "$msg" | grep -qE '(BREAKING CHANGE|feat!:)' ; then
+            echo "level=major" >> "$GITHUB_OUTPUT"
+          elif echo "$msg" | grep -qE '^feat(\(.+\))?:' ; then
+            echo "level=minor" >> "$GITHUB_OUTPUT"
+          elif echo "$msg" | grep -qE '^fix(\(.+\))?:' ; then
+            echo "level=patch" >> "$GITHUB_OUTPUT"
+          else
+            echo "level=skip" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Bump version
+        if: steps.bump.outputs.level != 'skip'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          npm version ${{ steps.bump.outputs.level }} -m "chore(release): %s"
+          git push --follow-tags
+
+      - name: Publish
+        if: steps.bump.outputs.level != 'skip'
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
