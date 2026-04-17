@@ -1,6 +1,6 @@
 {
   "name": "@dangelopalladino/etf-core",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Shared business logic, design tokens, UI primitives, and commerce/analytics/SEO infrastructure for 6identities.com and etfframework.com.",
   "type": "module",
   "private": false,

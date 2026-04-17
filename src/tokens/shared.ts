@@ -57,12 +57,25 @@ export const BORDER_TOKENS = {
 } as const;
 
 // ─── Shadow Tokens — warm-tinted depth system ───
+// Legacy 5-tier scale. Kept for backwards compat with components that already
+// reference SHADOW_TOKENS.{xs,sm,md,lg,xl}. New code should reference
+// BLUEPRINT_SHADOWS instead per directive §5.3 (3-token cap).
 export const SHADOW_TOKENS = {
   xs:  '0 1px 2px rgba(58, 54, 50, 0.04)',
   sm:  '0 2px 8px rgba(58, 54, 50, 0.06)',
   md:  '0 4px 16px rgba(58, 54, 50, 0.08), 0 1px 4px rgba(58, 54, 50, 0.04)',
   lg:  '0 8px 32px rgba(58, 54, 50, 0.10), 0 2px 8px rgba(58, 54, 50, 0.05)',
   xl:  '0 16px 48px rgba(58, 54, 50, 0.12), 0 4px 16px rgba(58, 54, 50, 0.06)',
+} as const;
+
+// ─── BLUEPRINT_SHADOWS — directive §5.3 3-token cap ───
+// AntD baseThemeConfig consumes these so the rendered shadow set is
+// directive-compliant (≤ 3 unique box-shadow values per Eight-Number Audit).
+// Sites can override at the var(--shadow-*) level via tokens.css if needed.
+export const BLUEPRINT_SHADOWS = {
+  none:    'none',
+  subtle:  '0 1px 3px rgba(0, 0, 0, 0.04)',
+  overlay: '0 8px 24px rgba(58, 54, 50, 0.12)',
 } as const;
 
 // ─── WCAG Contrast Utility ───
@@ -102,15 +115,34 @@ export function getScoreColor(score: number): string {
 /**
  * Base AntD theme shared by both sites. Site-specific layers add identity
  * colors, dark mode, additional component overrides.
+ *
+ * v1.0.4 — Directive-compliant per docs/PromptsLocker/8phaseHardReset.md
+ * §5.3 + §8.1:
+ *   - cssVar mode enabled (key: 'etfbrand'). Both site repos render in
+ *     separate browser contexts, so a single shared key is safe.
+ *   - colorPrimary bound to `var(--color-brand, <fallback>)`. The fallback
+ *     keeps consumers working without a site-level CSS binding;
+ *     site-specific tokens/{6id,etfframework}.ts override the fallback per
+ *     brand (terracotta for 6i, navy for ETF).
+ *   - fontFamily bound to `var(--font-sans, ...)` so sites supply the font
+ *     via next/font without changing this file. Inter is the directive's
+ *     preferred sans (§5.3) but any next/font value works.
+ *   - Radii capped at {4, 6, 8, 12, pill} per §5.3 — borderRadiusXS bumped
+ *     2 → 4; Card.borderRadiusLG dropped 24 → 12; Modal.borderRadiusLG
+ *     dropped 16 → 12.
+ *   - Shadow tokens collapsed to BLUEPRINT_SHADOWS (3 values: none, subtle,
+ *     overlay) per §5.3 3-token cap.
  */
 export const baseThemeConfig: ThemeConfig = {
+  cssVar: { key: 'etfbrand' },
+  hashed: false,
   token: {
-    colorPrimary:       '#2D7A7B',
+    colorPrimary:       'var(--color-brand, #2D7A7B)',
     colorLink:          '#C27B5C',
     colorSuccess:       '#4BA86A',
     colorWarning:       '#D4A853',
     colorError:         '#E74C3C',
-    colorInfo:          '#2D7A7B',
+    colorInfo:          'var(--color-brand, #2D7A7B)',
     colorBgBase:        '#FAF5EE',
     colorBgContainer:   '#FFFFFF',
     colorBgLayout:      '#F5EFE6',
@@ -118,7 +150,7 @@ export const baseThemeConfig: ThemeConfig = {
     colorBorderSecondary: '#F0E8DF',
     colorTextBase:      '#3A3632',
     colorTextSecondary: '#6B6560',
-    fontFamily: "'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+    fontFamily: "var(--font-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
     fontSize: 14,
     lineHeight: 1.57,
     fontSizeHeading1: HEADING_SCALE.h1.size,
@@ -131,16 +163,17 @@ export const baseThemeConfig: ThemeConfig = {
     lineHeightHeading3: HEADING_SCALE.h3.lineHeight,
     lineHeightHeading4: HEADING_SCALE.h4.lineHeight,
     lineHeightHeading5: HEADING_SCALE.h5.lineHeight,
-    boxShadow: SHADOW_TOKENS.sm,
-    boxShadowSecondary: SHADOW_TOKENS.md,
-    boxShadowTertiary: SHADOW_TOKENS.xs,
+    boxShadow:          BLUEPRINT_SHADOWS.subtle,
+    boxShadowSecondary: BLUEPRINT_SHADOWS.overlay,
+    boxShadowTertiary:  BLUEPRINT_SHADOWS.none,
     borderRadius: 6,
     borderRadiusLG: 12,
     borderRadiusSM: 4,
-    borderRadiusXS: 2,
+    borderRadiusXS: 4,
     controlHeight: 40,
     controlHeightLG: 48,
     controlHeightSM: 32,
+    lineWidthFocus: 2,
   },
   components: {
     Button: {
@@ -149,10 +182,13 @@ export const baseThemeConfig: ThemeConfig = {
       controlHeightLG: 52,
       paddingInline: 28,
       fontWeight: 600,
+      primaryShadow: 'none',
+      defaultShadow: 'none',
+      dangerShadow: 'none',
     },
-    Card:      { borderRadiusLG: 24, paddingLG: 32 },
+    Card:      { borderRadiusLG: 12, paddingLG: 32 },
     Input:     { borderRadius: 8, controlHeight: 44, paddingInline: 16 },
-    Modal:     { borderRadiusLG: 16 },
+    Modal:     { borderRadiusLG: 12 },
     Menu:      { itemBorderRadius: 8 },
     Typography:{ fontWeightStrong: 700 },
     Form:      { itemMarginBottom: 20 },
