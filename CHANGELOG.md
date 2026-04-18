@@ -9,6 +9,30 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html):
 - **minor** — new components, exported fields, or analytics events
 - **patch** — bug fixes and content corrections
 
+## [1.0.5] — 2026-04-17
+
+### Fixed — revert cssVar mode
+
+v1.0.4 added `cssVar: { key: 'etfbrand' }` and `hashed: false` to
+`baseThemeConfig`. AntD v6's cssVar generator failed to parse the
+`var(--color-brand, <fallback>)` token strings as colors and emitted
+`--ant-color-primary: #000000` (black) for the generated CSS variable.
+Result: every `<Button type="primary">` rendered black on both sites.
+
+v1.0.5 reverts only those two settings. Everything else from v1.0.4
+stays — the brand `var()` bindings, Inter font binding, 4-radii cap,
+`BLUEPRINT_SHADOWS`, focus ring, no-shadow Buttons. Without cssVar
+mode, AntD inlines token values into component styles, and `var()`
+expressions resolve correctly at the consuming element's CSS scope.
+
+New tests in `tests/tokens.test.ts` lock in the no-cssVar shape so this
+regression cannot return silently.
+
+Note: an automated `chore(release): 1.1.0` commit landed on `main` after
+v1.0.4 (the publish workflow's `^feat(:|\()` trigger fired on the v1.0.4
+merge). The v1.1.0 tag has been deleted as redundant noise — same buggy
+code as v1.0.4. v1.0.5 is the canonical fix.
+
 ## [1.0.4] — 2026-04-17
 
 ### Changed — directive-compliant brand tokens
