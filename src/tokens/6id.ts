@@ -74,13 +74,25 @@ export const darkThemeConfig: ThemeConfig = {
 };
 
 // ─── 6id full themeConfig — extends shared base with full overrides ───
+//
+// v1.0.4 — colorPrimary fallback flipped to terracotta per directive §5.1
+// (#A04B37 Anchor terracotta, AAA on warm cream surfaces). Site repo
+// continues to set --color-brand in globals.css; the var() wins when set,
+// fallback ships terracotta when not.
+//
+// Drawer.borderRadius:0 dropped — outside the directive's 4-radii compliant
+// set {4,6,8,12,pill}. Drawer now inherits base 6.
 export const themeConfig: ThemeConfig = {
   ...baseThemeConfig,
+  token: {
+    ...baseThemeConfig.token,
+    colorPrimary: 'var(--color-brand, #A04B37)',
+    colorInfo:    'var(--color-brand, #A04B37)',
+  },
   components: {
     ...baseThemeConfig.components,
     Progress:  { defaultColor: '#C27B5C' },
     Collapse:  { borderRadiusLG: 12 },
-    Drawer:    { borderRadius: 0 },
     Statistic: { contentFontSize: 36 },
     Tabs:      { itemActiveColor: '#3A3632', itemSelectedColor: '#3A3632', inkBarColor: '#C27B5C' },
     Tag:       { borderRadiusSM: 4 },

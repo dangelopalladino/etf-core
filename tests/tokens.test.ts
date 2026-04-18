@@ -46,13 +46,22 @@ describe('tokens/6id', () => {
     ]);
   });
 
-  it('themeConfig sets colorPrimary to brand teal', () => {
-    expect(sixIdTheme.token?.colorPrimary).toBe('#2D7A7B');
+  it('themeConfig binds colorPrimary to --color-brand with terracotta fallback (§5.1)', () => {
+    // v1.0.4 — site sets --color-brand in globals.css; fallback is the
+    // directive's Anchor terracotta (#A04B37). Updated from the v1.0.3
+    // assertion which expected the legacy brand teal #2D7A7B.
+    expect(sixIdTheme.token?.colorPrimary).toBe('var(--color-brand, #A04B37)');
+    expect(sixIdTheme.token?.colorInfo).toBe('var(--color-brand, #A04B37)');
   });
 });
 
 describe('tokens/etfframework', () => {
-  it('themeConfig matches base brand primary', () => {
-    expect(etfTheme.token?.colorPrimary).toBe('#2D7A7B');
+  it('themeConfig binds colorPrimary to --color-brand with navy fallback (§5.2)', () => {
+    // v1.0.4 — site sets --color-brand in globals.css; fallback is the
+    // directive's Downriver navy (#0A2540). Updated from the v1.0.3
+    // assertion which expected the legacy brand teal #2D7A7B.
+    expect(etfTheme.token?.colorPrimary).toBe('var(--color-brand, #0A2540)');
+    expect(etfTheme.token?.colorInfo).toBe('var(--color-brand, #0A2540)');
+    expect(etfTheme.token?.colorLink).toBe('var(--color-brand-interaction, #3656D6)');
   });
 });
