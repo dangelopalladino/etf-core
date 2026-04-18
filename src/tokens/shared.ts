@@ -116,40 +116,36 @@ export function getScoreColor(score: number): string {
  * Base AntD theme shared by both sites. Site-specific layers add identity
  * colors, dark mode, additional component overrides.
  *
- * v1.0.5 — Reverts the `cssVar: { key: 'etfbrand' }` + `hashed: false`
- * settings introduced in v1.0.4. Reason: AntD v6 cssVar mode failed to
- * parse `var(--color-brand, …)` token values when generating the
- * --etfbrand-color-primary variable, computing it as #000000 (black).
- * Inline-style mode (the default, no cssVar) handles var() expressions
- * correctly at runtime via the consuming element's CSS scope.
+ * v1.0.6 — Drops `var(--color-brand, …)` from token color values.
+ * AntD v6's CSS-var-mode generator could not parse var() strings as
+ * colors and emitted `--ant-color-primary: #000000` (black). Even with
+ * cssVar config removed, AntD v6 enables CSS-var-mode classes regardless
+ * of explicit configuration; the only path that consistently renders the
+ * brand color is to pass a literal hex into the AntD token. Sites that
+ * want runtime brand override can still use `--color-brand` in their own
+ * non-AntD CSS — but AntD itself gets a hex.
  *
- * Everything else from v1.0.4 stays — the brand var() bindings, Inter
- * font binding, 4-radii cap, BLUEPRINT_SHADOWS, focus ring, no-shadow
- * Buttons. Only the cssVar/hashed config is removed.
+ * What this means in practice: each site bakes its brand into the
+ * upstream token file. `tokens/6id.themeConfig.colorPrimary = '#A04B37'`
+ * (terracotta per §5.1). `tokens/etfframework.themeConfig.colorPrimary
+ * = '#0A2540'` (navy per §5.2). Adding a third site means adding a third
+ * tokens file with its own hex.
  *
- * Directive compliance per docs/PromptsLocker/8phaseHardReset.md §5.3 +
- * §8.1:
- *   - colorPrimary bound to `var(--color-brand, <fallback>)`. The fallback
- *     keeps consumers working without a site-level CSS binding;
- *     site-specific tokens/{6id,etfframework}.ts override the fallback per
- *     brand (terracotta for 6i, navy for ETF).
- *   - fontFamily bound to `var(--font-sans, ...)` so sites supply the font
- *     via next/font without changing this file. Inter is the directive's
- *     preferred sans (§5.3) but any next/font value works.
- *   - Radii capped at {4, 6, 8, 12, pill} per §5.3 — borderRadiusXS bumped
- *     2 → 4; Card.borderRadiusLG dropped 24 → 12; Modal.borderRadiusLG
- *     dropped 16 → 12.
- *   - Shadow tokens collapsed to BLUEPRINT_SHADOWS (3 values: none, subtle,
- *     overlay) per §5.3 3-token cap.
+ * baseThemeConfig keeps the legacy teal `#2D7A7B` as a sensible default
+ * for any consumer that doesn't override at the per-site layer.
+ *
+ * Everything else from v1.0.4/v1.0.5 stays — Inter font binding (font
+ * parser accepts var() strings), 4-radii cap, BLUEPRINT_SHADOWS, focus
+ * ring, no-shadow Buttons.
  */
 export const baseThemeConfig: ThemeConfig = {
   token: {
-    colorPrimary:       'var(--color-brand, #2D7A7B)',
+    colorPrimary:       '#2D7A7B',
     colorLink:          '#C27B5C',
     colorSuccess:       '#4BA86A',
     colorWarning:       '#D4A853',
     colorError:         '#E74C3C',
-    colorInfo:          'var(--color-brand, #2D7A7B)',
+    colorInfo:          '#2D7A7B',
     colorBgBase:        '#FAF5EE',
     colorBgContainer:   '#FFFFFF',
     colorBgLayout:      '#F5EFE6',
