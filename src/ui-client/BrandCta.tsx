@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Button, Space } from 'antd';
 import type { SizeType } from 'antd/es/config-provider/SizeContext';
 import { ArrowRightOutlined } from '@ant-design/icons';
@@ -16,6 +16,13 @@ interface BrandCtaProps {
   onSecondaryClick?: () => void;
 }
 
+/**
+ * BrandCta — renders a primary button and optional secondary button.
+ *
+ * Uses router.push for client-side navigation rather than wrapping the button
+ * in <Link>, which would nest <a><button></button></a> — invalid HTML and
+ * two tab stops for AT users.
+ */
 export default function BrandCta({
   primary,
   secondary,
@@ -25,32 +32,37 @@ export default function BrandCta({
   onPrimaryClick,
   onSecondaryClick,
 }: BrandCtaProps) {
+  const router = useRouter();
   return (
     <Space size={12} wrap className={align === 'center' ? 'justify-center' : 'justify-start'}>
-      <Link href={primary.href} onClick={onPrimaryClick}>
+      <Button
+        type={buttonType}
+        size={size}
+        shape="round"
+        icon={<ArrowRightOutlined />}
+        iconPlacement="end"
+        onClick={(e) => {
+          onPrimaryClick?.();
+          if (!e.defaultPrevented) router.push(primary.href);
+        }}
+      >
+        {primary.text}
+      </Button>
+
+      {secondary && (
         <Button
-          type={buttonType}
+          type="default"
           size={size}
           shape="round"
           icon={<ArrowRightOutlined />}
           iconPlacement="end"
+          onClick={(e) => {
+            onSecondaryClick?.();
+            if (!e.defaultPrevented) router.push(secondary.href);
+          }}
         >
-          {primary.text}
+          {secondary.text}
         </Button>
-      </Link>
-
-      {secondary && (
-        <Link href={secondary.href} onClick={onSecondaryClick}>
-          <Button
-            type="default"
-            size={size}
-            shape="round"
-            icon={<ArrowRightOutlined />}
-            iconPlacement="end"
-          >
-            {secondary.text}
-          </Button>
-        </Link>
       )}
     </Space>
   );

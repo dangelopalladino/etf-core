@@ -21,7 +21,7 @@ const VARIANT_CONFIG = {
     wrapper: 'mb-10',
   },
   breakdown: {
-    eyebrow: 'text-xs font-bold uppercase tracking-[0.12em] text-accent pl-5 border-l-[3px] border-accent block mb-3',
+    eyebrow: 'text-xs font-semibold uppercase tracking-[0.12em] text-accent block mb-3',
     title: '!text-[24px] md:!text-[30px] !leading-[1.2]',
     titleForceLevel: null as (1 | 2 | 3 | null),
     subtitle: 'text-base leading-relaxed text-text-secondary max-w-[560px]',
