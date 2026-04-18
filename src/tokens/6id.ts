@@ -75,19 +75,23 @@ export const darkThemeConfig: ThemeConfig = {
 
 // ─── 6id full themeConfig — extends shared base with full overrides ───
 //
-// v1.0.4 — colorPrimary fallback flipped to terracotta per directive §5.1
-// (#A04B37 Anchor terracotta, AAA on warm cream surfaces). Site repo
-// continues to set --color-brand in globals.css; the var() wins when set,
-// fallback ships terracotta when not.
+// v1.0.6 — Switched colorPrimary from `var(--color-brand, #A04B37)` to
+// the literal hex `#A04B37`. AntD v6's CSS-var-mode generator could not
+// parse var() strings as colors (emitted #000000 black). The site-wide
+// `--color-brand` CSS variable in globals.css remains for non-AntD
+// components that consume it, but AntD itself consumes the literal hex.
 //
-// Drawer.borderRadius:0 dropped — outside the directive's 4-radii compliant
-// set {4,6,8,12,pill}. Drawer now inherits base 6.
+// Brand reference: §5.1 Anchor terracotta (#A04B37), AAA contrast on
+// warm cream surfaces.
+//
+// Drawer.borderRadius:0 dropped — outside the directive's 4-radii
+// compliant set {4,6,8,12,pill}. Drawer inherits base 6.
 export const themeConfig: ThemeConfig = {
   ...baseThemeConfig,
   token: {
     ...baseThemeConfig.token,
-    colorPrimary: 'var(--color-brand, #A04B37)',
-    colorInfo:    'var(--color-brand, #A04B37)',
+    colorPrimary: '#A04B37',
+    colorInfo:    '#A04B37',
   },
   components: {
     ...baseThemeConfig.components,

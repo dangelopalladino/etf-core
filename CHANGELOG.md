@@ -9,6 +9,47 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html):
 - **minor** — new components, exported fields, or analytics events
 - **patch** — bug fixes and content corrections
 
+## [1.0.6] — 2026-04-17
+
+### Fixed — drop var() from token color values
+
+v1.0.5 reverted the `cssVar: { key: 'etfbrand' }` config but **AntD v6
+keeps cssVar-mode classes active regardless of explicit configuration**
+(verified: button still got class `css-var-_R_elb_` and stylesheet
+still defined `--ant-color-primary: #000000`). The only path that
+consistently renders the brand color is to remove `var()` strings from
+AntD token color fields entirely and pass literal hex.
+
+Changes:
+- `baseThemeConfig.token.colorPrimary`: `'var(--color-brand, #2D7A7B)'` → `'#2D7A7B'`
+- `baseThemeConfig.token.colorInfo`: same
+- `tokens/6id.themeConfig.token.colorPrimary`: → `'#A04B37'` (terracotta §5.1)
+- `tokens/6id.themeConfig.token.colorInfo`: → `'#A04B37'`
+- `tokens/etfframework.themeConfig.token.colorPrimary`: → `'#0A2540'` (navy §5.2)
+- `tokens/etfframework.themeConfig.token.colorInfo`: → `'#0A2540'`
+- `tokens/etfframework.themeConfig.token.colorLink`: → `'#3656D6'`
+
+`fontFamily` keeps `var(--font-sans), -apple-system, …` — AntD's font
+parser accepts `var()` strings unchanged. Only color parsers fail.
+
+What this means for sites: each site repo bakes its brand into the
+upstream tokens file. Adding a third site means adding a third
+`tokens/<site>.ts` with its own hex literals. The site-wide
+`--color-brand` CSS variable in each site's `globals.css` remains for
+non-AntD components to consume — AntD itself uses the literal hex.
+
+Test additions in `tests/tokens.test.ts` lock in the literal-hex shape
+with negative `not.toMatch(/^var\(/)` assertions to catch any future
+regression to var() bindings.
+
+### Production verification
+
+Both `https://6identities.com` and `https://etfframework.com` confirmed
+rendering correct brand colors after the equivalent hotfix landed at
+the site level (commits dbb430c on 6i, f68f75e on ETF). v1.0.6 brings
+the same fix upstream so the site wrappers can be collapsed to thin
+re-exports without re-introducing the bug.
+
 ## [1.0.5] — 2026-04-17
 
 ### Fixed — revert cssVar mode

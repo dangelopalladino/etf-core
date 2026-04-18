@@ -39,22 +39,29 @@ describe('tokens/shared', () => {
     expect(needsDarkTextOnBackground('#000000')).toBe(false);
   });
 
-  // v1.0.5 — locks in the no-cssVar shape. v1.0.4 had `cssVar: { key: 'etfbrand' }`
-  // and `hashed: false`, which broke `var()` token resolution under AntD v6
-  // (rendered primary buttons as #000000 black). v1.0.5 reverts both. These
-  // assertions catch any future regression that re-enables cssVar mode while
-  // still using `var(--color-brand, …)` token strings.
-  it('baseThemeConfig does NOT enable cssVar mode (v1.0.5 revert)', () => {
+  // v1.0.6 — locks in the literal-hex shape. v1.0.4 enabled cssVar mode
+  // and used var(--color-brand, …) strings in token color values; v1.0.5
+  // tried to disable cssVar mode; both rendered primary buttons #000000
+  // because AntD v6 keeps cssVar-mode classes active regardless of config
+  // and its color parser cannot evaluate var() strings. v1.0.6 abandons
+  // var() in token color values entirely — sites get a literal hex baked
+  // into the upstream tokens file.
+  it('baseThemeConfig does NOT enable cssVar mode', () => {
     expect(baseThemeConfig.cssVar).toBeUndefined();
     expect(baseThemeConfig.hashed).toBeUndefined();
   });
 
-  it('baseThemeConfig binds colorPrimary to --color-brand with teal fallback', () => {
-    expect(baseThemeConfig.token?.colorPrimary).toBe('var(--color-brand, #2D7A7B)');
-    expect(baseThemeConfig.token?.colorInfo).toBe('var(--color-brand, #2D7A7B)');
+  it('baseThemeConfig colorPrimary is literal hex (no var()) — v1.0.6 fix', () => {
+    expect(baseThemeConfig.token?.colorPrimary).toBe('#2D7A7B');
+    expect(baseThemeConfig.token?.colorInfo).toBe('#2D7A7B');
+    // Negative assertion: no var() string allowed. Catches regression to
+    // the v1.0.4/v1.0.5 var(--color-brand, …) approach.
+    expect(baseThemeConfig.token?.colorPrimary).not.toMatch(/^var\(/);
   });
 
-  it('baseThemeConfig binds fontFamily to --font-sans', () => {
+  it('baseThemeConfig fontFamily MAY contain var() (font parser accepts it)', () => {
+    // fontFamily is the one place var() works because AntD does not try
+    // to parse it as a color. Inter is delivered by site via next/font.
     expect(baseThemeConfig.token?.fontFamily).toMatch(/var\(--font-sans\)/);
   });
 });
@@ -66,22 +73,18 @@ describe('tokens/6id', () => {
     ]);
   });
 
-  it('themeConfig binds colorPrimary to --color-brand with terracotta fallback (§5.1)', () => {
-    // v1.0.4 — site sets --color-brand in globals.css; fallback is the
-    // directive's Anchor terracotta (#A04B37). Updated from the v1.0.3
-    // assertion which expected the legacy brand teal #2D7A7B.
-    expect(sixIdTheme.token?.colorPrimary).toBe('var(--color-brand, #A04B37)');
-    expect(sixIdTheme.token?.colorInfo).toBe('var(--color-brand, #A04B37)');
+  it('themeConfig.colorPrimary is literal terracotta hex (§5.1)', () => {
+    expect(sixIdTheme.token?.colorPrimary).toBe('#A04B37');
+    expect(sixIdTheme.token?.colorInfo).toBe('#A04B37');
+    expect(sixIdTheme.token?.colorPrimary).not.toMatch(/^var\(/);
   });
 });
 
 describe('tokens/etfframework', () => {
-  it('themeConfig binds colorPrimary to --color-brand with navy fallback (§5.2)', () => {
-    // v1.0.4 — site sets --color-brand in globals.css; fallback is the
-    // directive's Downriver navy (#0A2540). Updated from the v1.0.3
-    // assertion which expected the legacy brand teal #2D7A7B.
-    expect(etfTheme.token?.colorPrimary).toBe('var(--color-brand, #0A2540)');
-    expect(etfTheme.token?.colorInfo).toBe('var(--color-brand, #0A2540)');
-    expect(etfTheme.token?.colorLink).toBe('var(--color-brand-interaction, #3656D6)');
+  it('themeConfig.colorPrimary is literal navy hex (§5.2)', () => {
+    expect(etfTheme.token?.colorPrimary).toBe('#0A2540');
+    expect(etfTheme.token?.colorInfo).toBe('#0A2540');
+    expect(etfTheme.token?.colorLink).toBe('#3656D6');
+    expect(etfTheme.token?.colorPrimary).not.toMatch(/^var\(/);
   });
 });

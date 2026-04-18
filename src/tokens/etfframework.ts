@@ -1,11 +1,15 @@
 /**
  * ETF FRAMEWORK — site-specific tokens.
  *
- * v1.0.4 — colorPrimary fallback set to navy per directive §5.2 (#0A2540
- * Downriver navy, AAA on white surfaces, 14.91:1). colorLink uses ETF's
- * interaction blue (#3656D6, §5.2). Site repo continues to set
- * --color-brand and --color-brand-interaction in globals.css; var() wins
- * when set, fallback ships navy when not.
+ * v1.0.6 — Switched colorPrimary / colorInfo / colorLink from
+ * `var(--color-brand, …)` strings to literal hex. AntD v6's CSS-var-mode
+ * generator could not parse var() strings as colors (emitted #000000
+ * black). The site-wide --color-brand and --color-brand-interaction CSS
+ * variables in globals.css remain for non-AntD components, but AntD
+ * itself consumes the literal hex.
+ *
+ * Brand reference: §5.2 Downriver navy (#0A2540), AAA on white (14.91:1).
+ * colorLink uses ETF's interaction blue (#3656D6).
  *
  * Diverges from 6id's themeConfig only at the colorPrimary / colorLink /
  * colorInfo level — all other tokens (radii, shadows, font, control sizes)
@@ -21,8 +25,8 @@ export const themeConfig: ThemeConfig = {
   ...baseThemeConfig,
   token: {
     ...baseThemeConfig.token,
-    colorPrimary: 'var(--color-brand, #0A2540)',
-    colorInfo:    'var(--color-brand, #0A2540)',
-    colorLink:    'var(--color-brand-interaction, #3656D6)',
+    colorPrimary: '#0A2540',
+    colorInfo:    '#0A2540',
+    colorLink:    '#3656D6',
   },
 };
