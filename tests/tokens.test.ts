@@ -5,6 +5,7 @@ import {
   HEADING_SCALE,
   STATUS_STYLES,
   SCORE_COLORS,
+  baseThemeConfig,
   getScoreColor,
   needsDarkTextOnBackground,
 } from '../src/tokens/shared';
@@ -36,6 +37,25 @@ describe('tokens/shared', () => {
   it('needsDarkTextOnBackground returns true for very light colors', () => {
     expect(needsDarkTextOnBackground('#FFFFFF')).toBe(true);
     expect(needsDarkTextOnBackground('#000000')).toBe(false);
+  });
+
+  // v1.0.5 — locks in the no-cssVar shape. v1.0.4 had `cssVar: { key: 'etfbrand' }`
+  // and `hashed: false`, which broke `var()` token resolution under AntD v6
+  // (rendered primary buttons as #000000 black). v1.0.5 reverts both. These
+  // assertions catch any future regression that re-enables cssVar mode while
+  // still using `var(--color-brand, …)` token strings.
+  it('baseThemeConfig does NOT enable cssVar mode (v1.0.5 revert)', () => {
+    expect(baseThemeConfig.cssVar).toBeUndefined();
+    expect(baseThemeConfig.hashed).toBeUndefined();
+  });
+
+  it('baseThemeConfig binds colorPrimary to --color-brand with teal fallback', () => {
+    expect(baseThemeConfig.token?.colorPrimary).toBe('var(--color-brand, #2D7A7B)');
+    expect(baseThemeConfig.token?.colorInfo).toBe('var(--color-brand, #2D7A7B)');
+  });
+
+  it('baseThemeConfig binds fontFamily to --font-sans', () => {
+    expect(baseThemeConfig.token?.fontFamily).toMatch(/var\(--font-sans\)/);
   });
 });
 

@@ -116,10 +116,19 @@ export function getScoreColor(score: number): string {
  * Base AntD theme shared by both sites. Site-specific layers add identity
  * colors, dark mode, additional component overrides.
  *
- * v1.0.4 — Directive-compliant per docs/PromptsLocker/8phaseHardReset.md
- * §5.3 + §8.1:
- *   - cssVar mode enabled (key: 'etfbrand'). Both site repos render in
- *     separate browser contexts, so a single shared key is safe.
+ * v1.0.5 — Reverts the `cssVar: { key: 'etfbrand' }` + `hashed: false`
+ * settings introduced in v1.0.4. Reason: AntD v6 cssVar mode failed to
+ * parse `var(--color-brand, …)` token values when generating the
+ * --etfbrand-color-primary variable, computing it as #000000 (black).
+ * Inline-style mode (the default, no cssVar) handles var() expressions
+ * correctly at runtime via the consuming element's CSS scope.
+ *
+ * Everything else from v1.0.4 stays — the brand var() bindings, Inter
+ * font binding, 4-radii cap, BLUEPRINT_SHADOWS, focus ring, no-shadow
+ * Buttons. Only the cssVar/hashed config is removed.
+ *
+ * Directive compliance per docs/PromptsLocker/8phaseHardReset.md §5.3 +
+ * §8.1:
  *   - colorPrimary bound to `var(--color-brand, <fallback>)`. The fallback
  *     keeps consumers working without a site-level CSS binding;
  *     site-specific tokens/{6id,etfframework}.ts override the fallback per
@@ -134,8 +143,6 @@ export function getScoreColor(score: number): string {
  *     overlay) per §5.3 3-token cap.
  */
 export const baseThemeConfig: ThemeConfig = {
-  cssVar: { key: 'etfbrand' },
-  hashed: false,
   token: {
     colorPrimary:       'var(--color-brand, #2D7A7B)',
     colorLink:          '#C27B5C',
