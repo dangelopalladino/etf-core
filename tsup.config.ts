@@ -14,6 +14,7 @@ export default defineConfig({
     'commerce/priceMap':         'src/commerce/priceMap.ts',
     'analytics/index':           'src/analytics/index.ts',
     'seo/index':                 'src/seo/index.ts',
+    'utils/index':               'src/utils/index.ts',
   },
   format: ['esm', 'cjs'],
   dts: true,

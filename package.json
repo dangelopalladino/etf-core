@@ -77,6 +77,11 @@
       "types": "./dist/seo/index.d.ts",
       "import": "./dist/seo/index.mjs",
       "require": "./dist/seo/index.cjs"
+    },
+    "./utils": {
+      "types": "./dist/utils/index.d.ts",
+      "import": "./dist/utils/index.mjs",
+      "require": "./dist/utils/index.cjs"
     }
   },
   "scripts": {
