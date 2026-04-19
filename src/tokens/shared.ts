@@ -134,10 +134,22 @@ export function getScoreColor(score: number): string {
  * baseThemeConfig keeps the legacy teal `#2D7A7B` as a sensible default
  * for any consumer that doesn't override at the per-site layer.
  *
- * Everything else from v1.0.4/v1.0.5 stays — Inter font binding (font
- * parser accepts var() strings), 4-radii cap, BLUEPRINT_SHADOWS, focus
- * ring, no-shadow Buttons.
+ * Everything else from v1.0.4/v1.0.5 stays — 4-radii cap, BLUEPRINT_SHADOWS,
+ * focus ring, no-shadow Buttons. As of v1.1.0 the font stack is General Sans
+ * (see `fonts` export below); sites serve the woff2 files from their own
+ * public/ directories.
  */
+
+// ─── Font stacks (v1.1.0) — General Sans per canonical §6.x ───
+// Declaration only: etf-core does not ship the woff2 files in the tarball.
+// Each consumer site is responsible for loading General Sans (and JetBrains
+// Mono for code blocks) via next/font or a site-level @font-face rule.
+export const fonts = {
+  display: "'General Sans', Georgia, 'Times New Roman', serif",
+  body: "'General Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+  mono: "'JetBrains Mono', Menlo, Monaco, Consolas, monospace",
+} as const;
+
 export const baseThemeConfig: ThemeConfig = {
   token: {
     colorPrimary:       '#2D7A7B',
@@ -153,7 +165,7 @@ export const baseThemeConfig: ThemeConfig = {
     colorBorderSecondary: '#F0E8DF',
     colorTextBase:      '#3A3632',
     colorTextSecondary: '#6B6560',
-    fontFamily: "var(--font-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+    fontFamily: fonts.body,
     fontSize: 14,
     lineHeight: 1.57,
     fontSizeHeading1: HEADING_SCALE.h1.size,
