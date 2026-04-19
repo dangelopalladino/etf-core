@@ -80,6 +80,16 @@ export const EVENTS = {
 
 export type EventName = (typeof EVENTS)[keyof typeof EVENTS];
 
+// Cross-brand ecosystem transitions (6identities ↔ etfframework). Keep string
+// values verbatim — site-side GA4 dashboards depend on these literals.
+export const ECOSYSTEM_EVENTS = {
+  SIX_I_TO_ETF_TRANSITION: 'ecosystem_6i_to_etf_transition',
+  ETF_TO_SIX_I_TRANSITION: 'ecosystem_etf_to_6i_transition',
+} as const;
+
+export type EcosystemEventName =
+  (typeof ECOSYSTEM_EVENTS)[keyof typeof ECOSYSTEM_EVENTS];
+
 export const KEYS = {
   source: 'source',
   page: 'page',
