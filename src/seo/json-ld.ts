@@ -83,7 +83,24 @@ export function breadcrumbListSchema(crumbs: Crumb[]) {
   };
 }
 
+/**
+ * @deprecated Per canonical schema rules, FAQPage JSON-LD should no longer
+ * be emitted — Google restricted FAQPage rich results to government and
+ * health-authority sites in August 2023. Keep visible FAQ sections on the
+ * page and remove the schema call.
+ *
+ * Still returns a valid FAQPage payload so existing consumers don't break
+ * at runtime. Emits a one-shot `console.warn` in client-side dev builds to
+ * nudge migration. Scheduled for removal in a future major release once
+ * both consumer sites drop their calls.
+ */
 export function faqPageSchema(items: FaqItem[]) {
+  if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production') {
+    // eslint-disable-next-line no-console
+    console.warn(
+      '[etf-core] faqPageSchema() is deprecated per canonical schema rules. Remove FAQPage JSON-LD emission; keep visible FAQ sections. This factory will be removed in a future major version.'
+    );
+  }
   return {
     '@context': CONTEXT,
     '@type': 'FAQPage',
