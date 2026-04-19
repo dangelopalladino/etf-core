@@ -9,6 +9,66 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html):
 - **minor** — new components, exported fields, or analytics events
 - **patch** — bug fixes and content corrections
 
+## [1.1.0] — 2026-04-19
+
+Phase B canonical alignment for the 6identities ↔ etfframework
+dual-brand ecosystem. All first-party changes — no `peerDependencies`
+bumps. Consumers inherit on their next `npm install` + bump.
+
+### Added
+
+- `ECOSYSTEM_EVENTS` + `EcosystemEventName` exported from `./analytics`.
+  Two canonical cross-brand transition event names
+  (`ecosystem_6i_to_etf_transition`, `ecosystem_etf_to_6i_transition`)
+  so GA4 dashboards on both sites can reference a single source of truth.
+- New `./utils` subpath with `withUtm(href, source, campaign)` —
+  typed URL tagger that sets `utm_source` / `utm_medium=cross_brand` /
+  `utm_campaign` in one call. Replaces ad-hoc `?ref=etfframework`
+  strings across both sites. Exports the `Site` and `Campaign` types.
+- `fonts` export on `./tokens/shared` with `display` / `body` / `mono`
+  stacks. All three default to General Sans (display/body) or
+  JetBrains Mono (mono). Declaration only — sites load the woff2
+  files themselves.
+
+### Changed
+
+- `baseThemeConfig.token.fontFamily` now references `fonts.body`
+  directly, dropping the site-supplied `var(--font-sans)` binding.
+  Each consumer site continues to load General Sans via next/font
+  or an @font-face rule in its own `globals.css`.
+- `src/content/books.ts` terminology aligned with canonical taxonomy:
+  three occurrences of "patterns" → "types" (lines 54, 130, 164).
+  `The Foundation™` reference on line 74 is unchanged (concept
+  reference, not a component rename).
+
+### Deprecated
+
+- `faqPageSchema(items)` in `./seo` — still returns a valid FAQPage
+  JSON-LD payload and all existing call sites continue to work, but
+  emits a one-shot `console.warn` in client-side dev builds
+  (`typeof window !== 'undefined' && NODE_ENV !== 'production'`) and
+  carries a JSDoc `@deprecated` tag. Removal is deferred to a future
+  major release once both consumer sites drop their calls — Google
+  restricted FAQPage rich results to government and health-authority
+  sites in August 2023, so the schema no longer earns rich snippets
+  for either brand.
+
+### Tests
+
+- New: `tests/analytics/ecosystem-events.test.ts`,
+  `tests/utils/withUtm.test.ts`, `tests/seo/json-ld.test.ts`.
+- Extended: `tests/tokens.test.ts` locks in the new `fonts` shape
+  and the `baseThemeConfig.token.fontFamily === fonts.body` identity
+  with a negative `/var\(/` assertion to catch regression.
+
+### Consumer note
+
+ETFtestSite and etfframework will inherit these changes on their
+next `npm install @dangelopalladino/etf-core` bump (Phase C, separate
+sessions). Sites that currently call `faqPageSchema(...)` will start
+seeing the deprecation warning in local dev; both will be migrated
+off the factory in Phase C.
+
 ## [1.0.6] — 2026-04-17
 
 ### Fixed — drop var() from token color values

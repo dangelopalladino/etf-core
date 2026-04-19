@@ -51,7 +51,7 @@ export const BOOKS: Record<BookSlug, BookContent> = {
     description: [
       'The last game ends, and the structure that organized your entire life disappears overnight. The alarm, the teammates, the coaches, the scoreboard — gone. What remains is you, without the context that made you make sense.',
       'Motion is not a motivational book. It is not a therapy workbook. It is not a career-transition guide. It is a replacement operating system for former athletes, built around two integrated systems: the 6 Identities inventory and the Executable Transition Framework (ETF™).',
-      'The 6 Identities tells you exactly which of six transition patterns you are currently operating in, what internal engine is driving your behavior, and what formation context shaped how you arrived here. The ETF™ takes it from there — eight components that rebuild identity, relationships, community, daily structure, and execution on top of the permanent foundation your athletic career already built.',
+      'The 6 Identities tells you exactly which of six types you are currently operating in, what internal engine is driving your behavior, and what formation context shaped how you arrived here. The ETF™ takes it from there — eight components that rebuild identity, relationships, community, daily structure, and execution on top of the permanent foundation your athletic career already built.',
     ],
     toc: [
       'Introduction — Nobody Trains You for This Part',
@@ -127,7 +127,7 @@ export const BOOKS: Record<BookSlug, BookContent> = {
     description: [
       'You already know something is wrong. Maybe they came home from their last season and something shifted. Maybe they got quieter. Maybe they got louder — filling every day with noise and activity that does not seem to be building toward anything. Maybe they seem fine on the surface and you cannot point to anything specific — just a feeling.',
       'What you are seeing is the most underserved transition in sports — and you are one of the most important people in determining whether they build through it or drift through it. The Family Playbook is the practical companion to Understanding the Crash: what to do, what to stop doing, and what your athlete needs from you at each stage.',
-      'Organized by the six 6 Identities patterns, by age group, by level of play, and by the ten things every family member needs to know, the Playbook gives you a conversation guide, boundary scripts, and the specific moves that support your athlete without overstepping.',
+      'Organized by the six 6 Identities types, by age group, by level of play, and by the ten things every family member needs to know, the Playbook gives you a conversation guide, boundary scripts, and the specific moves that support your athlete without overstepping.',
     ],
     toc: [
       'Introduction — You Already Know Something Is Wrong',
@@ -161,7 +161,7 @@ export const BOOKS: Record<BookSlug, BookContent> = {
       'Both family guides together — the understanding and the playbook.',
     description: [
       'Buy both family guides together and save $5.99 versus buying separately. Understanding the Crash gives you the biology, psychology, and identity-foreclosure framework that explains what is happening inside your athlete. The Family Playbook gives you what to do with that understanding — the conversations, the boundaries, and the pattern-specific moves.',
-      'Together, the two books cover everything a parent, partner, sibling, or close family member needs to support a former athlete through transition: the science behind the crash, the five systems that just went offline, the six transition patterns and how each one shows up at home, and a complete conversation guide for the hardest questions you will need to ask.',
+      'Together, the two books cover everything a parent, partner, sibling, or close family member needs to support a former athlete through transition: the science behind the crash, the five systems that just went offline, the six transition types and how each one shows up at home, and a complete conversation guide for the hardest questions you will need to ask.',
       'Both books are delivered as individual PDFs. Your purchase entitles you to both downloads from your purchase confirmation page.',
     ],
     toc: [

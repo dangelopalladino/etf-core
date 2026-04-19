@@ -6,6 +6,7 @@ import {
   STATUS_STYLES,
   SCORE_COLORS,
   baseThemeConfig,
+  fonts,
   getScoreColor,
   needsDarkTextOnBackground,
 } from '../src/tokens/shared';
@@ -59,10 +60,27 @@ describe('tokens/shared', () => {
     expect(baseThemeConfig.token?.colorPrimary).not.toMatch(/^var\(/);
   });
 
-  it('baseThemeConfig fontFamily MAY contain var() (font parser accepts it)', () => {
-    // fontFamily is the one place var() works because AntD does not try
-    // to parse it as a color. Inter is delivered by site via next/font.
-    expect(baseThemeConfig.token?.fontFamily).toMatch(/var\(--font-sans\)/);
+  it('baseThemeConfig fontFamily references fonts.body (General Sans, v1.1.0)', () => {
+    // v1.1.0 drops the site-supplied var(--font-sans) binding in favor of
+    // a direct General Sans stack baked upstream. Sites load the woff2
+    // files; etf-core declares the stack.
+    expect(baseThemeConfig.token?.fontFamily).toBe(fonts.body);
+    expect(baseThemeConfig.token?.fontFamily).not.toMatch(/var\(/);
+  });
+});
+
+describe('tokens/shared fonts (v1.1.0)', () => {
+  it('exposes display / body / mono stacks', () => {
+    expect(Object.keys(fonts).sort()).toEqual(['body', 'display', 'mono']);
+  });
+
+  it('display and body start with General Sans', () => {
+    expect(fonts.display).toMatch(/^'General Sans'/);
+    expect(fonts.body).toMatch(/^'General Sans'/);
+  });
+
+  it('mono starts with JetBrains Mono', () => {
+    expect(fonts.mono).toMatch(/^'JetBrains Mono'/);
   });
 });
 
