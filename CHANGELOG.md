@@ -9,11 +9,33 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html):
 - **minor** — new components, exported fields, or analytics events
 - **patch** — bug fixes and content corrections
 
+## [1.1.1] — 2026-04-19
+
+Republishes the v1.1.0 Phase B content under a new patch number.
+
+**Why:** the v1.1.0 CI publish failed with `E409 Cannot publish over
+existing version` against GitHub Packages even though no prior
+successful publish.yml run for this workflow ever published 1.1.0.
+The registry appears to treat 1.1.0 as already-claimed (tombstoned),
+so the version number is unreclaimable. The `v1.1.0` git tag and the
+`chore(release): 1.1.0` commit on main exist, but no npm artifact
+corresponds — consumers pinning to `^1.1.0` would receive nothing
+from this pipeline. Bumping to 1.1.1 lets the same Phase B content
+reach the registry.
+
+**Content:** identical to the intended v1.1.0 release — see the
+v1.1.0 entry below for the full B.1 / B.2 / B.3 / B.6 / B.7 summary.
+No additional code changes; this is a release-mechanics fix only.
+
 ## [1.1.0] — 2026-04-19
 
 Phase B canonical alignment for the 6identities ↔ etfframework
 dual-brand ecosystem. All first-party changes — no `peerDependencies`
 bumps. Consumers inherit on their next `npm install` + bump.
+
+**Registry note:** this version was never successfully published.
+See the [1.1.1] entry above for the republish. The content summary
+below describes what v1.1.1 ships.
 
 ### Added
 
