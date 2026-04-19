@@ -96,7 +96,6 @@ export function breadcrumbListSchema(crumbs: Crumb[]) {
  */
 export function faqPageSchema(items: FaqItem[]) {
   if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production') {
-    // eslint-disable-next-line no-console
     console.warn(
       '[etf-core] faqPageSchema() is deprecated per canonical schema rules. Remove FAQPage JSON-LD emission; keep visible FAQ sections. This factory will be removed in a future major version.'
     );
