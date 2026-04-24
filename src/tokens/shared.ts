@@ -148,6 +148,7 @@ export const fonts = {
   display: "'General Sans', Georgia, 'Times New Roman', serif",
   body: "'General Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
   mono: "'JetBrains Mono', Menlo, Monaco, Consolas, monospace",
+  serif: "'Source Serif 4', Georgia, serif",
 } as const;
 
 export const baseThemeConfig: ThemeConfig = {
