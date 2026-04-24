@@ -1,7 +1,8 @@
 'use client';
 
 import React from 'react';
-import { STATUS_STYLES, type StatusType } from '../tokens/shared';
+import { theme } from 'antd';
+import type { StatusType } from '../tokens/shared';
 
 interface MetricPanelProps {
   value: string | number;
@@ -22,7 +23,15 @@ export default function MetricPanel({
   layout = 'stacked',
   className = '',
 }: MetricPanelProps) {
-  const valueColor = status ? STATUS_STYLES[status].text : undefined;
+  const { token } = theme.useToken();
+  const statusTextColors: Record<StatusType, string> = {
+    urgent:  token.colorError,
+    caution: token.colorWarning,
+    info:    token.colorInfo,
+    success: token.colorSuccess,
+    neutral: token.colorTextSecondary,
+  };
+  const valueColor = status ? statusTextColors[status] : undefined;
   const isInline = layout === 'inline';
 
   return (
