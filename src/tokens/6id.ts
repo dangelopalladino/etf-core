@@ -15,12 +15,16 @@ export * from './shared';
 // ─── Identity Type Colors — "pottery glaze" palette (45–55% sat, 55–65% light) ───
 export const IDENTITY_COLORS = {
   compass:  '#2A6B6B',   // Deep Teal — introspection, depth
-  mirage:   '#8B6B7B',   // Warm Plum — creativity, wisdom
+  mirage:   '#8B6B7B',   // Warm Plum — kept for backward compat (renamed to Momentum)
+  momentum: '#8B6B7B',   // Warm Plum — canonical name (Mirage → Momentum rename)
   sentinel: '#7B8C6E',   // Sage/Olive — growth, groundedness
   signal:   '#C2898A',   // Dusty Rose — empathy, relational depth
   anchor:   '#C9705B',   // Terracotta — action, connection
   catalyst: '#D4A853',   // Amber/Gold — energy, leadership
 } as const;
+
+/** Canonical identity type keys (excludes legacy `mirage` alias). */
+export type IdentityTypeKey = Exclude<keyof typeof IDENTITY_COLORS, 'mirage'>;
 
 // ─── Dark Mode Palette ───
 export const DARK_MODE_COLORS = {

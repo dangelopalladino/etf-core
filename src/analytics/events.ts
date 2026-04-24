@@ -72,6 +72,10 @@ export const EVENTS = {
   RESEARCH_PDF_DOWNLOADED: 'research_pdf_downloaded',
   NEWSLETTER_INLINE_SUBMITTED: 'newsletter_inline_submitted',
 
+  // Consent (GDPR/CCPA — Consent Mode v2)
+  CONSENT_ACCEPTED: 'consent_accepted',
+  CONSENT_DENIED: 'consent_denied',
+
   // Errors
   ERROR_404: 'error_404',
   ERROR_BOUNDARY_HIT: 'error_boundary_hit',

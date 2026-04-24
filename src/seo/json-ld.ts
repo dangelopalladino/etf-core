@@ -91,8 +91,8 @@ export function breadcrumbListSchema(crumbs: Crumb[]) {
  *
  * Still returns a valid FAQPage payload so existing consumers don't break
  * at runtime. Emits a one-shot `console.warn` in client-side dev builds to
- * nudge migration. Scheduled for removal in a future major release once
- * both consumer sites drop their calls.
+ * nudge migration. Scheduled for removal in v2.0 — both consumer sites
+ * must drop their calls before the major release.
  */
 export function faqPageSchema(items: FaqItem[]) {
   if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production') {
