@@ -47,6 +47,7 @@ interface SectionHeaderProps {
   variant?: SectionHeaderVariant;
   actions?: React.ReactNode;
   className?: string;
+  titleClassName?: string;
 }
 
 export default function SectionHeader({
@@ -58,6 +59,7 @@ export default function SectionHeader({
   variant = 'editorial',
   actions,
   className = '',
+  titleClassName = '',
 }: SectionHeaderProps) {
   const isCenter = align === 'center';
   const config = VARIANT_CONFIG[variant];
@@ -71,7 +73,7 @@ export default function SectionHeader({
 
       <Title
         level={level}
-        className={`text-primary leading-snug mb-6 ${config.title}`}
+        className={`text-primary leading-snug mb-6 ${config.title} ${titleClassName}`.trim()}
       >
         {title}
       </Title>

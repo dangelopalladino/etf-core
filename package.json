@@ -1,6 +1,6 @@
 {
   "name": "@dangelopalladino/etf-core",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Shared business logic, design tokens, UI primitives, and commerce/analytics/SEO infrastructure for 6identities.com and etfframework.com.",
   "type": "module",
   "private": false,
@@ -94,7 +94,10 @@
     "test:watch": "vitest",
     "prepare": "npm run build",
     "prepublishOnly": "npm run clean && npm run build",
-    "e2e:cross-site": "playwright test"
+    "e2e:cross-site": "playwright test",
+    "dev:etf": "cd ../etfframework && npm run dev",
+    "dev:6id": "cd ../ETFtestSite && npm run dev",
+    "dev:all": "concurrently \"npm:dev\" \"npm:dev:etf\" \"npm:dev:6id\""
   },
   "peerDependencies": {
     "@ant-design/icons": ">=6",
@@ -129,6 +132,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "antd": "^6.3.5",
+    "concurrently": "^9.2.1",
     "eslint": "^9",
     "jose": "^5.10.0",
     "next": "^16.2.2",
