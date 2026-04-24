@@ -1,7 +1,8 @@
 'use client';
 
 import React from 'react';
-import { STATUS_STYLES, type StatusType } from '../tokens/shared';
+import { theme } from 'antd';
+import type { StatusType } from '../tokens/shared';
 
 interface StatusBadgeProps {
   status: StatusType;
@@ -18,7 +19,14 @@ export default function StatusBadge({
   size = 'md',
   dot = false,
 }: StatusBadgeProps) {
-  const colors = STATUS_STYLES[status];
+  const { token } = theme.useToken();
+  const colors = {
+    urgent:  { bg: token.colorErrorBg,    border: token.colorErrorBorder,   text: token.colorError },
+    caution: { bg: token.colorWarningBg,  border: token.colorWarningBorder, text: token.colorWarning },
+    info:    { bg: token.colorInfoBg,     border: token.colorInfoBorder,    text: token.colorInfo },
+    success: { bg: token.colorSuccessBg,  border: token.colorSuccessBorder, text: token.colorSuccess },
+    neutral: { bg: token.colorFillTertiary, border: token.colorBorderSecondary, text: token.colorTextSecondary },
+  }[status];
   const isSm = size === 'sm';
 
   if (variant === 'subtle') {
