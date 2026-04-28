@@ -10,6 +10,29 @@ export interface NavigationGuardConfig {
   message?: string;
 }
 
+/**
+ * Guards against accidental navigation while `when` is true.
+ *
+ * Attaches a `beforeunload` listener (tab close / hard refresh / external navigation).
+ * Returns `confirmNavigation` for programmatic use.
+ *
+ * NOTE — SPA link clicks (Next.js App Router): `beforeunload` does NOT fire for in-app
+ * `<Link>` navigation. Use `confirmNavigation` with the `onNavigate` prop instead:
+ *
+ * ```tsx
+ * const { confirmNavigation } = useNavigationGuard({ when: isDirty });
+ *
+ * <Link
+ *   href="/home"
+ *   onNavigate={(e) => {
+ *     if (isDirty) {
+ *       e.preventDefault();
+ *       confirmNavigation(() => router.push('/home'));
+ *     }
+ *   }}
+ * >Home</Link>
+ * ```
+ */
 export function useNavigationGuard({ when, message = DEFAULT_MESSAGE }: NavigationGuardConfig) {
   useEffect(() => {
     if (!when) return;
