@@ -15,6 +15,7 @@ export default defineConfig({
     'analytics/index':           'src/analytics/index.ts',
     'seo/index':                 'src/seo/index.ts',
     'utils/index':               'src/utils/index.ts',
+    'hooks/index':               'src/hooks/index.ts',
   },
   format: ['esm', 'cjs'],
   dts: true,
