@@ -5,9 +5,9 @@
  * authoritative ledger of which env-var Price ID maps to which product type
  * across both consumer sites.
  *
- * Both `ETFtestSite/src/app/api/checkout/route.ts` and
- * `etfframework/src/app/api/checkout/route.ts` import this map. Adding a new
- * SKU is a `@dangelopalladino/etf-core` minor release.
+ * NOTE: Neither checkout route imports this yet — wiring is in progress.
+ * ETFtestSite wiring is blocked on env-var name migrations (see TODO comments).
+ * Adding a new SKU is a `@dangelopalladino/etf-core` minor release.
  */
 
 export type ProductType =
@@ -15,10 +15,12 @@ export type ProductType =
   | 'premium_results'
   | 'full_package'
   | 'premium_upgrade'
+  // Way Forward modules (named by topic to match 6id implementation)
   | 'way_forward_bundle'
-  | 'way_forward_module_1'
-  | 'way_forward_module_2'
-  | 'way_forward_module_3'
+  | 'way_forward_career'
+  | 'way_forward_relationships'
+  | 'way_forward_body'
+  | 'way_forward_money'
   // Books
   | 'book_motion'
   | 'book_understanding_the_crash'
@@ -29,7 +31,10 @@ export type ProductType =
   | 'practitioner_credits'
   | 'extra_links'
   | 'implementer_cert'
-  | 'implementer_renewal';
+  | 'implementer_renewal'
+  // Implementer license tier (etfframework.com — also sold on 6identities.com)
+  | 'implementer_license'
+  | 'implementer_license_renewal';
 
 export interface PriceEntry {
   /** Env-var name holding the Stripe Price ID. Resolved at runtime. */
@@ -38,34 +43,46 @@ export interface PriceEntry {
   amountUsd: number;
   /** Stripe checkout mode. */
   mode: 'payment' | 'subscription';
-  /** Optional success URL override (absolute or path). */
+  /** Optional success URL path (relative) or absolute URL override. */
   successUrl?: string;
   /** Cancel URL override. */
   cancelUrl?: string;
 }
 
 export const PRICE_MAP: Record<ProductType, PriceEntry> = {
+  // TODO(6id-migration): 6id currently reads STRIPE_PRICE_FULL_PROFILE; rename env var in
+  // 6id Vercel + checkout route before wiring 6id to resolvePriceId().
   premium_results:        { envVar: 'STRIPE_PRICE_PREMIUM_RESULTS',      amountUsd: 9.99,  mode: 'payment' },
+  // TODO(6id-migration): 6id currently reads STRIPE_PRICE_EVERYTHING.
   full_package:           { envVar: 'STRIPE_PRICE_FULL_PACKAGE',         amountUsd: 29.99, mode: 'payment' },
   premium_upgrade:        { envVar: 'STRIPE_PRICE_PREMIUM_UPGRADE',      amountUsd: 19.99, mode: 'payment' },
-  way_forward_bundle:     { envVar: 'STRIPE_PRICE_WAY_FORWARD_BUNDLE',   amountUsd: 14.99, mode: 'payment' },
-  way_forward_module_1:   { envVar: 'STRIPE_PRICE_WAY_FORWARD_MODULE_1', amountUsd: 5.99,  mode: 'payment' },
-  way_forward_module_2:   { envVar: 'STRIPE_PRICE_WAY_FORWARD_MODULE_2', amountUsd: 5.99,  mode: 'payment' },
-  way_forward_module_3:   { envVar: 'STRIPE_PRICE_WAY_FORWARD_MODULE_3', amountUsd: 5.99,  mode: 'payment' },
 
-  book_motion:                { envVar: 'STRIPE_PRICE_BOOK_MOTION',                amountUsd: 9.99,  mode: 'payment' },
-  book_understanding_the_crash: { envVar: 'STRIPE_PRICE_BOOK_UNDERSTANDING_CRASH', amountUsd: 12.99, mode: 'payment' },
-  book_family_playbook:       { envVar: 'STRIPE_PRICE_BOOK_FAMILY_PLAYBOOK',       amountUsd: 12.99, mode: 'payment' },
-  book_family_bundle:         { envVar: 'STRIPE_PRICE_BOOK_FAMILY_BUNDLE',         amountUsd: 19.99, mode: 'payment' },
+  way_forward_bundle:        { envVar: 'STRIPE_PRICE_WAY_FORWARD_BUNDLE',         amountUsd: 14.99, mode: 'payment' },
+  way_forward_career:        { envVar: 'STRIPE_PRICE_WAY_FORWARD_CAREER',         amountUsd: 5.99,  mode: 'payment' },
+  way_forward_relationships: { envVar: 'STRIPE_PRICE_WAY_FORWARD_RELATIONSHIPS',  amountUsd: 5.99,  mode: 'payment' },
+  way_forward_body:          { envVar: 'STRIPE_PRICE_WAY_FORWARD_BODY',           amountUsd: 5.99,  mode: 'payment' },
+  way_forward_money:         { envVar: 'STRIPE_PRICE_WAY_FORWARD_MONEY',          amountUsd: 5.99,  mode: 'payment' },
 
-  practitioner_portal:    { envVar: 'STRIPE_PRICE_PRACTITIONER_PORTAL',  amountUsd: 49.0,  mode: 'subscription' },
-  practitioner_credits:   { envVar: 'STRIPE_PRICE_PRACTITIONER_CREDITS', amountUsd: 8.99,  mode: 'payment' },
-  extra_links:            { envVar: 'STRIPE_PRICE_EXTRA_LINKS',          amountUsd: 5.99,  mode: 'payment' },
-  implementer_cert:       { envVar: 'STRIPE_PRICE_IMPLEMENTER_CERT',     amountUsd: 99.0,  mode: 'payment',
-    // Track C will flip this to https://etfframework.com/certification/modules?success=true
-    // once etfframework's LMS routes are live. See docs/architecture/cert-lms-migration-plan.md.
+  book_motion:                  { envVar: 'STRIPE_PRICE_BOOK_MOTION',            amountUsd: 19.99, mode: 'payment' },
+  // Both checkout routes use STRIPE_PRICE_BOOK_UTC (not STRIPE_PRICE_BOOK_UNDERSTANDING_CRASH).
+  book_understanding_the_crash: { envVar: 'STRIPE_PRICE_BOOK_UTC',               amountUsd: 9.99,  mode: 'payment' },
+  book_family_playbook:         { envVar: 'STRIPE_PRICE_BOOK_FAMILY_PLAYBOOK',   amountUsd: 9.99,  mode: 'payment' },
+  book_family_bundle:           { envVar: 'STRIPE_PRICE_BOOK_FAMILY_BUNDLE',     amountUsd: 19.99, mode: 'payment' },
+
+  // TODO(6id-migration): 6id currently reads STRIPE_PRICE_PRACTITIONER_CREDIT (singular).
+  practitioner_portal:    { envVar: 'STRIPE_PRICE_PRACTITIONER_PORTAL',   amountUsd: 49.0,  mode: 'subscription' },
+  practitioner_credits:   { envVar: 'STRIPE_PRICE_PRACTITIONER_CREDITS',  amountUsd: 8.99,  mode: 'payment' },
+  extra_links:            { envVar: 'STRIPE_PRICE_EXTRA_LINKS',           amountUsd: 5.99,  mode: 'payment' },
+
+  implementer_cert:    { envVar: 'STRIPE_PRICE_IMPLEMENTER_CERT',     amountUsd: 99.0,  mode: 'payment',
+    // ETF routes through /purchase/success (which links to the 6id LMS). If ETF builds
+    // its own LMS route, swap this to 'https://etfframework.com/certification/modules?success=true'.
+    // See docs/architecture/cert-lms-migration-plan.md.
     successUrl: 'https://6identities.com/professionals/certification/modules?success=true' },
-  implementer_renewal:    { envVar: 'STRIPE_PRICE_IMPLEMENTER_RENEWAL',  amountUsd: 49.0,  mode: 'subscription' },
+  implementer_renewal: { envVar: 'STRIPE_PRICE_IMPLEMENTER_RENEWAL',  amountUsd: 49.0,  mode: 'subscription' },
+
+  implementer_license:          { envVar: 'STRIPE_PRICE_IMPLEMENTER_LICENSE',          amountUsd: 99.0, mode: 'payment',      successUrl: '/implementer/success' },
+  implementer_license_renewal:  { envVar: 'STRIPE_PRICE_IMPLEMENTER_LICENSE_RENEWAL',  amountUsd: 49.0, mode: 'subscription', successUrl: '/implementer/success' },
 };
 
 export function resolvePriceId(productType: ProductType): string | null {
@@ -87,4 +104,6 @@ export const PROFESSIONAL_PRODUCT_TYPES = new Set<ProductType>([
   'extra_links',
   'implementer_cert',
   'implementer_renewal',
+  'implementer_license',
+  'implementer_license_renewal',
 ]);
