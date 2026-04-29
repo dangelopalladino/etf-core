@@ -5,7 +5,12 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'node',
-    include: ['tests/**/*.test.ts'],
+    include: ['tests/**/*.test.{ts,tsx}'],
+    // node remains the default for token/logic tests; *.aria.test.tsx files
+    // opt into jsdom for component ARIA contract verification.
+    environmentMatchGlobs: [
+      ['tests/**/*.aria.test.tsx', 'jsdom'],
+    ],
     coverage: {
       provider: 'v8',
       include: ['src/**/*.ts'],
