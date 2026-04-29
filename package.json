@@ -87,6 +87,11 @@
       "types": "./dist/hooks/index.d.ts",
       "import": "./dist/hooks/index.mjs",
       "require": "./dist/hooks/index.cjs"
+    },
+    "./brand": {
+      "types": "./dist/brand/index.d.ts",
+      "import": "./dist/brand/index.mjs",
+      "require": "./dist/brand/index.cjs"
     }
   },
   "scripts": {
