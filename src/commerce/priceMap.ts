@@ -5,8 +5,6 @@
  * authoritative ledger of which env-var Price ID maps to which product type
  * across both consumer sites.
  *
- * NOTE: Neither checkout route imports this yet — wiring is in progress.
- * ETFtestSite wiring is blocked on env-var name migrations (see TODO comments).
  * Adding a new SKU is a `@dangelopalladino/etf-core` minor release.
  */
 
@@ -50,18 +48,15 @@ export interface PriceEntry {
 }
 
 export const PRICE_MAP: Record<ProductType, PriceEntry> = {
-  // TODO(6id-migration): 6id currently reads STRIPE_PRICE_FULL_PROFILE; rename env var in
-  // 6id Vercel + checkout route before wiring 6id to resolvePriceId().
   premium_results:        { envVar: 'STRIPE_PRICE_PREMIUM_RESULTS',      amountUsd: 9.99,  mode: 'payment' },
-  // TODO(6id-migration): 6id currently reads STRIPE_PRICE_EVERYTHING.
   full_package:           { envVar: 'STRIPE_PRICE_FULL_PACKAGE',         amountUsd: 29.99, mode: 'payment' },
   premium_upgrade:        { envVar: 'STRIPE_PRICE_PREMIUM_UPGRADE',      amountUsd: 19.99, mode: 'payment' },
 
-  way_forward_bundle:        { envVar: 'STRIPE_PRICE_WAY_FORWARD_BUNDLE',         amountUsd: 14.99, mode: 'payment' },
-  way_forward_career:        { envVar: 'STRIPE_PRICE_WAY_FORWARD_CAREER',         amountUsd: 5.99,  mode: 'payment' },
-  way_forward_relationships: { envVar: 'STRIPE_PRICE_WAY_FORWARD_RELATIONSHIPS',  amountUsd: 5.99,  mode: 'payment' },
-  way_forward_body:          { envVar: 'STRIPE_PRICE_WAY_FORWARD_BODY',           amountUsd: 5.99,  mode: 'payment' },
-  way_forward_money:         { envVar: 'STRIPE_PRICE_WAY_FORWARD_MONEY',          amountUsd: 5.99,  mode: 'payment' },
+  way_forward_bundle:        { envVar: 'STRIPE_PRICE_WAY_FORWARD_BUNDLE',         amountUsd: 9.99,  mode: 'payment' },
+  way_forward_career:        { envVar: 'STRIPE_PRICE_WAY_FORWARD_CAREER',         amountUsd: 2.99,  mode: 'payment' },
+  way_forward_relationships: { envVar: 'STRIPE_PRICE_WAY_FORWARD_RELATIONSHIPS',  amountUsd: 2.99,  mode: 'payment' },
+  way_forward_body:          { envVar: 'STRIPE_PRICE_WAY_FORWARD_BODY',           amountUsd: 2.99,  mode: 'payment' },
+  way_forward_money:         { envVar: 'STRIPE_PRICE_WAY_FORWARD_MONEY',          amountUsd: 2.99,  mode: 'payment' },
 
   book_motion:                  { envVar: 'STRIPE_PRICE_BOOK_MOTION',            amountUsd: 19.99, mode: 'payment' },
   // Both checkout routes use STRIPE_PRICE_BOOK_UTC (not STRIPE_PRICE_BOOK_UNDERSTANDING_CRASH).
@@ -69,7 +64,6 @@ export const PRICE_MAP: Record<ProductType, PriceEntry> = {
   book_family_playbook:         { envVar: 'STRIPE_PRICE_BOOK_FAMILY_PLAYBOOK',   amountUsd: 9.99,  mode: 'payment' },
   book_family_bundle:           { envVar: 'STRIPE_PRICE_BOOK_FAMILY_BUNDLE',     amountUsd: 19.99, mode: 'payment' },
 
-  // TODO(6id-migration): 6id currently reads STRIPE_PRICE_PRACTITIONER_CREDIT (singular).
   practitioner_portal:    { envVar: 'STRIPE_PRICE_PRACTITIONER_PORTAL',   amountUsd: 49.0,  mode: 'subscription' },
   practitioner_credits:   { envVar: 'STRIPE_PRICE_PRACTITIONER_CREDITS',  amountUsd: 8.99,  mode: 'payment' },
   extra_links:            { envVar: 'STRIPE_PRICE_EXTRA_LINKS',           amountUsd: 5.99,  mode: 'payment' },
