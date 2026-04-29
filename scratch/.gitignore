@@ -1,0 +1,7 @@
+# Dev-only sandbox. Build artifacts and node_modules are not committed;
+# screenshots ARE committed (they are the v1.5 visual verification record).
+node_modules
+.next
+*.log
+playwright-report
+.test-results
