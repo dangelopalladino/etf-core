@@ -107,8 +107,9 @@ export function LockedGate({
       {/* Inert wrapper around gated children. `inert` is supported in modern
           browsers; aria-hidden + tabindex=-1 covers older. */}
       <div
-        // @ts-expect-error — `inert` is a valid HTML attribute, late TS DOM lib catches up.
-        inert=""
+        // React 19 supports `inert` as a boolean prop → renders the inert HTML
+        // attribute when truthy. aria-hidden is the AT fallback for older UAs.
+        inert={true}
         aria-hidden="true"
         className="pointer-events-none select-none"
       >
