@@ -16,6 +16,7 @@ export default defineConfig({
     'seo/index':                 'src/seo/index.ts',
     'utils/index':               'src/utils/index.ts',
     'hooks/index':               'src/hooks/index.ts',
+    'brand/index':               'src/brand/index.ts',
   },
   format: ['esm', 'cjs'],
   dts: true,

@@ -57,9 +57,13 @@ export const BORDER_TOKENS = {
 } as const;
 
 // ─── Shadow Tokens — warm-tinted depth system ───
-// Legacy 5-tier scale. Kept for backwards compat with components that already
-// reference SHADOW_TOKENS.{xs,sm,md,lg,xl}. New code should reference
-// BLUEPRINT_SHADOWS instead per directive §5.3 (3-token cap).
+/**
+ * @deprecated Use {@link BLUEPRINT_SHADOWS} instead. Migration map:
+ *   xs/sm → BLUEPRINT_SHADOWS.subtle
+ *   md/lg/xl → BLUEPRINT_SHADOWS.overlay
+ * Removal scheduled for v2.0 (semver-major). Retained in v1.5 for binary
+ * compatibility with consumer apps already importing SHADOW_TOKENS.
+ */
 export const SHADOW_TOKENS = {
   xs:  '0 1px 2px rgba(58, 54, 50, 0.04)',
   sm:  '0 2px 8px rgba(58, 54, 50, 0.06)',
@@ -211,3 +215,168 @@ export const baseThemeConfig: ThemeConfig = {
     Divider:   { colorSplit: '#E5DDD4' },
   },
 };
+
+// ───────────────────────────────────────────────────────────────────────────
+// v1.5 ADDITIVE SURFACE — additions only; no existing export above is touched.
+// All new types/values default to 'shared' brand and degrade safely when no
+// <BrandProvider> is present (production state for both consumer apps).
+// ───────────────────────────────────────────────────────────────────────────
+
+/** Brand identity. 'shared' is the safe fallback used when no BrandProvider wraps the tree. */
+export type Brand = 'etf' | '6id' | 'shared';
+
+/** Mobile-first responsive breakpoints. min-width only. Used by primitives' JSDoc and DESIGN.md. */
+export const BREAKPOINTS = {
+  /** 320px — base layer. Every primitive's default styles target this width. */
+  base: 0,
+  /** 640px — tablets in portrait, large phones in landscape. */
+  sm: 640,
+  /** 768px — tablets in landscape, small laptops. */
+  md: 768,
+  /** 1024px — laptops, desktop. */
+  lg: 1024,
+  /** 1280px — large desktop. */
+  xl: 1280,
+} as const;
+export type BreakpointKey = keyof typeof BREAKPOINTS;
+
+/** State tone vocabulary used by NoticeCard, EmptyState, IconBadge, StatusBadge composition. */
+export const STATE_TONES = ['urgent', 'caution', 'info', 'success', 'neutral', 'locked', 'loading'] as const;
+export type StateTone = typeof STATE_TONES[number];
+
+/** Tone → STATUS_STYLES key mapping. locked/loading collapse onto 'neutral' for color resolution. */
+export const STATE_TONE_TO_STATUS: Record<StateTone, StatusType> = {
+  urgent:  'urgent',
+  caution: 'caution',
+  info:    'info',
+  success: 'success',
+  neutral: 'neutral',
+  locked:  'neutral',
+  loading: 'neutral',
+};
+
+/** Resolved STATUS_STYLES per tone. New code should prefer this over reaching into STATUS_STYLES. */
+export const STATE_TONE_STYLES: Record<StateTone, { bg: string; border: string; text: string }> = {
+  urgent:  STATUS_STYLES.urgent,
+  caution: STATUS_STYLES.caution,
+  info:    STATUS_STYLES.info,
+  success: STATUS_STYLES.success,
+  neutral: STATUS_STYLES.neutral,
+  locked:  STATUS_STYLES.neutral,
+  loading: STATUS_STYLES.neutral,
+};
+
+/**
+ * Email-safe tokens — resolved hex literals for HTML email contexts where CSS
+ * variables and design-token modules don't resolve. Consumers may reference
+ * these in inline style strings inside react-email templates.
+ */
+export const EMAIL_SAFE_TOKENS = {
+  brandPrimary:  BRAND.primary,
+  brandAccent:   BRAND.accent,
+  surface:       SURFACE_TOKENS.default,
+  surfaceRaised: SURFACE_TOKENS.raised,
+  border:        BORDER_TOKENS.default,
+  text:          BRAND.foreground,
+  textMuted:     BRAND.textMuted,
+  white:         '#FFFFFF',
+  black:         '#000000',
+} as const;
+
+/** Shared spacing scale (px). Used by space() helper. */
+export const SHARED_SPACING_SCALE = {
+  0:   0,
+  1:   4,
+  2:   8,
+  3:   12,
+  4:   16,
+  5:   20,
+  6:   24,
+  8:   32,
+  10:  40,
+  12:  48,
+  14:  56,
+  16:  64,
+  20:  80,
+  24:  96,
+  30:  120,
+} as const;
+export type SpaceKey = keyof typeof SHARED_SPACING_SCALE;
+
+/** Shared radius scale (px). Capped at 20 — `rounded-3xl` and above are banned per DESIGN.md. */
+export const SHARED_RADIUS_SCALE = {
+  none: 0,
+  sm:   4,
+  md:   8,
+  lg:   12,
+  xl:   20,
+} as const;
+export type RadiusKey = keyof typeof SHARED_RADIUS_SCALE;
+
+/** Shared motion durations (ms). 'reveal' is reserved for scroll-driven counter/grid reveals only. */
+export const SHARED_MOTION = {
+  fast:   120,
+  base:   180,
+  slow:   280,
+  reveal: 600,
+} as const;
+export type MotionDuration = keyof typeof SHARED_MOTION;
+
+/**
+ * Focus ring tokens — one per brand. shared = neutral charcoal, conservative
+ * default that renders correctly without a BrandProvider. ETF gold mirrors
+ * the inline value already used in etfframework.ts. 6id electric blue mirrors
+ * SIX_ID_COLORS.action. Consumers reach these via {@link focusRing}.
+ */
+export const FOCUS_RING_TOKENS = {
+  etf:    { color: '#B07B2A', width: 3, offset: 2, alpha: 0.25, shadow: '0 0 0 3px rgba(176, 123, 42, 0.25)' },
+  '6id':  { color: '#1877F2', width: 3, offset: 2, alpha: 0.30, shadow: '0 0 0 3px rgba(24, 119, 242, 0.30)' },
+  shared: { color: '#3A3632', width: 2, offset: 2, alpha: 0.35, shadow: '0 0 0 2px rgba(58, 54, 50, 0.35)' },
+} as const;
+
+/**
+ * Heading class strings — Tailwind classnames mirroring HEADING_SCALE. Kept in
+ * lock-step with HEADING_SCALE via tests/tokens.test.ts assertion. Mobile-first:
+ * each entry begins with the 320px base size, then scales up via md:/lg:.
+ */
+export const HEADING_CLASSES: Record<'h1' | 'h2' | 'h3' | 'h4' | 'h5', string> = {
+  h1: 'text-[30px] md:text-[36px] lg:text-[44px] tracking-[-0.02em] lg:tracking-[-0.03em] leading-[1.15]',
+  h2: 'text-[24px] md:text-[30px] leading-[1.2]',
+  h3: 'text-[20px] md:text-[24px] leading-[1.25]',
+  h4: 'text-[16px] md:text-[20px] leading-[1.3]',
+  h5: 'text-[14px] md:text-[16px] leading-[1.4]',
+} as const;
+
+// ─── Helpers ────────────────────────────────────────────────────────────────
+
+/** Returns spacing value in px for a SpaceKey. Dev-only warn on unknown keys. */
+export function space(n: SpaceKey | number): number {
+  if (typeof n === 'number' && !(n in SHARED_SPACING_SCALE)) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn(`[etf-core] space(${n}) is not in SHARED_SPACING_SCALE; returning raw px.`);
+    }
+    return n;
+  }
+  return SHARED_SPACING_SCALE[n as SpaceKey];
+}
+
+/** Returns radius value in px for a RadiusKey. Dev-only warn on unknown keys. */
+export function radius(name: RadiusKey): number {
+  if (!(name in SHARED_RADIUS_SCALE)) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn(`[etf-core] radius(${String(name)}) is not in SHARED_RADIUS_SCALE; defaulting to md=8.`);
+    }
+    return SHARED_RADIUS_SCALE.md;
+  }
+  return SHARED_RADIUS_SCALE[name];
+}
+
+/** Returns motion duration in ms for a key. */
+export function motion(key: MotionDuration): number {
+  return SHARED_MOTION[key];
+}
+
+/** Returns focus-ring shadow string for a brand. Defaults to 'shared' for unknown brands. */
+export function focusRing(brand: Brand = 'shared'): string {
+  return (FOCUS_RING_TOKENS[brand] ?? FOCUS_RING_TOKENS.shared).shadow;
+}
