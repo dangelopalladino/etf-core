@@ -7,7 +7,14 @@ import type { StatusType } from '../tokens/shared';
 interface StatusBadgeProps {
   status: StatusType;
   children: React.ReactNode;
-  variant?: 'pill' | 'subtle';
+  /**
+   * Visual variant.
+   * - `pill` (default) — bordered pill with status background tint.
+   * - `subtle` — colored text label, no background, no border (existing behavior).
+   * - `text-only` — just the colored label, ignores `dot`. Smaller leading
+   *   suited for inline use inside dense data tables. Added in v1.6.0.
+   */
+  variant?: 'pill' | 'subtle' | 'text-only';
   size?: 'sm' | 'md';
   dot?: boolean;
 }
@@ -28,6 +35,19 @@ export default function StatusBadge({
     neutral: { bg: token.colorFillTertiary, border: token.colorBorderSecondary, text: token.colorTextSecondary },
   }[status];
   const isSm = size === 'sm';
+
+  if (variant === 'text-only') {
+    // text-only: bare colored label. No bg, no border, no dot.
+    // Added in v1.6.0.
+    return (
+      <span
+        className={`inline ${isSm ? 'text-xs' : 'text-sm'} font-semibold`}
+        style={{ color: colors.text }}
+      >
+        {children}
+      </span>
+    );
+  }
 
   if (variant === 'subtle') {
     return (

@@ -34,6 +34,33 @@ const VARIANT_CONFIG = {
     subtitle: 'text-sm leading-relaxed text-text-secondary max-w-[480px]',
     wrapper: 'mb-4',
   },
+  /**
+   * `manifesto` — oversized eyebrow + ultra-large title for landing/manifesto
+   * surfaces. Title sizing matches DISPLAY_CLASSES.md (clamp(48,7vw,80)).
+   * One per page max.
+   *
+   * Added in v1.6.0.
+   */
+  manifesto: {
+    eyebrow: 'text-base font-semibold uppercase tracking-[0.14em] text-accent block mb-6',
+    title: '!text-[clamp(40px,7vw,80px)] !tracking-[-0.04em] !leading-[1.02]',
+    titleForceLevel: 1 as (1 | 2 | 3 | null),
+    subtitle: 'text-xl leading-relaxed text-text-secondary max-w-[640px]',
+    wrapper: 'mb-12',
+  },
+  /**
+   * `display` — poster-style title at DISPLAY_CLASSES.lg sizing
+   * (clamp(48,9vw,96)). Eyebrow is suppressed unless explicitly given.
+   *
+   * Added in v1.6.0.
+   */
+  display: {
+    eyebrow: 'text-base font-semibold uppercase tracking-[0.14em] text-accent block mb-6',
+    title: '!text-[clamp(48px,9vw,96px)] !tracking-[-0.04em] !leading-[1.02]',
+    titleForceLevel: 1 as (1 | 2 | 3 | null),
+    subtitle: 'text-xl leading-relaxed text-text-secondary max-w-[640px]',
+    wrapper: 'mb-12',
+  },
 } as const;
 
 type SectionHeaderVariant = keyof typeof VARIANT_CONFIG;
