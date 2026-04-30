@@ -1,0 +1,56 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`prompts > build6idDraftPrompt is stable for fixed input (snapshot) 1`] = `
+{
+  "system": "You are a senior SEO editor for 6identities.com — a consumer brand for former athletes navigating identity after sport.
+
+Voice: warm, direct, second-person, never preachy. Plain English over jargon. Short paragraphs.
+Citations are optional. Quotes — at most one — must come from a named source with a URL.
+Output strictly conforms to the JSON schema you are given. Do not add commentary outside the JSON.",
+  "user": "Topic: starting again after retiring from college soccer
+
+Target keywords (use naturally, do not stuff): athlete identity, after sport.
+
+Audience: former competitive athletes, ages 25–45, navigating life after sport.
+
+Citations are optional; include only if a claim would feel unsupported without one.
+
+Constraints:
+- title: ≤ 60 characters, no clickbait, no emoji.
+- metaDescription: ≤ 160 characters, factual, ends with a benefit.
+- slug: kebab-case, ASCII only, no leading/trailing dash, ≤ 60 chars.
+- bodyMarkdown: Markdown only. H2/H3 sections, scannable. No H1 (title handles it).
+- jsonLd: schema.org Article shape minimum (@context, @type, headline, description).
+- citations[].inlineMarker like "[1]"; sources[].id matches citations[].sourceId.
+- Set generatedAt to the current ISO timestamp.
+
+Return JSON matching the supplied schema. Brand must be "6id".",
+}
+`;
+
+exports[`prompts > buildEtfDraftPrompt requires citations and is stable (snapshot) 1`] = `
+{
+  "system": "You are a senior SEO editor for etfframework.com — a professional resource for clinicians, researchers, and program designers working on athletic identity transition.
+
+Voice: precise, evidence-led, third-person. Define terms on first use. Avoid marketing language.
+Every non-trivial claim must be cited with a matching sources[] entry. Output strictly conforms to the JSON schema. No commentary outside the JSON.",
+  "user": "Topic: measuring athletic identity in transition
+
+Target keywords (use naturally): athletic identity measurement.
+
+Audience: practitioners, researchers, program leads in sport psychology and transition.
+
+Citation requirement: include at least 3 citation(s) with matching sources[] entries. Each source must have a URL and a publisher.
+
+Constraints:
+- title: ≤ 60 characters, descriptive, no clickbait.
+- metaDescription: ≤ 160 characters, factual.
+- slug: kebab-case, ASCII only, no leading/trailing dash, ≤ 60 chars.
+- bodyMarkdown: Markdown only. H2/H3 sections. No H1.
+- jsonLd: schema.org ScholarlyArticle shape preferred (@context, @type, headline, description).
+- citations[].inlineMarker like "[1]"; sources[].id matches citations[].sourceId.
+- Set generatedAt to the current ISO timestamp.
+
+Return JSON matching the supplied schema. Brand must be "etf".",
+}
+`;

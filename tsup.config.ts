@@ -13,6 +13,9 @@ const sharedExternal = [
   'jose',
   'pdf-lib',
   'server-only',
+  'groq-sdk',
+  '@react-email/components',
+  '@react-email/render',
 ];
 
 const sharedBase = {
@@ -48,6 +51,7 @@ export default defineConfig([
       'commerce/priceMap':    'src/commerce/priceMap.ts',
       'analytics/index':      'src/analytics/index.ts',
       'seo/index':            'src/seo/index.ts',
+      'seo-automation/index': 'src/seo-automation/index.ts',
       'utils/index':          'src/utils/index.ts',
       'hooks/index':          'src/hooks/index.ts',
     },
