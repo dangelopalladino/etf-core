@@ -9,6 +9,128 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html):
 - **minor** — new components, exported fields, or analytics events
 - **patch** — bug fixes and content corrections
 
+## [1.5.0] — 2026-04-29
+
+### Added (additive only — zero existing exports removed or modified)
+
+**Brand context (`@dangelopalladino/etf-core/brand`)**
+- `BrandProvider` (client) + `useBrand()` hook + `getBrand()` server
+  function. `Brand = 'etf' | '6id' | 'shared'`. Fallback is `'shared'`.
+- `brandShadows` / `brandRadius` / `brandMotion` / `brandFocusRing`
+  helpers; `FOCUS_RING_TOKENS` re-export.
+
+**Tokens (`@dangelopalladino/etf-core/tokens/shared`)**
+- New: `Brand` type, `BREAKPOINTS`, `STATE_TONES` + `StateTone`,
+  `STATE_TONE_TO_STATUS`, `STATE_TONE_STYLES`, `EMAIL_SAFE_TOKENS`,
+  `SHARED_RADIUS_SCALE` + `RadiusKey`, `SHARED_SPACING_SCALE` +
+  `SpaceKey`, `SHARED_MOTION` + `MotionDuration`, `FOCUS_RING_TOKENS`,
+  `HEADING_CLASSES`.
+- Helpers: `space()`, `radius()`, `motion()`, `focusRing()`.
+- `SHADOW_TOKENS` JSDoc strengthened with explicit migration map
+  (`xs/sm → BLUEPRINT_SHADOWS.subtle`; `md/lg/xl → .overlay`). Export
+  retained for v1.x; removal scheduled for v2.0.
+
+**Server primitives (`@dangelopalladino/etf-core/ui-server`)**
+- `Eyebrow`, `Kicker`, `NoticeCard`, `EmptyState`, `IconBadge`,
+  `Stat` / `StatValue` / `StatLabel`, `Stack`, `Cluster`, `Hero`,
+  `Card`.
+
+**Client primitives (`@dangelopalladino/etf-core/ui-client`)**
+- `LoadingState`, `SkeletonCard`, `LockedGate`.
+
+### Mobile-first responsive contract (binding for every new primitive)
+
+1. Base classes target 320px; no viewport assumptions in base layer.
+2. Responsive scaling via `min-width` breakpoints only (`sm:`/`md:`/`lg:`);
+   no `max-width` media queries except print.
+3. No fixed heights on content containers — `aspect-ratio` or token
+   `min-h-*` only.
+4. No fixed widths below 768px. Documented decorative-px exemptions:
+   IconBadge sizes 28/36/44, LoadingState spinner 16/24/32.
+5. Padding and spacing scale up; never start large and compress down.
+6. Each primitive's JSDoc `@remarks` describes its 320px base layout
+   first, before anything else.
+
+### ARIA contracts (encoded into the API, verified by tests)
+
+- `NoticeCard`: tone-derived role — `urgent`/`caution` →
+  `role="alert"` + `aria-live="assertive"`; `info`/`success`/`neutral`/
+  `locked`/`loading` → `role="status"` + `aria-live="polite"`. Title
+  rendered as `<h3>` and referenced via `aria-labelledby`.
+- `EmptyState`: `<section>` + `aria-labelledby`. Illustration slot
+  `aria-hidden="true"` by default. No fallback action injected.
+- `IconBadge`: `label` ⇒ `role="img"` + `aria-label` (inner icon
+  `aria-hidden`); no `label` ⇒ entire span `aria-hidden` (decorative).
+- `Stat`: semantic `<dl>` / `<dd>` / `<dt>`; `tabular-nums` +
+  `overflow-wrap: anywhere` for long values.
+- `Hero`: `<header>` + `<h1>` (or `<h2>` at `level={2}`); eyebrow is
+  `<p>`, never a heading.
+- `LoadingState`: `role="status"` + `aria-live="polite"` +
+  `aria-busy="true"`; spinner SVG `aria-hidden`; visible label or
+  `sr-only` "Loading"; `motion-reduce:animate-none`.
+- `SkeletonCard`: entire card `aria-hidden="true"` (decorative);
+  shimmer gated via `motion-safe`. Media slot uses `aspect-ratio`,
+  not a fixed pixel height.
+- `LockedGate`: `role="dialog"` + `aria-modal="true"` +
+  `aria-labelledby`; gated children carry `inert={true}` +
+  `aria-hidden` (no blur-tease); focus moves to first focusable on
+  mount; Tab cycles within the panel; Esc fires `onDismiss` only when
+  `dismissible`; focus restores to previously-focused element on
+  unmount.
+
+### Adoption notes (for consumer apps)
+
+> **Important — `BrandProvider` is required for RSC contexts.**
+> v1.5's `getBrand()` does not thread brand through the React Server
+> Components → Client Components boundary on its own. Without
+> `<BrandProvider brand="etf"|"6id">` in the tree (typically wrapping
+> the root layout), every primitive resolves `Brand = 'shared'` and
+> renders the safe neutral defaults (BLUEPRINT_SHADOWS, neutral focus
+> ring, SHARED_MOTION, no serif). Consumer apps must wrap their root
+> layout in `BrandProvider` before adopting any of the new primitives
+> if they want brand-correct rendering. AsyncLocalStorage-based
+> server-side resolution is deferred to v2.
+
+- **Visual verification record.** A scratch harness at `scratch/`
+  (Next.js + Tailwind + Playwright, isolated from the published
+  package) renders every v1.5 primitive in three brand contexts at
+  four viewports (320 / 375 / 768 / 1280). 52 PNGs are committed at
+  `scratch/screenshots/` as the visual verification record. The
+  `scratch/` directory is dev-only — it is **not** part of the
+  published tarball (`package.json` `files` ships only `dist`,
+  `CHANGELOG.md`, `README.md`).
+- **Adoption blocker cleared.** v1.5 primitives now have visual
+  verification. Consumer-app migration PRs may open against this
+  version.
+
+### Existing surface unchanged
+
+`SectionHeader`, `BrandCta`, `MetricPanel`, `StatusBadge`,
+`SectionWrapper`, `ServerHeading`, `ServerText` render byte-identically
+to v1.4. `SHADOW_TOKENS` export is retained.
+
+### Verification
+
+- `tsc --noEmit`: zero errors
+- `vitest`: 105/105 (57 prior + 21 v1.5 token/helper + 27 ARIA
+  contract tests)
+- `tsup build`: dist/ clean; `brand/index.{mjs,cjs,d.ts,d.cts}`
+  present; all prior export paths preserved
+- `eslint`: clean (new `rounded-3xl` literal ban + `SHADOW_TOKENS`
+  named-import block scoped to non-`tokens/` etf-core src)
+- `npx impeccable detect --json src/`: `[]` (zero findings); report
+  committed at `impeccable-detect-report.json`
+
+### Deferred to v2
+
+- jsdom render tests beyond ARIA contracts (full visual snapshot
+  coverage)
+- Husky / lint-staged pre-commit hook (`tsc && vitest && impeccable
+  detect`)
+- AsyncLocalStorage-based server-side `getBrand()` resolution so
+  RSC trees pick up the nearest `<BrandProvider>` without a manual
+  layout wrap
+
 ## [1.1.1] — 2026-04-19
 
 Republishes the v1.1.0 Phase B content under a new patch number.
