@@ -95,7 +95,7 @@
     }
   },
   "scripts": {
-    "build": "tsup",
+    "build": "npm run clean && tsup",
     "dev": "tsup --watch",
     "clean": "rm -rf dist",
     "lint": "eslint src",

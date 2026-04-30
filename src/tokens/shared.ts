@@ -380,3 +380,46 @@ export function motion(key: MotionDuration): number {
 export function focusRing(brand: Brand = 'shared'): string {
   return (FOCUS_RING_TOKENS[brand] ?? FOCUS_RING_TOKENS.shared).shadow;
 }
+
+// ───────────────────────────────────────────────────────────────────────────
+// v1.6 ADDITIVE — Impeccable display + motion tokens.
+// Additive only; no existing export above is modified.
+// ───────────────────────────────────────────────────────────────────────────
+
+/**
+ * Display-tier headline classes — poster-scale typography for landing /
+ * manifesto surfaces. Each entry is a Tailwind class string using `clamp()`
+ * for fluid scaling between mobile and desktop. Tracking and leading match
+ * the Phase 1 Impeccable display tier (`-0.04em`, `1.02`).
+ *
+ * Use one display headline per page max; pair with `<DisplayHeading>` (server)
+ * or the equivalent client primitive — never inline raw clamp().
+ *
+ * Added in v1.6.0.
+ */
+export const DISPLAY_CLASSES = {
+  /** ~40 → 64px. Use on landing sub-sections. */
+  sm: 'text-[clamp(40px,6vw,64px)] tracking-[-0.04em] leading-[1.02]',
+  /** ~48 → 80px. Default manifesto/headline. */
+  md: 'text-[clamp(48px,7vw,80px)] tracking-[-0.04em] leading-[1.02]',
+  /** ~56 → 96px. Reserve for hero-only display moments. */
+  lg: 'text-[clamp(56px,8vw,96px)] tracking-[-0.04em] leading-[1.02]',
+} as const;
+export type DisplayScale = keyof typeof DISPLAY_CLASSES;
+
+/**
+ * Impeccable motion tokens — easing + duration + allowlisted keyframe names.
+ * Mirrors the values used in 6id `globals.css` so consumers (and renderers
+ * that can't reach CSS variables) share one canonical motion vocabulary.
+ *
+ * The keyframe name list is the allowlist enforced by
+ * `tools/eslint-rules/animation-allowlist.js` in 6id. New keyframes must be
+ * added in BOTH places.
+ *
+ * Added in v1.6.0.
+ */
+export const MOTION_TOKENS_IMPECCABLE = {
+  ease: 'cubic-bezier(0.22, 1, 0.36, 1)',
+  durations: { fast: '160ms', base: '320ms', slow: '560ms' },
+  keyframes: ['fadeSlide', 'textRise', 'fadeUp'] as const,
+} as const;

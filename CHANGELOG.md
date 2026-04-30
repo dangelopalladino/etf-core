@@ -9,6 +9,51 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html):
 - **minor** — new components, exported fields, or analytics events
 - **patch** — bug fixes and content corrections
 
+## [1.6.0] — 2026-04-29
+
+### Added (additive only — zero existing exports removed or modified)
+
+**Tokens (`@dangelopalladino/etf-core/tokens/shared`)**
+- `DISPLAY_CLASSES` (`sm` | `md` | `lg`) — poster-tier title classes using
+  `clamp()` for fluid scaling between mobile and desktop. Tracking `-0.04em`,
+  leading `1.02`. One display headline per page max.
+- `DisplayScale` type alias (keys of `DISPLAY_CLASSES`).
+- `MOTION_TOKENS_IMPECCABLE` — `{ ease, durations: { fast, base, slow },
+  keyframes: ['fadeSlide', 'textRise', 'fadeUp'] }`. Mirrors the values used
+  in 6id `globals.css`. The keyframe list is the allowlist enforced by
+  6id's `tools/eslint-rules/animation-allowlist.js`.
+
+**Server primitives (`@dangelopalladino/etf-core/ui-server`)**
+- `SectionWrapper` — new `maxWidth='full'` (edge-to-edge, drops outer
+  horizontal padding), new `spacing` levels `'tight'` (py-8 md:py-12) and
+  `'spacious'` (py-20 md:py-28), and new optional `tone='warm'` prop.
+  `tone` wins over `background` for the bg layer when both are passed.
+  Existing call signatures render byte-identical output.
+
+**Client primitives (`@dangelopalladino/etf-core/ui-client`)**
+- `SectionHeader` — new `'manifesto'` and `'display'` variants. Both use
+  `<h1>`-level semantics via the existing `titleLevel` prop and apply
+  `clamp()`-based display sizing matching `DISPLAY_CLASSES`.
+- `BrandCta` — new optional `weight` prop (`'standard' | 'editorial'`,
+  default `'standard'`). When `editorial`, the primary renders as an
+  inline arrow-suffixed text link in the brand color (no button chrome);
+  the secondary still renders as a normal button.
+- `StatusBadge` — new optional `variant='text-only'` (bare colored label,
+  no background, no border, ignores `dot`). Existing `pill` and `subtle`
+  variants are unchanged.
+
+### Fixed
+
+- **Brand bundle `'use client'` directive.** `dist/brand/index.{cjs,mjs}`
+  and `dist/ui-client/index.{cjs,mjs}` now begin with `'use client';` so
+  Next.js 16 RSC can import these entries directly into Server Components
+  (e.g. `app/layout.tsx`). Previously the directive was stripped during
+  bundling, requiring consumer apps to write a thin `'use client'` shim
+  to re-export `BrandProvider` for RSC trees. tsup config now injects the
+  directive via `banner` on the client-bundled entries only.
+
+---
+
 ## [1.5.0] — 2026-04-29
 
 ### Added (additive only — zero existing exports removed or modified)
