@@ -397,4 +397,5 @@ them drop those overrides.
 - D2 — shared digital-product infra
 - D8 — single webhook handler
 
+[1.6.0]: https://github.com/dangelopalladino/etf-core/releases/tag/v1.6.0
 [1.0.0]: https://github.com/dangelopalladino/etf-core/releases/tag/v1.0.0
