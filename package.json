@@ -92,6 +92,11 @@
       "types": "./dist/brand/index.d.ts",
       "import": "./dist/brand/index.mjs",
       "require": "./dist/brand/index.cjs"
+    },
+    "./seo-automation": {
+      "types": "./dist/seo-automation/index.d.ts",
+      "import": "./dist/seo-automation/index.mjs",
+      "require": "./dist/seo-automation/index.cjs"
     }
   },
   "scripts": {
@@ -111,9 +116,12 @@
   },
   "peerDependencies": {
     "@ant-design/icons": ">=6",
+    "@react-email/components": ">=1",
+    "@react-email/render": ">=2",
     "@react-pdf/renderer": ">=4",
     "@supabase/supabase-js": ">=2",
     "antd": ">=6",
+    "groq-sdk": ">=1",
     "jose": ">=5",
     "next": ">=16",
     "pdf-lib": ">=1",
@@ -123,7 +131,16 @@
     "stripe": ">=18"
   },
   "peerDependenciesMeta": {
+    "@react-email/components": {
+      "optional": true
+    },
+    "@react-email/render": {
+      "optional": true
+    },
     "@react-pdf/renderer": {
+      "optional": true
+    },
+    "groq-sdk": {
       "optional": true
     },
     "pdf-lib": {
@@ -137,6 +154,8 @@
     "@ant-design/icons": "^6.1.1",
     "@eslint/js": "^9.39.4",
     "@playwright/test": "^1.59.1",
+    "@react-email/components": "^1.0.12",
+    "@react-email/render": "^2.0.8",
     "@supabase/supabase-js": "^2.103.0",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
@@ -147,6 +166,7 @@
     "antd": "^6.3.5",
     "concurrently": "^9.2.1",
     "eslint": "^9",
+    "groq-sdk": "^1.1.2",
     "jose": "^5.10.0",
     "jsdom": "^29.1.0",
     "next": "^16.2.2",

@@ -9,6 +9,35 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html):
 - **minor** — new components, exported fields, or analytics events
 - **patch** — bug fixes and content corrections
 
+## [Unreleased]
+
+### Added
+
+**Server-only SEO automation (`@dangelopalladino/etf-core/seo-automation`)**
+- New subpath export with brand-aware (`'6id' | 'etf'`) draft generation,
+  revision, and approval-email dispatch.
+- `generateDraft(input)` and `reviseDraft({ draft, critique })` — wrap
+  `groq-sdk` chat completions with a JSON schema (`response_format`) and
+  hand-rolled validation; throws `SeoDraftError` with the raw model output
+  on parse/schema failure. Default model `llama-3.3-70b-versatile`,
+  overridable via `GROQ_MODEL` env or per-call `model`.
+- `signApprovalToken(claims, opts?)` / `verifyApprovalToken(token)` — HS256
+  JWTs via `jose`, mirroring the `commerce/download-tokens.ts` idiom.
+  `SEO_APPROVAL_SECRET` env var, issuer `etf-core`, audience `seo-approval`,
+  default 7d expiry, hard cap 30d.
+- `sendApprovalEmail({ to, brand, draft, draftId, baseUrl, ... })` — mints
+  three single-purpose tokens (approve/revise/reject), renders an
+  `<ApprovalEmail/>` React Email component to HTML via `@react-email/render`,
+  and sends via Resend. Returns `{ success } | { skipped } | { error }`,
+  matching `sendBookFulfillmentEmail`. ETF brand requires explicit `from`
+  until a verified sender domain is configured.
+- New optional peer deps: `groq-sdk`, `@react-email/components`,
+  `@react-email/render`. Required env: `GROQ_API_KEY`,
+  `SEO_APPROVAL_SECRET`. Optional: `RESEND_API_KEY`, `GROQ_MODEL`.
+
+Server-only constraint: consume only from server components, API
+routes, server actions, or cron handlers — never from `'use client'` code.
+
 ## [1.6.0] — 2026-04-29
 
 ### Added (additive only — zero existing exports removed or modified)
