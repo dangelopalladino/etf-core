@@ -11,9 +11,23 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html):
 
 ## [Unreleased]
 
-### Added
+### Added — Fluid type + spacing contract (v1.9.0 candidate)
 
-**Server-only SEO automation (`@dangelopalladino/etf-core/seo-automation`)**
+**Tokens (`@dangelopalladino/etf-core/tokens/shared`)** — pure additive; zero existing exports modified.
+
+- `FLUID_TYPE_SCALE` (`xs`/`sm`/`base`/`lg`/`xl`/`2xl`) — `clamp()` strings interpolating between 375px and 1440px viewports. `xs` 12 → 13, `sm` 14 → 16, `base` 16 → 18, `lg` 18 → 24, `xl` 24 → 36, `2xl` 32 → 52. Linear-interpolation math validated at both anchors and intermediate viewports.
+- `FLUID_SPACING_SCALE` (`sectionPy`/`sectionPx`/`cardP`/`gapMd`/`gapSection`) — fluid structural spacing tokens. `sectionPy`/`gapSection` 48 → 96; `sectionPx` 20 → 80; `cardP`/`gapMd` 16 → 32.
+- `CONTAINER_CLAMP` — `'min(100% - 2rem, 72rem)'` single-source container width.
+- `CONTROL_HEIGHT_TOKENS` (`sm`=32, `md`=40, `lg`=48, `touch`=44) — numeric AntD control-height anchors surfaced as a foundation token. `touch` matches `BrandCta size='middle'` (WCAG minimum touch target).
+- `FLUID_TYPE_TAILWIND` — Tailwind escape-hatch `text-[clamp(...)]` arbitrary-value strings for libs that cannot run a paste step.
+- `buildThemeBlock()` — returns a copy-paste-ready Tailwind v4 `@theme { ... }` body for consumer `globals.css`. Output is byte-stable and matches the README block verbatim.
+- New TypeScript exports: `FluidTypeKey`, `FluidSpacingKey`, `ControlHeightKey`.
+
+**Docs**
+
+- New README section "Fluid type and spacing contract (v1.9.0+)" covering the two-layer design system (foundation + AntD component tokens), the six fluid type tokens, the five fluid spacing tokens, the canonical paste block, the upgrade snippet, the AntD numeric-only constraint, and the consumer drift call-out (ETFtestSite `--text-base` 15 → 16, etfframework 16 → 17, both diverge from canonical 16 → 18).
+
+### Added — Server-only SEO automation (`@dangelopalladino/etf-core/seo-automation`)
 - New subpath export with brand-aware (`'6id' | 'etf'`) draft generation,
   revision, and approval-email dispatch.
 - `generateDraft(input)` and `reviseDraft({ draft, critique })` — wrap
