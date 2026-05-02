@@ -11,6 +11,56 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html):
 
 ## [Unreleased]
 
+### Changed — Off-grid sweep + ESLint ratchet (v1.11.0 candidate)
+
+Sweeps every remaining off-grid type literal, mixed-step margin, and hardcoded hex color across `src/ui-server/` and `src/ui-client/`, then ratchets ESLint to prevent regressions.
+
+**Tokens added (`@dangelopalladino/etf-core/tokens/shared`)**
+
+- `KICKER_CLASS` — `text-[clamp(0.75rem,0.188vw+0.706rem,0.875rem)] font-bold uppercase tracking-[0.08em]` (12px → 14px fluid).
+- `STAT_NUMBER_CLASS` — `text-[clamp(2rem,1.502vw+1.648rem,3rem)] font-bold leading-[1.1] tabular-nums` (32px → 48px fluid).
+
+**Off-grid type sweep**
+
+| File | Was | Now |
+|---|---|---|
+| `src/ui-server/Eyebrow.tsx` | `text-[11px] md:text-[12px]` | `HERO_CLASSES.eyebrow` (11→12 fluid) |
+| `src/ui-server/Kicker.tsx` | `text-[12px] md:text-[14px]` | `KICKER_CLASS` (12→14 fluid) |
+| `src/ui-server/Stat.tsx` (StatValue) | `text-[32px] md:text-[40px] lg:text-[48px]` | `STAT_NUMBER_CLASS` (32→48 fluid) |
+| `src/ui-server/Stat.tsx` (StatLabel) | `text-[12px] md:text-[13px]` | `KICKER_CLASS` (+1px desktop max, accepted) |
+| `src/ui-server/EmptyState.tsx` (h2) | `text-[18px] md:text-[22px] lg:text-[24px]` | `HEADING_CLASSES.h3` (20→24, +2px small-screen floor) |
+| `src/ui-server/EmptyState.tsx` (body) | `text-[14px] md:text-[15px]` | `text-sm` |
+| `src/ui-server/NoticeCard.tsx` (h3) | `text-[14px] md:text-[16px]` | `text-sm md:text-base` |
+| `src/ui-server/NoticeCard.tsx` (body) | `text-[13px] md:text-[14px]` | `text-xs md:text-sm` |
+| `src/ui-client/LoadingState.tsx` | `text-[13px] md:text-[14px]` | `text-xs md:text-sm` (plan called for KICKER_CLASS but its bold/uppercase composition is wrong for microcopy — substituted Tailwind utilities) |
+| `src/ui-client/LockedGate.tsx` (h2) | `text-[18px] md:text-[20px]` | `HEADING_CLASSES.h4` (16→20, -2px small-screen floor) |
+| `src/ui-client/LockedGate.tsx` (body) | `text-[14px] md:text-[15px]` | `text-sm` |
+
+**Mixed-step spacing sweep**
+
+| File | Was | Now |
+|---|---|---|
+| `src/ui-server/Hero.tsx` | `mt-1 md:mt-2` | `mt-2` |
+| `src/ui-server/NoticeCard.tsx` | `mt-1 md:mt-2` | `mt-2` |
+| `src/ui-client/CtaSection.tsx` (minimal variant) | `pt-10 sm:pt-14 pb-6 sm:pb-8` | `py-[clamp(2rem,5vw,4rem)]` |
+
+**Hardcoded hex sweep**
+
+| File | Was | Now |
+|---|---|---|
+| `src/ui-server/Card.tsx` | inline `'#F5EFE6' / '#FAF5EE' / '#EDE6DA'` and `'#E5DDD4'` border | `SURFACE_TOKENS.default / raised / ground` and `BORDER_TOKENS.default` |
+| `src/ui-client/SkeletonCard.tsx` | `border-[#E5DDD4] bg-[#FAF5EE] bg-[#EDE6DA]` | `border-border bg-surface-raised bg-surface-ground` |
+| `src/ui-client/LockedGate.tsx` | `border-[#E5DDD4] shadow-[0_8px_24px_rgba(58,54,50,0.12)]` | `border-border` + `style={{ boxShadow: BLUEPRINT_SHADOWS.overlay }}` |
+
+**ESLint ratchet (`eslint.config.mjs`)**
+
+- Migrated-primitives `files` allowlist extended from 5 to 15 files (adds Eyebrow, Kicker, Stat, EmptyState, NoticeCard, LoadingState, LockedGate, SectionHeader, Card, SkeletonCard).
+- New `no-restricted-syntax` selector inside the migrated-primitive block: bans hex literals in className arbitrary values — `(border|bg|text|ring)-[#hex]`. Forces use of `SURFACE_TOKENS` / `BORDER_TOKENS` / `BLUEPRINT_SHADOWS` or semantic Tailwind utilities. Scoped to the allowlist; `src/tokens/` definitions remain legal. Future contributors who reintroduce hex into a migrated primitive get an ESLint failure in the same commit.
+
+**Audit (no-op)**
+
+- `MetricPanel`, `StatusBadge`, `ScoreBar`, `IconBadge`, `Stack` audited per the addendum — already clean (no off-grid `text-[Npx]`, no mixed-step margins, no hex strings). Will be added to the migrated-primitive allowlist in a future PR once they pick up additional fluid-contract usage.
+
 ### Changed — Wire primitives to fluid contract (v1.10.0 candidate)
 
 **Behavior change** in this repo: `SectionWrapper` outer X-padding is now fluid by default.

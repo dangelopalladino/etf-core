@@ -1,4 +1,5 @@
 import React from 'react';
+import { HEADING_CLASSES } from '../tokens/shared';
 
 export interface EmptyStateProps {
   title: React.ReactNode;
@@ -54,11 +55,11 @@ export function EmptyState({
           {illustration}
         </div>
       ) : null}
-      <h2 id={titleId} className="text-[18px] md:text-[22px] lg:text-[24px] font-semibold leading-[1.25] m-0">
+      <h2 id={titleId} className={`${HEADING_CLASSES.h3} font-semibold m-0`}>
         {title}
       </h2>
       {body ? (
-        <p className="text-[14px] md:text-[15px] leading-[1.5] text-text-secondary m-0 max-w-prose">
+        <p className="text-sm leading-[1.5] text-text-secondary m-0 max-w-prose">
           {body}
         </p>
       ) : null}

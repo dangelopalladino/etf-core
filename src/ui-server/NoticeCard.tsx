@@ -76,12 +76,12 @@ export function NoticeCard({
       <div className="min-w-0 flex-1">
         <h3
           id={titleId}
-          className="text-[14px] md:text-[16px] font-semibold leading-[1.3] m-0"
+          className="text-sm md:text-base font-semibold leading-[1.3] m-0"
         >
           {title}
         </h3>
         {children ? (
-          <div className="mt-1 md:mt-2 text-[13px] md:text-[14px] leading-[1.5] break-words">
+          <div className="mt-2 text-xs md:text-sm leading-[1.5] break-words">
             {children}
           </div>
         ) : null}
