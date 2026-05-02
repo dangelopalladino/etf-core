@@ -36,6 +36,17 @@ interface ServerTextProps {
   variant?: 'body' | 'secondary' | 'muted' | 'eyebrow' | 'caption';
 }
 
+/**
+ * Body / secondary / muted / eyebrow / caption text variants.
+ *
+ * `body` resolves to `text-base`, which after consumer paste of
+ * `buildThemeBlock()` reads `--text-base = clamp(16px, ..., 18px)` from
+ * `FLUID_TYPE_SCALE.base`. See README "Fluid type and spacing contract"
+ * for the canonical paste block. Without paste, `text-base` falls back to
+ * Tailwind's default 16px (no regression). Variant utility class strings
+ * are intentionally unchanged in this repo — fluid behavior is delivered
+ * via the consumer's `@theme` block, not by mutating these strings.
+ */
 export function ServerText({ children, className = '', as: Tag = 'p', variant = 'body' }: ServerTextProps) {
   const variants: Record<string, string> = {
     body: 'text-base leading-relaxed text-text-secondary',

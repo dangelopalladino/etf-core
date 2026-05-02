@@ -39,6 +39,18 @@ interface SectionWrapperProps {
   border?: 'none' | 'top' | 'bottom' | 'both';
   /** Vertical rhythm between direct children */
   density?: 'airy' | 'default' | 'dense';
+  /**
+   * Horizontal padding on the outer container.
+   * - `fluid`  — `clamp(20px, 5.634vw - 0.071rem, 80px)` (matches `FLUID_SPACING_SCALE.sectionPx`).
+   *              Default. Scales smoothly between mobile and desktop instead of stepping at `sm:`.
+   * - `static` — legacy `px-4 sm:px-6` (escape hatch for tight layouts).
+   * - `none`   — `px-0`. Use with `maxWidth='full'` for edge-to-edge surfaces; children must self-constrain.
+   *
+   * `maxWidth='full'` forces `none` regardless of this prop.
+   *
+   * Added in v1.10.0.
+   */
+  paddingX?: 'fluid' | 'static' | 'none';
   /** HTML element tag */
   as?: 'section' | 'div' | 'main' | 'article';
   /** Optional anchor ID */
@@ -92,6 +104,15 @@ const TONE_MAP = {
   warm: 'bg-[var(--color-surface-warm,var(--color-surface))]',
 } as const;
 
+// Horizontal padding map. `fluid` literal matches FLUID_SPACING_SCALE.sectionPx
+// in src/tokens/shared.ts — kept inline so the wrapper works without consumer
+// having pasted the @theme block. Update both sites if the spec changes.
+const PADDING_X_MAP = {
+  fluid:  'px-[clamp(1.25rem,5.634vw-0.071rem,5rem)]',
+  static: 'px-4 sm:px-6',
+  none:   '',
+} as const;
+
 export default function SectionWrapper({
   children,
   maxWidth = 'default',
@@ -100,6 +121,7 @@ export default function SectionWrapper({
   tone,
   border = 'none',
   density,
+  paddingX = 'fluid',
   as: Tag = 'section',
   id,
   className = '',
@@ -107,9 +129,9 @@ export default function SectionWrapper({
   // tone wins over background for the bg layer when both are present.
   const bgClass = tone ? TONE_MAP[tone] : BG_MAP[background];
 
-  // maxWidth='full' is edge-to-edge: drop outer horizontal padding so children
-  // can self-constrain.
-  const horizontalPadding = maxWidth === 'full' ? '' : 'px-4 sm:px-6';
+  // maxWidth='full' is edge-to-edge: drop outer horizontal padding regardless
+  // of paddingX so children can self-constrain.
+  const horizontalPadding = maxWidth === 'full' ? '' : PADDING_X_MAP[paddingX];
 
   const outerClasses = [
     SPACING_MAP[spacing],
