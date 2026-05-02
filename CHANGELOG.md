@@ -11,9 +11,85 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html):
 
 ## [Unreleased]
 
-### Changed — Off-grid sweep + ESLint ratchet (v1.11.0 candidate)
+### Changed — v1.11 ratchet completion + non-UI consistency sweep (v1.11.1 candidate)
+
+Closes the gaps left by the v1.11.0 release. The off-grid + hex sweep was correct in intent but its enforcement layer (the new ESLint regex selectors) was over-escaped — the rules silently matched literal `\s` / `\b` / `\[` / `\]` instead of whitespace / word-boundary / bracket characters, so every selector was effectively a no-op. v1.11.1 corrects the escaping, extends the migrated-primitive allowlist to the five audit-clean primitives v1.11.0 left out, finishes the mixed-step spacing sweep across the remaining ladders, and applies the same v1.11 token discipline to non-UI surfaces (commerce email templates, seo-automation email template, webhook).
+
+**ESLint ratchet bug fix (`eslint.config.mjs`)**
+
+- Regex selectors corrected: `\\\\s` → `\\s`, `\\\\b` → `\\b`, `\\\\[` → `\\[`, `\\\\]` → `\\]`, `\\\\d` → `\\d`. The body-text-token, heading-token-only, hex-literal, and rounded-3xl bans now actually fire on violations. Empirically verified: a test file with `text-3xl rounded-3xl border-[#FF0000] text-[14px]` now produces 4 errors (it produced 0 before).
+- Migrated-primitive allowlist extended from 15 to 20 files: adds `MetricPanel`, `ScoreBar`, `StatusBadge`, `IconBadge`, `Stack` (the audit-clean primitives v1.11.0 explicitly noted but did not pin).
+
+**Hidden ratchet violations surfaced and fixed**
+
+- `src/ui-client/SectionHeader.tsx` (subtitle classes for `editorial` / `hero` / `manifesto` / `display` variants) used `text-lg` / `text-xl` literals — body-text-token ban. Replaced with inline `text-[clamp(...)]` matching `FLUID_TYPE_SCALE.lg` (18 → 24px) and `.xl` (24 → 36px) respectively. No visual regression vs. consumer-with-paste; deterministic visual vs. consumer-without-paste.
+- `src/ui-client/MetricPanel.tsx:41` value used `text-2xl` literal — body-text-token ban. Replaced with inline `text-[clamp(1.5rem,1.127vw+1.236rem,2.25rem)]` (matches `FLUID_TYPE_SCALE.xl`).
+
+**Mixed-step spacing sweep (continuation)**
+
+The v1.11.0 sweep fixed two `mt-1 md:mt-2` ladders and one asymmetric `pt/pb` ladder. v1.11.1 finishes the job across every remaining ladder in the migrated allowlist, applying the same principle: ≤4px range collapses to a single value (matching v1.11.0's `mt-1 md:mt-2 → mt-2` move); ≥8px range fluidizes via inline `clamp()` preserving original mobile/desktop endpoints exactly.
+
+| File | Was | Now |
+|---|---|---|
+| `src/ui-server/Hero.tsx` (inner content) | `gap-4 sm:gap-5 md:gap-6` | `gap-[clamp(1rem,0.751vw+0.824rem,1.5rem)]` (16 → 24) |
+| `src/ui-server/Hero.tsx` (split grid) | `md:gap-10 lg:gap-14` | `md:gap-[clamp(2.5rem,1.502vw+2.148rem,3.5rem)]` (40 → 56) |
+| `src/ui-server/Hero.tsx` (column) | `gap-6 md:gap-8` | `gap-[clamp(1.5rem,0.751vw+1.324rem,2rem)]` (24 → 32) |
+| `src/ui-server/NoticeCard.tsx` | `p-3 sm:p-4 md:p-5` | `p-[clamp(0.75rem,0.751vw+0.574rem,1.25rem)]` (12 → 20) |
+| `src/ui-server/NoticeCard.tsx` | `gap-2 sm:gap-3 md:gap-4` | `gap-[clamp(0.5rem,0.751vw+0.324rem,1rem)]` (8 → 16) |
+| `src/ui-server/NoticeCard.tsx` (icon) | `w-5 h-5 md:w-6 md:h-6` | `w-6 h-6` (collapse, 4px range) |
+| `src/ui-server/EmptyState.tsx` | 4-step py/px/gap ladder | `py-[clamp(2rem,3.005vw+1.296rem,4rem)] px-[clamp(1rem,1.502vw+0.648rem,2rem)] gap-[clamp(0.75rem,0.751vw+0.574rem,1.25rem)]` (matches `FLUID_SPACING_SCALE.cardP` for px) |
+| `src/ui-server/EmptyState.tsx` (illustration) | `max-w-[200px] md:max-w-[280px]` | `max-w-[clamp(12.5rem,7.512vw+10.74rem,17.5rem)]` (200 → 280) |
+| `src/ui-server/EmptyState.tsx` (action) | `mt-2 md:mt-3` | `mt-3` (collapse, 4px range) |
+| `src/ui-client/CtaSection.tsx` (dark + light variants) | `p-6 sm:p-10 md:p-16` | `p-[clamp(1.5rem,3.756vw+0.620rem,4rem)]` (24 → 64) |
+| `src/ui-client/CtaSection.tsx` (all 3 variants) | `mb-12 md:mb-16` | `mb-[clamp(3rem,1.502vw+2.648rem,4rem)]` (48 → 64) |
+| `src/ui-client/CtaSection.tsx` (minimal) | `px-4 sm:px-6` | `px-[clamp(1rem,0.751vw+0.824rem,1.5rem)]` (16 → 24) |
+| `src/ui-client/LockedGate.tsx` (panel) | `max-w-[320px] md:max-w-[420px] lg:max-w-[480px] p-5 md:p-6 lg:p-8 gap-3 md:gap-4` | `max-w-[clamp(20rem,15.023vw+16.479rem,30rem)] p-[clamp(1.25rem,1.127vw+0.986rem,2rem)] gap-[clamp(0.75rem,0.376vw+0.662rem,1rem)]` |
+| `src/ui-client/SkeletonCard.tsx` | `p-3 md:p-4`, `mb-3 md:mb-4`, `space-y-2 md:space-y-3` | `p-4`, `mb-4`, `space-y-3` (collapses, 4px range each) |
+
+**Non-UI surfaces — same v1.11 token discipline**
+
+- `src/commerce/emails/send-book-fulfillment.ts` — replaces hardcoded `BRAND_TEAL/BG/TEXT/MUTED` constants and inline `#FFFFFF` / `#E5DDD4` literals with `EMAIL_SAFE_TOKENS.{brandPrimary,surface,text,textMuted,white,border}`. Replaces `'DM Sans', -apple-system, sans-serif` with `fonts.body` / `fonts.serif` (General Sans per v1.1.0 brand stack).
+- `src/commerce/emails/send-certification-guide.ts` — same fix.
+- `src/seo-automation/email-template.tsx` — `primaryText: '#FFFFFF'` → `EMAIL_SAFE_TOKENS.white`.
+
+**Type unification**
+
+- `src/content/books.ts` `BookProductType` — was a duplicate string-literal union of the four `book_*` members. Now `Extract<ProductType, \`book_${string}\`>` derived from the canonical `ProductType` ledger in `src/commerce/priceMap.ts`. Adding a new book SKU now requires editing one file, not two.
+- `src/content/books.ts` `BOOK_PRODUCT_TYPES` — was a duplicate `Set` instance reference-distinct from `priceMap.BOOK_PRODUCT_TYPES`. Now re-exports the canonical Set so identity checks across consumers compare equal.
+- `src/commerce/webhook.ts` — inline `'book_motion' | 'book_understanding_the_crash' | ...` cast literal replaced with `BookProductType` import.
+
+**Webhook constants + bug-prone calls**
+
+- `src/commerce/webhook.ts` — `unitPrice = productType === 'extra_links' ? 599 : 899` is now derived from `PRICE_MAP[productType].amountUsd * 100`. Magic `2500` (referral credit, three call sites) extracted to `REFERRAL_CREDIT_CENTS = 2500` module constant.
+
+**SDK-strictness fix**
+
+- `src/seo-automation/groq-client.ts` — `chat()` was always passing `strict: true` to Groq's OpenAI-compatible JSON-schema response_format. The default `DRAFT_JSON_SCHEMA` declares `additionalProperties: true` on `jsonLd` (JSON-LD permits arbitrary `@`-prefixed keys), which violates strict mode and will be rejected by the API. `strict` is now opt-in via `jsonSchema.strict?: boolean`, default `false`. Caller-side validation in `validateDraftShape` is unchanged.
+
+**Defensive guard**
+
+- `src/utils/withUtm.ts` — `new URL(href)` would throw on relative inputs (`/professionals` style). Guarded with `URL.canParse(href)` pass-through. Cross-brand attribution still requires absolute URLs to be meaningful; relative inputs are returned unchanged rather than crashing.
+
+**Type annotations + export shape**
+
+- `src/seo/json-ld.ts` — every exported factory now returns explicit `JsonLdSchema` (alias for `Record<string, unknown>`) instead of inferred shape.
+- `src/analytics/ga4-loader.tsx` — `GA4LoaderProps` is now exported. `export default GA4Loader` removed (named export was the only one re-exported through `analytics/index.ts`).
+
+**JSDoc accuracy**
+
+Hero, Stat, EmptyState, NoticeCard, LoadingState JSDocs updated to describe current fluid behavior — prior text referenced the removed `text-[Npx] md:text-[Mpx]` ladders.
+
+**Audit (no-op)**
+
+- `MetricPanel`, `StatusBadge`, `ScoreBar`, `IconBadge`, `Stack` — added to ratchet allowlist (see above). Empirical re-test on a representative file confirms all four bans (text-3xl, text-[14px], hex literal, rounded-3xl) now fail lint with descriptive messages.
+
+## [1.11.0] — 2026-05-02
+
+### Changed — Off-grid sweep + ESLint ratchet
 
 Sweeps every remaining off-grid type literal, mixed-step margin, and hardcoded hex color across `src/ui-server/` and `src/ui-client/`, then ratchets ESLint to prevent regressions.
+
+> **Known issue (resolved in v1.11.1):** the ESLint regex selectors introduced in this release were over-escaped, rendering every ratchet rule a no-op. Hidden violations in `SectionHeader.tsx` (subtitle `text-lg`/`text-xl`) and `MetricPanel.tsx` (`text-2xl`) shipped uncaught. v1.11.1 corrects the escaping and removes the violations.
 
 **Tokens added (`@dangelopalladino/etf-core/tokens/shared`)**
 

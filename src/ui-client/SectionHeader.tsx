@@ -17,7 +17,10 @@ const VARIANT_CONFIG = {
     eyebrow: 'text-sm font-semibold uppercase tracking-[0.1em] text-accent block mb-4',
     title: '',
     titleForceLevel: null as (1 | 2 | 3 | null),
-    subtitle: 'text-lg leading-relaxed text-text-secondary max-w-[560px]',
+    // Subtitle uses fluid clamp() matching FLUID_TYPE_SCALE.lg (18 → 24px
+    // across 375 → 1440 viewports). Inline rather than `text-lg` so the
+    // body-text-token ratchet does not need an exemption.
+    subtitle: 'text-[clamp(1.125rem,0.563vw+0.993rem,1.5rem)] leading-relaxed text-text-secondary max-w-[560px]',
     wrapper: 'mb-8',
   },
   // Hero / breakdown / compact title classes derive from HEADING_CLASSES (h1 / h2 / h3)
@@ -30,7 +33,8 @@ const VARIANT_CONFIG = {
     eyebrow: 'text-sm font-semibold uppercase tracking-[0.1em] text-accent block mb-4',
     title: forceTitle(HEADING_CLASSES.h1),
     titleForceLevel: 1 as (1 | 2 | 3 | null),
-    subtitle: 'text-xl leading-relaxed text-text-secondary max-w-[640px]',
+    // Subtitle uses fluid clamp() matching FLUID_TYPE_SCALE.xl (24 → 36px).
+    subtitle: 'text-[clamp(1.5rem,1.127vw+1.236rem,2.25rem)] leading-relaxed text-text-secondary max-w-[640px]',
     wrapper: 'mb-10',
   },
   breakdown: {
@@ -60,7 +64,8 @@ const VARIANT_CONFIG = {
     eyebrow: 'text-base font-semibold uppercase tracking-[0.14em] text-accent block mb-6',
     title: '!text-[clamp(40px,7vw,80px)] !tracking-[-0.04em] !leading-[1.02]',
     titleForceLevel: 1 as (1 | 2 | 3 | null),
-    subtitle: 'text-xl leading-relaxed text-text-secondary max-w-[640px]',
+    // Subtitle uses fluid clamp() matching FLUID_TYPE_SCALE.xl (24 → 36px).
+    subtitle: 'text-[clamp(1.5rem,1.127vw+1.236rem,2.25rem)] leading-relaxed text-text-secondary max-w-[640px]',
     wrapper: 'mb-12',
   },
   /**
@@ -76,7 +81,8 @@ const VARIANT_CONFIG = {
     eyebrow: 'text-base font-semibold uppercase tracking-[0.14em] text-accent block mb-6',
     title: '!text-[clamp(48px,9vw,96px)] !tracking-[-0.04em] !leading-[1.02]',
     titleForceLevel: 1 as (1 | 2 | 3 | null),
-    subtitle: 'text-xl leading-relaxed text-text-secondary max-w-[640px]',
+    // Subtitle uses fluid clamp() matching FLUID_TYPE_SCALE.xl (24 → 36px).
+    subtitle: 'text-[clamp(1.5rem,1.127vw+1.236rem,2.25rem)] leading-relaxed text-text-secondary max-w-[640px]',
     wrapper: 'mb-12',
   },
 } as const;

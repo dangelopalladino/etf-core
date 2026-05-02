@@ -3,7 +3,11 @@ import type Stripe from 'stripe';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { sendBookFulfillmentEmail } from './emails/send-book-fulfillment';
 import { sendCertificationGuideEmail } from './emails/send-certification-guide';
-import { BOOK_PRODUCT_TYPES, PROFESSIONAL_PRODUCT_TYPES } from './priceMap';
+import { BOOK_PRODUCT_TYPES, PRICE_MAP, PROFESSIONAL_PRODUCT_TYPES } from './priceMap';
+import type { BookProductType } from '../content/books';
+
+/** Referral credit per completed referee purchase. Cents (Stripe convention). */
+const REFERRAL_CREDIT_CENTS = 2500;
 
 /**
  * Pure Stripe-event handler — no Next.js coupling. Signature verification and
@@ -111,7 +115,9 @@ async function handleCheckoutCompleted(
     (productType === 'practitioner_credits' || productType === 'extra_links') &&
     userId
   ) {
-    const unitPrice = productType === 'extra_links' ? 599 : 899;
+    // Derived from the canonical ledger so a price change in priceMap.ts
+    // propagates to the line-item quantity calc.
+    const unitPrice = Math.round(PRICE_MAP[productType].amountUsd * 100);
     const fallbackQuantity = session.amount_total
       ? Math.round(session.amount_total / unitPrice)
       : 1;
@@ -244,11 +250,7 @@ async function handleCheckoutCompleted(
     try {
       const result = await sendBookFulfillmentEmail({
         email: customerEmail,
-        productKey: productType as
-          | 'book_motion'
-          | 'book_understanding_the_crash'
-          | 'book_family_playbook'
-          | 'book_family_bundle',
+        productKey: productType as BookProductType,
       });
       if (result.error) {
         console.error(`🔴 Book fulfillment failed for ${customerEmail}:`, result.error);
@@ -288,7 +290,7 @@ async function processReferral(args: {
       referee_email: customerEmail,
       referee_stripe_session_id: sessionId,
       status: 'completed',
-      credit_amount: 2500,
+      credit_amount: REFERRAL_CREDIT_CENTS,
       completed_at: new Date().toISOString(),
     })
     .select('id')
@@ -304,7 +306,7 @@ async function processReferral(args: {
     .insert({
       user_id: referralLink.user_id,
       referral_id: referral.id,
-      amount: 2500,
+      amount: REFERRAL_CREDIT_CENTS,
     });
   if (creditError) console.error('🔴 Failed to create renewal credit:', creditError);
 
@@ -320,7 +322,7 @@ async function processReferral(args: {
       notification_type: 'referral_credit_earned',
       payload: {
         refereeEmail: customerEmail,
-        creditAmount: 2500,
+        creditAmount: REFERRAL_CREDIT_CENTS,
         referralCode,
       },
     });

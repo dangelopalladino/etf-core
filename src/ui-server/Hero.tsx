@@ -20,22 +20,19 @@ export interface HeroProps {
  * Hero — top-of-section composition primitive.
  *
  * @remarks
- * Layout at 320px (base): single-column `<header>` with `flex flex-col gap-4`,
- * padding `py-10 px-4`. Title is `text-[28px]` leading-tight; eyebrow renders
- * above as `<p>` (NOT a heading — eyebrows are not headings); subtitle is
- * `text-[15px]` body color; CTAs render as a `Cluster`-style wrap row beneath
- * subtitle (`gap-3`); media slot renders below CTAs at base, `w-full` and
- * intrinsic-aspect-ratio (no fixed height).
+ * Layout at 320px (base): single-column `<header>` with fluid padding
+ * (`py-[clamp(2.5rem,6vw,5rem)] px-[clamp(1rem,3vw,2.5rem)]`) and fluid
+ * vertical gaps (`gap-[clamp(1.5rem,0.751vw+1.324rem,2rem)]` outer,
+ * `gap-[clamp(1rem,0.751vw+0.824rem,1.5rem)]` inner). Type comes from
+ * `HERO_CLASSES` (title, subtitle, eyebrow) — fluid clamp() between 375
+ * → 1440 viewports. Media slot is `w-full` with intrinsic aspect ratio.
  *
- * Scales up:
- *   - sm: `py-12 px-6 gap-5`, title `text-[32px]`
- *   - md: `py-16 px-8 gap-6`, title `text-[40px]`. If `split=true`, switches to
- *     a two-column grid (`md:grid-cols-2`) with media on the right.
- *   - lg: `py-20 px-10`, title `text-[52px]`.
+ * `split=true`: at md+, switches to a two-column grid
+ * (`md:grid-cols-2 md:gap-[clamp(2.5rem,1.502vw+2.148rem,3.5rem)]`) with
+ * media on the right.
  *
- * No fixed widths anywhere below md. Media slot is `w-full` and uses the
- * intrinsic aspect of whatever is inside (image dims, embed ratio, etc.).
- * Padding ramps up — never starts large and shrinks.
+ * No fixed widths below md. Padding scales smoothly (no breakpoint steps)
+ * — never starts large and shrinks.
  *
  * ARIA: outer `<header>`. Title is `<h1>` by default (or `<h2>` if level=2).
  * Eyebrow is `<p>` to keep it out of the heading outline. CTA group has no
@@ -56,7 +53,7 @@ export function Hero({
   const TitleTag = (level === 1 ? 'h1' : 'h2') as 'h1' | 'h2';
 
   const content = (
-    <div className="flex flex-col gap-4 sm:gap-5 md:gap-6 min-w-0">
+    <div className="flex flex-col gap-[clamp(1rem,0.751vw+0.824rem,1.5rem)] min-w-0">
       {eyebrow ? <p className={`${HERO_CLASSES.eyebrow} text-accent m-0`}>{eyebrow}</p> : null}
       <TitleTag className={`${HERO_CLASSES.title} font-bold m-0 [overflow-wrap:anywhere]`}>
         {title}
@@ -82,7 +79,7 @@ export function Hero({
   return (
     <header
       className={`w-full py-[clamp(2.5rem,6vw,5rem)] px-[clamp(1rem,3vw,2.5rem)] ${
-        split ? 'md:grid md:grid-cols-2 md:gap-10 lg:gap-14 md:items-center' : 'flex flex-col gap-6 md:gap-8'
+        split ? 'md:grid md:grid-cols-2 md:gap-[clamp(2.5rem,1.502vw+2.148rem,3.5rem)] md:items-center' : 'flex flex-col gap-[clamp(1.5rem,0.751vw+1.324rem,2rem)]'
       } ${className}`.trim()}
     >
       {content}

@@ -3,6 +3,10 @@
 
 const CONTEXT = 'https://schema.org';
 
+/** Common return shape for every JSON-LD factory. Open-ended on purpose —
+ *  schema.org payloads carry arbitrary `@`-prefixed keys. */
+export type JsonLdSchema = Record<string, unknown>;
+
 export type Crumb = { name: string; url: string };
 
 export type FaqItem = { question: string; answer: string };
@@ -70,7 +74,7 @@ export interface SoftwareApplicationOpts {
   price?: string;
 }
 
-export function breadcrumbListSchema(crumbs: Crumb[]) {
+export function breadcrumbListSchema(crumbs: Crumb[]): JsonLdSchema {
   return {
     '@context': CONTEXT,
     '@type': 'BreadcrumbList',
@@ -94,7 +98,7 @@ export function breadcrumbListSchema(crumbs: Crumb[]) {
  * nudge migration. Scheduled for removal in v2.0 — both consumer sites
  * must drop their calls before the major release.
  */
-export function faqPageSchema(items: FaqItem[]) {
+export function faqPageSchema(items: FaqItem[]): JsonLdSchema {
   if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production') {
     console.warn(
       '[etf-core] faqPageSchema() is deprecated per canonical schema rules. Remove FAQPage JSON-LD emission; keep visible FAQ sections. This factory will be removed in a future major version.'
@@ -111,7 +115,7 @@ export function faqPageSchema(items: FaqItem[]) {
   };
 }
 
-export function personSchema(opts: PersonOpts) {
+export function personSchema(opts: PersonOpts): JsonLdSchema {
   const base: Record<string, unknown> = {
     '@context': CONTEXT,
     '@type': 'Person',
@@ -140,7 +144,7 @@ export function personSchema(opts: PersonOpts) {
   return base;
 }
 
-export function organizationSchema(opts: OrganizationOpts) {
+export function organizationSchema(opts: OrganizationOpts): JsonLdSchema {
   const base: Record<string, unknown> = {
     '@context': CONTEXT,
     '@type': 'Organization',
@@ -156,7 +160,7 @@ export function organizationSchema(opts: OrganizationOpts) {
   return base;
 }
 
-export function articleSchema(opts: ArticleOpts) {
+export function articleSchema(opts: ArticleOpts): JsonLdSchema {
   const base: Record<string, unknown> = {
     '@context': CONTEXT,
     '@type': 'Article',
@@ -180,7 +184,7 @@ export function articleSchema(opts: ArticleOpts) {
   return base;
 }
 
-export function scholarlyArticleSchema(opts: ScholarlyArticleOpts) {
+export function scholarlyArticleSchema(opts: ScholarlyArticleOpts): JsonLdSchema {
   const base: Record<string, unknown> = {
     '@context': CONTEXT,
     '@type': 'ScholarlyArticle',
@@ -212,7 +216,7 @@ export function scholarlyArticleSchema(opts: ScholarlyArticleOpts) {
   return base;
 }
 
-export function softwareApplicationSchema(opts: SoftwareApplicationOpts) {
+export function softwareApplicationSchema(opts: SoftwareApplicationOpts): JsonLdSchema {
   return {
     '@context': CONTEXT,
     '@type': 'SoftwareApplication',

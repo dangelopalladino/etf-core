@@ -17,12 +17,14 @@ export interface EmptyStateProps {
  *
  * @remarks
  * Layout at 320px (base): full-width column (`w-full flex flex-col items-center
- * text-center`), `py-8 px-4` padding, `gap-3`. Title `text-[18px]`, body
- * `text-[14px]`, action stacked beneath. No fixed heights — content wraps
- * freely. Illustration slot wraps decorative SVG/PNG; consumer-supplied
- * dimensions are respected but the wrapper has `max-w-[200px]` at base scaling
- * up to `max-w-[280px]` at `md:`. Scales to `py-12 px-6 gap-4` at `md:` (768px)
- * and `py-16 px-8 gap-5` at `lg:`. Padding ramps up — never starts large.
+ * text-center`) with fluid clamp() padding/gap that scales smoothly between
+ * 375 → 1440 viewports — `py-[clamp(2rem,3.005vw+1.296rem,4rem)]`,
+ * `px-[clamp(1rem,1.502vw+0.648rem,2rem)]` (matches `FLUID_SPACING_SCALE.cardP`),
+ * `gap-[clamp(0.75rem,0.751vw+0.574rem,1.25rem)]`. Title uses
+ * `HEADING_CLASSES.h3`; body is `text-sm`. Illustration wrapper is fluid
+ * `max-w-[clamp(12.5rem,7.512vw+10.74rem,17.5rem)]` (200 → 280px). No fixed
+ * heights — content wraps freely. Replaced multi-step breakpoint ladders in
+ * v1.11.0.
  *
  * ARIA: `<section>` with `aria-labelledby` referencing the title id; the
  * illustration slot is wrapped in `aria-hidden="true"` by default. If the
@@ -48,10 +50,10 @@ export function EmptyState({
   return (
     <section
       aria-labelledby={titleId}
-      className={`w-full flex flex-col items-center text-center py-8 px-4 gap-3 sm:py-10 sm:gap-4 md:py-12 md:px-6 md:gap-4 lg:py-16 lg:px-8 lg:gap-5 ${className}`.trim()}
+      className={`w-full flex flex-col items-center text-center py-[clamp(2rem,3.005vw+1.296rem,4rem)] px-[clamp(1rem,1.502vw+0.648rem,2rem)] gap-[clamp(0.75rem,0.751vw+0.574rem,1.25rem)] ${className}`.trim()}
     >
       {illustration ? (
-        <div aria-hidden="true" className="w-full max-w-[200px] md:max-w-[280px]">
+        <div aria-hidden="true" className="w-full max-w-[clamp(12.5rem,7.512vw+10.74rem,17.5rem)]">
           {illustration}
         </div>
       ) : null}
@@ -63,7 +65,7 @@ export function EmptyState({
           {body}
         </p>
       ) : null}
-      {action ? <div className="mt-2 md:mt-3">{action}</div> : null}
+      {action ? <div className="mt-3">{action}</div> : null}
     </section>
   );
 }

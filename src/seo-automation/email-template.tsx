@@ -14,6 +14,7 @@ import {
 import type { Brand, SeoDraft } from './types';
 import { SIX_ID_COLORS } from '../tokens/6id';
 import { ETF_COLORS } from '../tokens/etfframework';
+import { EMAIL_SAFE_TOKENS } from '../tokens/shared';
 
 interface BrandPalette {
   bg: string;
@@ -33,7 +34,7 @@ function paletteFor(brand: Brand): BrandPalette {
       text: ETF_COLORS.charcoal,
       muted: ETF_COLORS.gray,
       primary: ETF_COLORS.forest,
-      primaryText: '#FFFFFF',
+      primaryText: EMAIL_SAFE_TOKENS.white,
       border: ETF_COLORS.stone,
     };
   }

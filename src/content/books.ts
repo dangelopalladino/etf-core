@@ -6,17 +6,20 @@
  * PDF delivery is gated by Supabase Storage signed URLs (private bucket `books`).
  */
 
+import type { ProductType } from '../commerce/priceMap';
+
 export type BookSlug =
   | 'motion'
   | 'understanding-the-crash'
   | 'family-playbook'
   | 'family-bundle';
 
-export type BookProductType =
-  | 'book_motion'
-  | 'book_understanding_the_crash'
-  | 'book_family_playbook'
-  | 'book_family_bundle';
+/**
+ * Derived from the canonical `ProductType` ledger in `commerce/priceMap.ts` so
+ * adding a new book SKU only requires editing that single source of truth.
+ * Pre-v1.11.1 this was a duplicate string-literal union — drift risk.
+ */
+export type BookProductType = Extract<ProductType, `book_${string}`>;
 
 export interface BookContent {
   slug: BookSlug;
@@ -199,9 +202,8 @@ export const BOOK_PRODUCT_NAMES: Record<string, string> = {
   book_family_bundle: 'Family Bundle (Understanding the Crash + The Family Playbook)',
 };
 
-export const BOOK_PRODUCT_TYPES: Set<BookProductType> = new Set([
-  'book_motion',
-  'book_understanding_the_crash',
-  'book_family_playbook',
-  'book_family_bundle',
-]);
+// `BOOK_PRODUCT_TYPES` lives in `commerce/priceMap.ts` (canonical Stripe ledger).
+// Re-exported here for content-side consumers that prefer to import from
+// `@dangelopalladino/etf-core/content`. Pre-v1.11.1 this was a duplicate Set
+// instance — reference-distinct from the priceMap one, breaking identity checks.
+export { BOOK_PRODUCT_TYPES } from '../commerce/priceMap';

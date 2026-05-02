@@ -6,14 +6,17 @@ import {
   type BookContent,
 } from '../../content/books';
 import { resolveBookDownloads } from '../downloads';
+import { EMAIL_SAFE_TOKENS, fonts } from '../../tokens/shared';
 
 type BookProductKey = BookContent['productKey'];
 
 const FROM = '6 Identities <support@mail.6identities.com>';
-const BRAND_TEAL = '#2D7A7B';
-const BRAND_BG = '#F5EFE6';
-const BRAND_TEXT = '#3A3632';
-const BRAND_MUTED = '#6B6560';
+const BRAND_TEAL = EMAIL_SAFE_TOKENS.brandPrimary;
+const BRAND_BG = EMAIL_SAFE_TOKENS.surface;
+const BRAND_TEXT = EMAIL_SAFE_TOKENS.text;
+const BRAND_MUTED = EMAIL_SAFE_TOKENS.textMuted;
+const BRAND_BORDER = EMAIL_SAFE_TOKENS.border;
+const BRAND_WHITE = EMAIL_SAFE_TOKENS.white;
 
 function getResend(): Resend | null {
   const key = process.env.RESEND_API_KEY;
@@ -30,9 +33,9 @@ function renderHtml(opts: {
   const downloadBlocks = downloads
     .map(
       (d) => `
-        <div style="margin: 20px 0; padding: 20px; background: #FFFFFF; border: 1px solid #E5DDD4; border-radius: 12px;">
-          <div style="font-family: 'Georgia', serif; font-size: 20px; font-weight: 700; color: ${BRAND_TEXT}; margin-bottom: 12px;">${d.title}</div>
-          <a href="${d.url}" style="display: inline-block; padding: 12px 28px; background: ${BRAND_TEAL}; color: #FFFFFF; text-decoration: none; border-radius: 999px; font-weight: 600; font-size: 15px;">Download PDF</a>
+        <div style="margin: 20px 0; padding: 20px; background: ${BRAND_WHITE}; border: 1px solid ${BRAND_BORDER}; border-radius: 12px;">
+          <div style="font-family: ${fonts.serif}; font-size: 20px; font-weight: 700; color: ${BRAND_TEXT}; margin-bottom: 12px;">${d.title}</div>
+          <a href="${d.url}" style="display: inline-block; padding: 12px 28px; background: ${BRAND_TEAL}; color: ${BRAND_WHITE}; text-decoration: none; border-radius: 999px; font-weight: 600; font-size: 15px;">Download PDF</a>
           <div style="font-size: 13px; color: ${BRAND_MUTED}; margin-top: 12px;">Link expires in 24 hours. Save your file locally once downloaded.</div>
         </div>
       `
@@ -40,13 +43,13 @@ function renderHtml(opts: {
     .join('');
 
   return `
-    <div style="font-family: 'DM Sans', -apple-system, sans-serif; color: ${BRAND_TEXT}; max-width: 600px; margin: 0 auto; padding: 40px 24px; background: ${BRAND_BG};">
-      <h1 style="font-family: 'Georgia', serif; font-size: 26px; font-weight: 700; color: ${BRAND_TEAL}; margin: 0 0 8px;">Your ${orderName} is ready.</h1>
+    <div style="font-family: ${fonts.body}; color: ${BRAND_TEXT}; max-width: 600px; margin: 0 auto; padding: 40px 24px; background: ${BRAND_BG};">
+      <h1 style="font-family: ${fonts.serif}; font-size: 26px; font-weight: 700; color: ${BRAND_TEAL}; margin: 0 0 8px;">Your ${orderName} is ready.</h1>
       <div style="font-size: 15px; color: ${BRAND_MUTED}; line-height: 1.6; margin-bottom: 24px;">
         Thanks for your purchase. Your download link${downloads.length > 1 ? 's are' : ' is'} below. You can also access ${downloads.length > 1 ? 'them' : 'it'} from your purchase confirmation page.
       </div>
       ${downloadBlocks}
-      <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid #E5DDD4; font-size: 13px; color: ${BRAND_MUTED}; line-height: 1.6;">
+      <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid ${BRAND_BORDER}; font-size: 13px; color: ${BRAND_MUTED}; line-height: 1.6;">
         Questions? Reply to this email and we'll help.
       </div>
       <div style="margin-top: 32px; font-size: 12px; color: ${BRAND_MUTED}; text-align: center;">

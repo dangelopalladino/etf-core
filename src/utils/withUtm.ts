@@ -13,6 +13,12 @@ export function withUtm(
   source: Site,
   campaign: Campaign
 ): string {
+  // Cross-brand attribution is meaningful only across origins. Pass-through
+  // relative or protocol-less hrefs unchanged so consumers can pipe internal
+  // links through `withUtm` defensively without crashing on `/professionals`
+  // style values. `URL.canParse` (Node 18.17+ / modern browsers) avoids the
+  // try/catch dance.
+  if (!URL.canParse(href)) return href;
   const url = new URL(href);
   url.searchParams.set('utm_source', source);
   url.searchParams.set('utm_medium', 'cross_brand');

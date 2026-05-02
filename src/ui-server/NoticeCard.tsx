@@ -19,13 +19,13 @@ const ASSERTIVE: ReadonlyArray<StateTone> = ['urgent', 'caution'];
  * NoticeCard — inline notification block with tone-derived semantics.
  *
  * @remarks
- * Layout at 320px (base): full-width block (`w-full`), `p-3` padding, `gap-2`
- * between icon and content, vertical text stack. Border `1px` solid; radius
- * `rounded-[8px]` (token md). No fixed height — body text wraps freely.
- * Scales to `p-4 gap-3` at `sm:` (640px) and `p-5 gap-4` at `md:` (768px).
- * Icon (when provided) is decorative `w-5 h-5` at base, `md:w-6 md:h-6`,
- * which is exempt from the no-fixed-width rule (decorative icon, not a
- * content container).
+ * Layout at 320px (base): full-width block (`w-full`) with fluid padding
+ * (`p-[clamp(0.75rem,0.751vw+0.574rem,1.25rem)]`, 12 → 20px) and fluid icon-
+ * to-content gap (`gap-[clamp(0.5rem,0.751vw+0.324rem,1rem)]`, 8 → 16px) that
+ * scale smoothly between 375 → 1440 viewports. Border 1px solid; radius
+ * `rounded-[8px]` (token md). No fixed height — body text wraps freely. Icon
+ * (when provided) is decorative `w-6 h-6` (collapsed in v1.11.0 from a 5/6
+ * 2-step ladder), exempt from the no-fixed-width rule.
  *
  * ARIA: tone determines semantics:
  *   - urgent | caution → role="alert" + aria-live="assertive"
@@ -58,7 +58,7 @@ export function NoticeCard({
       role={role}
       aria-live={ariaLive}
       aria-labelledby={titleId}
-      className={`w-full p-3 sm:p-4 md:p-5 rounded-[8px] border flex items-start gap-2 sm:gap-3 md:gap-4 ${elevationClass} ${className}`.trim()}
+      className={`w-full p-[clamp(0.75rem,0.751vw+0.574rem,1.25rem)] rounded-[8px] border flex items-start gap-[clamp(0.5rem,0.751vw+0.324rem,1rem)] ${elevationClass} ${className}`.trim()}
       style={{
         backgroundColor: palette.bg,
         borderColor: palette.border,
@@ -68,7 +68,7 @@ export function NoticeCard({
       {icon ? (
         <span
           aria-hidden="true"
-          className="flex-shrink-0 w-5 h-5 md:w-6 md:h-6 inline-flex items-center justify-center"
+          className="flex-shrink-0 w-6 h-6 inline-flex items-center justify-center"
         >
           {icon}
         </span>

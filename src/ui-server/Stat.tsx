@@ -22,10 +22,10 @@ export interface StatLabelProps {
  * @remarks
  * Layout at 320px (base): renders `<dl>` with `flex flex-col gap-1`,
  * `text-left` (caller can override). No fixed dimensions; long values wrap
- * via `tabular-nums` + `overflow-wrap: anywhere` on StatValue. Scales
- * proportionally — value font caps via brand type scale (default 32px at
- * base, 40px at md:, 48px at lg:). Label is `text-[12px]` at base, `text-[13px]`
- * at md:.
+ * via `tabular-nums` + `overflow-wrap: anywhere` on StatValue. Value type
+ * comes from `STAT_NUMBER_CLASS` (32 → 48px fluid clamp across 375 → 1440);
+ * label uses `KICKER_CLASS` (12 → 14px fluid). Replaced the prior
+ * `text-[Npx] md:text-[Mpx] lg:text-[Kpx]` breakpoint ladder in v1.11.0.
  *
  * ARIA: <dl> is a description-list; <dd> (StatValue) holds the value and <dt>
  * (StatLabel) the term. Note dd-before-dt is intentional: visually, value

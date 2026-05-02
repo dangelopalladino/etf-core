@@ -62,8 +62,8 @@ Switch back to `^1.0.0` (GitHub Packages resolution) before merging to main.
 | `@dangelopalladino/etf-core/tokens/shared` | Base palette, shadow tokens, scale, status palette |
 | `@dangelopalladino/etf-core/tokens/6id` | 6identities-flavored AntD `themeConfig` + `IDENTITY_COLORS` |
 | `@dangelopalladino/etf-core/tokens/etfframework` | etfframework-flavored AntD `themeConfig` |
-| `@dangelopalladino/etf-core/ui-server` | `SectionWrapper`, `ServerHeading`, `ServerText` |
-| `@dangelopalladino/etf-core/ui-client` | `SectionHeader`, `BrandCta`, `CtaSection`, `MetricPanel`, `ScoreBar`, `StatusBadge`, `BookSalesPage` |
+| `@dangelopalladino/etf-core/ui-server` | `SectionWrapper`, `ServerHeading`, `ServerText`, `Hero`, `Card`, `Stat` (+ `StatValue` / `StatLabel`), `Stack` (+ `Cluster`), `NoticeCard`, `EmptyState`, `Eyebrow`, `Kicker`, `IconBadge` |
+| `@dangelopalladino/etf-core/ui-client` | `SectionHeader`, `BrandCta`, `CtaSection`, `MetricPanel`, `ScoreBar`, `StatusBadge`, `LockedGate`, `LoadingState`, `SkeletonCard` |
 | `@dangelopalladino/etf-core/content` | `books`, `testimonials` |
 | `@dangelopalladino/etf-core/commerce` | All commerce surfaces (re-exports) |
 | `@dangelopalladino/etf-core/commerce/webhook` | `handleStripeEvent(event, supabaseAdmin, resend, opts)` |
