@@ -335,16 +335,23 @@ export const FOCUS_RING_TOKENS = {
 } as const;
 
 /**
- * Heading class strings — Tailwind classnames mirroring HEADING_SCALE. Kept in
- * lock-step with HEADING_SCALE via tests/tokens.test.ts assertion. Mobile-first:
- * each entry begins with the 320px base size, then scales up via md:/lg:.
+ * Heading class strings — Tailwind classnames using `clamp()` for fluid
+ * scaling between mobile and desktop. Mobile minima match HEADING_SCALE
+ * `mobileSize`; desktop maxima match `size`. The single source of truth
+ * for `<ServerHeading>`, the `Hero` primitive, and any consumer that wants
+ * to apply heading typography to non-heading tags.
+ *
+ * Migrated from a `text-[Npx] md:text-[Mpx] lg:text-[Kpx]` breakpoint
+ * ladder to fluid `text-[clamp(...)]` in v1.7.x as part of the
+ * mobile-sizing remediation. Behavior at the 320px and ≥1280px endpoints
+ * is unchanged; intermediate viewports scale smoothly.
  */
 export const HEADING_CLASSES: Record<'h1' | 'h2' | 'h3' | 'h4' | 'h5', string> = {
-  h1: 'text-[30px] md:text-[36px] lg:text-[44px] tracking-[-0.02em] lg:tracking-[-0.03em] leading-[1.15]',
-  h2: 'text-[24px] md:text-[30px] leading-[1.2]',
-  h3: 'text-[20px] md:text-[24px] leading-[1.25]',
-  h4: 'text-[16px] md:text-[20px] leading-[1.3]',
-  h5: 'text-[14px] md:text-[16px] leading-[1.4]',
+  h1: 'text-[clamp(1.875rem,1.2rem+2.4vw,2.75rem)] tracking-[-0.03em] leading-[1.15]',
+  h2: 'text-[clamp(1.5rem,1.1rem+1.4vw,1.875rem)] leading-[1.2]',
+  h3: 'text-[clamp(1.25rem,1rem+0.85vw,1.5rem)] leading-[1.25]',
+  h4: 'text-[clamp(1rem,0.85rem+0.55vw,1.25rem)] leading-[1.3]',
+  h5: 'text-[clamp(0.875rem,0.8rem+0.25vw,1rem)] leading-[1.4]',
 } as const;
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -406,6 +413,25 @@ export const DISPLAY_CLASSES = {
   lg: 'text-[clamp(56px,8vw,96px)] tracking-[-0.04em] leading-[1.02]',
 } as const;
 export type DisplayScale = keyof typeof DISPLAY_CLASSES;
+
+/**
+ * Hero-tier composition classes for `<Hero>`. Title sits between the regular
+ * heading scale (`HEADING_CLASSES.h1`) and the poster `DISPLAY_CLASSES.sm` —
+ * larger than a typical h1 but not poster-scale. Subtitle and eyebrow are
+ * pinned to readable sizes that scale fluidly.
+ *
+ * Added in v1.7.x to remove the inline arbitrary-value typography that the
+ * `Hero` primitive previously carried.
+ */
+export const HERO_CLASSES = {
+  /** Title — fluid clamp ~28px → 52px, tight tracking, tight leading. */
+  title:    'text-[clamp(1.75rem,1.2rem+2.5vw,3.25rem)] tracking-[-0.02em] leading-[1.1]',
+  /** Subtitle — fluid clamp ~15px → 18px. */
+  subtitle: 'text-[clamp(0.9375rem,0.875rem+0.25vw,1.125rem)] leading-[1.5]',
+  /** Eyebrow — fluid clamp ~11px → 12px, semibold uppercase tracked. */
+  eyebrow:  'text-[clamp(0.6875rem,0.65rem+0.1vw,0.75rem)] font-semibold uppercase tracking-[0.1em]',
+} as const;
+export type HeroScale = keyof typeof HERO_CLASSES;
 
 /**
  * Impeccable motion tokens — easing + duration + allowlisted keyframe names.

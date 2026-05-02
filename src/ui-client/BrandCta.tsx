@@ -9,6 +9,15 @@ import { ArrowRightOutlined } from '@ant-design/icons';
 interface BrandCtaProps {
   primary: { text: string; href: string };
   secondary?: { text: string; href: string };
+  /**
+   * AntD Button `size`. Defaults to `'middle'` (44px tall via brand themes,
+   * meeting WCAG 2.1 target-size). Pass `'large'` only at hero/display call
+   * sites where the extra weight is editorially intentional.
+   *
+   * Default flipped from `'large'` → `'middle'` in v1.7.x as part of the
+   * mobile-sizing remediation; consumers that want the previous behavior must
+   * pass `size="large"` explicitly.
+   */
   size?: SizeType;
   align?: 'left' | 'center';
   buttonType?: 'primary' | 'default';
@@ -35,7 +44,7 @@ interface BrandCtaProps {
 export default function BrandCta({
   primary,
   secondary,
-  size = 'large',
+  size = 'middle',
   align = 'left',
   buttonType = 'primary',
   weight = 'standard',
