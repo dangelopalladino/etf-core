@@ -17,7 +17,8 @@ const SIZE_PX: Record<NonNullable<LoadingStateProps['size']>, number> = { sm: 16
  * Layout at 320px (base): `inline-flex items-center gap-2`, sized by intrinsic
  * SVG (decorative-fixed-px exempt: 16/24/32 — the SVG is decorative, not a
  * content container). Label text rendered visibly to the right of the spinner
- * (`text-[13px] md:text-[14px]`). No fixed wrapper width or height — the
+ * via `text-xs md:text-sm` (12 → 14px when consumer pastes the @theme block;
+ * Tailwind defaults otherwise). No fixed wrapper width or height — the
  * wrapper grows to whatever content it carries. No padding ramp needed
  * (LoadingState is in-line with siblings; the parent decides padding).
  *

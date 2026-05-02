@@ -24,13 +24,13 @@ interface CtaSectionProps {
 }
 
 // Radius caps at rounded-[20px] per DESIGN.md (eslint.config.mjs bans
-// rounded-3xl). Padding ramps mobile-first: 24px → 40px → 64px (down from
-// 32 → 48 → 96 in prior versions, which left only ~576px usable width at
-// the 768px breakpoint).
+// rounded-3xl). Padding ramps mobile-first via fluid clamp(): 24px → 64px
+// across 375 → 1440 viewports (preserves prior endpoints; smooths the
+// intermediate steps that previously laddered at sm: / md:).
 const VARIANT_CLASSES = {
-  dark: 'text-center p-6 sm:p-10 md:p-16 rounded-[20px] relative overflow-hidden shadow-md mb-12 md:mb-16 bg-primary',
-  light: 'text-center bg-surface-ground border border-border p-6 sm:p-10 md:p-16 rounded-[20px] relative overflow-hidden shadow-sm mb-12 md:mb-16',
-  minimal: 'text-center py-[clamp(2rem,5vw,4rem)] border-t border-border bg-surface-ground rounded-2xl mb-12 md:mb-16 px-4 sm:px-6',
+  dark: 'text-center p-[clamp(1.5rem,3.756vw+0.620rem,4rem)] rounded-[20px] relative overflow-hidden shadow-md mb-[clamp(3rem,1.502vw+2.648rem,4rem)] bg-primary',
+  light: 'text-center bg-surface-ground border border-border p-[clamp(1.5rem,3.756vw+0.620rem,4rem)] rounded-[20px] relative overflow-hidden shadow-sm mb-[clamp(3rem,1.502vw+2.648rem,4rem)]',
+  minimal: 'text-center py-[clamp(2rem,5vw,4rem)] border-t border-border bg-surface-ground rounded-2xl mb-[clamp(3rem,1.502vw+2.648rem,4rem)] px-[clamp(1rem,0.751vw+0.824rem,1.5rem)]',
 } as const;
 
 export default function CtaSection({

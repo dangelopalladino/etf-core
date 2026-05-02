@@ -38,7 +38,11 @@ export default function MetricPanel({
     <div className={`${isInline ? 'flex items-baseline gap-3' : ''} ${className}`}>
       <div className={isInline ? '' : 'mb-1'}>
         <span
-          className="font-mono font-bold text-2xl"
+          // Fluid metric value — clamp() matches FLUID_TYPE_SCALE.xl (24 → 36px
+          // across 375 → 1440). Replaces the prior static `text-2xl` so the
+          // value scales with the page; ratchet-compliant (no `text-(2xl|...)`
+          // body-oriented literal).
+          className="font-mono font-bold text-[clamp(1.5rem,1.127vw+1.236rem,2.25rem)]"
           style={{
             fontVariantNumeric: 'tabular-nums',
             color: valueColor ?? 'var(--color-foreground)',

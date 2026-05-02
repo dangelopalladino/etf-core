@@ -3,7 +3,7 @@
 import React from 'react';
 import Script from 'next/script';
 
-interface GA4LoaderProps {
+export interface GA4LoaderProps {
   measurementId: string;
   /** Override default linker domains. */
   linkerDomains?: string[];
@@ -17,7 +17,7 @@ interface GA4LoaderProps {
  * SAME `measurementId` (canonical: `G-7KJYNQJZ43`) — drift is caught by
  * `scripts/check-env-parity.ts`.
  */
-export function GA4Loader({ measurementId, linkerDomains }: GA4LoaderProps) {
+export function GA4Loader({ measurementId, linkerDomains }: GA4LoaderProps): React.ReactElement | null {
   if (!measurementId) return null;
   const domains = JSON.stringify(
     linkerDomains ?? ['6identities.com', 'etfframework.com'],
@@ -38,5 +38,3 @@ export function GA4Loader({ measurementId, linkerDomains }: GA4LoaderProps) {
     </>
   );
 }
-
-export default GA4Loader;

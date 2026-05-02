@@ -127,7 +127,7 @@ export function LockedGate({
         className="absolute inset-0 flex items-center justify-center p-4"
       >
         <div
-          className="w-full max-w-[320px] md:max-w-[420px] lg:max-w-[480px] p-5 md:p-6 lg:p-8 rounded-[12px] bg-white border border-border flex flex-col gap-3 md:gap-4"
+          className="w-full max-w-[clamp(20rem,15.023vw+16.479rem,30rem)] p-[clamp(1.25rem,1.127vw+0.986rem,2rem)] rounded-[12px] bg-white border border-border flex flex-col gap-[clamp(0.75rem,0.376vw+0.662rem,1rem)]"
           style={{ boxShadow: BLUEPRINT_SHADOWS.overlay }}
         >
           <h2 id={titleId} className={`${HEADING_CLASSES.h4} font-semibold m-0`}>
