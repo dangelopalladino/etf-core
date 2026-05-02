@@ -1,4 +1,5 @@
 import React from 'react';
+import { HERO_CLASSES } from '../tokens/shared';
 
 export interface HeroProps {
   eyebrow?: React.ReactNode;
@@ -56,12 +57,12 @@ export function Hero({
 
   const content = (
     <div className="flex flex-col gap-4 sm:gap-5 md:gap-6 min-w-0">
-      {eyebrow ? <p className="text-[11px] md:text-[12px] font-semibold uppercase tracking-[0.1em] text-accent m-0">{eyebrow}</p> : null}
-      <TitleTag className="text-[28px] sm:text-[32px] md:text-[40px] lg:text-[52px] font-bold leading-[1.1] tracking-[-0.02em] m-0 [overflow-wrap:anywhere]">
+      {eyebrow ? <p className={`${HERO_CLASSES.eyebrow} text-accent m-0`}>{eyebrow}</p> : null}
+      <TitleTag className={`${HERO_CLASSES.title} font-bold m-0 [overflow-wrap:anywhere]`}>
         {title}
       </TitleTag>
       {subtitle ? (
-        <p className="text-[15px] md:text-[17px] lg:text-[18px] leading-[1.5] text-text-secondary m-0 max-w-prose">
+        <p className={`${HERO_CLASSES.subtitle} text-text-secondary m-0 max-w-prose`}>
           {subtitle}
         </p>
       ) : null}
@@ -80,7 +81,7 @@ export function Hero({
 
   return (
     <header
-      className={`w-full py-10 px-4 sm:py-12 sm:px-6 md:py-16 md:px-8 lg:py-20 lg:px-10 ${
+      className={`w-full py-[clamp(2.5rem,6vw,5rem)] px-[clamp(1rem,3vw,2.5rem)] ${
         split ? 'md:grid md:grid-cols-2 md:gap-10 lg:gap-14 md:items-center' : 'flex flex-col gap-6 md:gap-8'
       } ${className}`.trim()}
     >

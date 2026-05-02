@@ -12,12 +12,25 @@ interface CtaSectionProps {
   variant?: 'dark' | 'light' | 'minimal';
   watermark?: React.ReactNode;
   onPrimaryClick?: () => void;
+  /**
+   * Size for the primary CTA button. Defaults to `'large'` because CtaSection
+   * is itself a hero/conversion surface and the larger button is editorially
+   * intentional here. Set to `'middle'` for tighter compositions.
+   *
+   * Pinned explicitly so the section does not silently track future
+   * `BrandCta` default changes.
+   */
+  ctaSize?: 'middle' | 'large';
 }
 
+// Radius caps at rounded-[20px] per DESIGN.md (eslint.config.mjs bans
+// rounded-3xl). Padding ramps mobile-first: 24px → 40px → 64px (down from
+// 32 → 48 → 96 in prior versions, which left only ~576px usable width at
+// the 768px breakpoint).
 const VARIANT_CLASSES = {
-  dark: 'text-center p-8 sm:p-12 md:p-24 rounded-3xl relative overflow-hidden shadow-md mb-16 bg-primary',
-  light: 'text-center bg-surface-ground border border-border p-8 sm:p-16 md:p-24 rounded-3xl relative overflow-hidden shadow-sm mb-16',
-  minimal: 'text-center pt-12 sm:pt-16 pb-6 sm:pb-8 border-t border-border bg-surface-ground rounded-2xl mb-16 px-4 sm:px-6',
+  dark: 'text-center p-6 sm:p-10 md:p-16 rounded-[20px] relative overflow-hidden shadow-md mb-12 md:mb-16 bg-primary',
+  light: 'text-center bg-surface-ground border border-border p-6 sm:p-10 md:p-16 rounded-[20px] relative overflow-hidden shadow-sm mb-12 md:mb-16',
+  minimal: 'text-center pt-10 sm:pt-14 pb-6 sm:pb-8 border-t border-border bg-surface-ground rounded-2xl mb-12 md:mb-16 px-4 sm:px-6',
 } as const;
 
 export default function CtaSection({
@@ -28,6 +41,7 @@ export default function CtaSection({
   variant = 'dark',
   watermark,
   onPrimaryClick,
+  ctaSize = 'large',
 }: CtaSectionProps) {
   const isDark = variant === 'dark';
   const isMinimal = variant === 'minimal';
@@ -51,6 +65,7 @@ export default function CtaSection({
             <BrandCta
               primary={{ text: buttonText, href: buttonHref }}
               align="center"
+              size={ctaSize}
               buttonType={isDark ? 'default' : 'primary'}
               onPrimaryClick={onPrimaryClick}
             />

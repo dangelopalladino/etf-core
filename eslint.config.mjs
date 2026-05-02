@@ -18,6 +18,10 @@ export default tseslint.config(
       '@typescript-eslint/no-explicit-any': 'off',
       // v1.5 additive: enforce DESIGN.md anti-patterns inside etf-core's own src/.
       // Scoped to this package only; consumer apps are unaffected.
+      //
+      // v1.7.x mobile-sizing addition: cta-default-size bans `size = 'large'`
+      // as a default-parameter value in primitives so the new `size = 'middle'`
+      // default in BrandCta cannot be silently re-flipped.
       'no-restricted-syntax': [
         'error',
         {
@@ -27,6 +31,65 @@ export default tseslint.config(
         {
           selector: "TemplateElement[value.raw=/\\\\brounded-3xl\\\\b/]",
           message: "rounded-3xl is banned per DESIGN.md §radius cap. Use radius('xl') or smaller.",
+        },
+        {
+          selector: "AssignmentPattern[left.name='size'][right.value='large']",
+          message: "Default CTA/Button `size` must be `'middle'` (WCAG-safe at 44px via brand themes). `'large'` is opt-in at hero/display call sites only.",
+        },
+      ],
+    },
+  },
+  {
+    // v1.7.x mobile-sizing typography contract. Enforced ONLY on the
+    // primitives migrated to the fluid HEADING_CLASSES/HERO_CLASSES/
+    // DISPLAY_CLASSES contract. Expand `files` as additional primitives
+    // are migrated in the P2 sweep (Eyebrow, Kicker, NoticeCard,
+    // EmptyState, Stat, LoadingState, LockedGate, SectionHeader,
+    // MetricPanel).
+    //
+    // - body-text-token: bans `text-lg` or larger in any string/template
+    //   literal so paragraph-like surfaces cannot ramp body copy into the
+    //   heading scale.
+    // - heading-token-only: bans inline `text-[Npx]` so heading primitives
+    //   consume the shared fluid clamp() tokens instead of arbitrary px
+    //   ladders.
+    files: [
+      'src/ui-client/BrandCta.tsx',
+      'src/ui-client/CtaSection.tsx',
+      'src/ui-server/ServerTypography.tsx',
+      'src/ui-server/SectionWrapper.tsx',
+      'src/ui-server/Hero.tsx',
+    ],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: "Literal[value=/\\\\brounded-3xl\\\\b/]",
+          message: "rounded-3xl is banned per DESIGN.md §radius cap (max rounded-[20px] = xl).",
+        },
+        {
+          selector: "TemplateElement[value.raw=/\\\\brounded-3xl\\\\b/]",
+          message: "rounded-3xl is banned per DESIGN.md §radius cap.",
+        },
+        {
+          selector: "AssignmentPattern[left.name='size'][right.value='large']",
+          message: "Default CTA/Button `size` must be `'middle'`. `'large'` is opt-in at hero/display call sites only.",
+        },
+        {
+          selector: "Literal[value=/(^|\\\\s)(md:|lg:|xl:)?text-(lg|xl|2xl|3xl|4xl|5xl|6xl|7xl|8xl|9xl)(\\\\s|$)/]",
+          message: "Body-oriented text utilities must stay at `text-base` or smaller. Use ServerHeading/HEADING_CLASSES/HERO_CLASSES/DISPLAY_CLASSES for heading-scale typography.",
+        },
+        {
+          selector: "TemplateElement[value.raw=/(^|\\\\s)(md:|lg:|xl:)?text-(lg|xl|2xl|3xl|4xl|5xl|6xl|7xl|8xl|9xl)(\\\\s|$)/]",
+          message: "Body-oriented text utilities must stay at `text-base` or smaller. Use ServerHeading/HEADING_CLASSES/HERO_CLASSES/DISPLAY_CLASSES for heading-scale typography.",
+        },
+        {
+          selector: "Literal[value=/(^|\\\\s)(md:|lg:|xl:)?text-\\\\[\\\\d+px\\\\]/]",
+          message: "Inline `text-[Npx]` is banned in migrated primitives. Consume HEADING_CLASSES/HERO_CLASSES/DISPLAY_CLASSES (fluid clamp() since v1.7.x).",
+        },
+        {
+          selector: "TemplateElement[value.raw=/(^|\\\\s)(md:|lg:|xl:)?text-\\\\[\\\\d+px\\\\]/]",
+          message: "Inline `text-[Npx]` is banned in migrated primitives. Consume HEADING_CLASSES/HERO_CLASSES/DISPLAY_CLASSES (fluid clamp() since v1.7.x).",
         },
       ],
     },

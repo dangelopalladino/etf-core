@@ -86,27 +86,31 @@ describe('v1.5 surface — tokens/shared additions', () => {
     }
   });
 
-  it('HEADING_CLASSES is mobile-first (md:/lg: only, no max-width queries)', () => {
+  it('HEADING_CLASSES is fluid (clamp-based) and breakpoint-free', () => {
     for (const value of Object.values(HEADING_CLASSES)) {
       expect(value).not.toMatch(/max-width/);
       expect(value).not.toMatch(/max-w:/);
-      // Each h-level mentions a base text size before any md:/lg:.
-      expect(value).toMatch(/^text-\[\d+px\]/);
+      // v1.7.x: each level uses a clamp() arbitrary value as its first
+      // declaration. No md:/lg: text-size overrides — fluid scaling replaces
+      // the discrete breakpoint ladder.
+      expect(value).toMatch(/^text-\[clamp\(/);
+      expect(value).not.toMatch(/\smd:text-\[/);
+      expect(value).not.toMatch(/\slg:text-\[/);
     }
   });
 
-  it('HEADING_CLASSES stays in sync with HEADING_SCALE for h1–h4', () => {
-    // h1 mobile size 30, md 36, lg 44
-    expect(HEADING_CLASSES.h1).toContain(`text-[${HEADING_SCALE.h1.mobileSize}px]`);
-    expect(HEADING_CLASSES.h1).toContain(`md:text-[${HEADING_SCALE.h1.tabletSize}px]`);
-    expect(HEADING_CLASSES.h1).toContain(`lg:text-[${HEADING_SCALE.h1.size}px]`);
-    // h2/h3/h4 base = mobileSize, md = size
-    expect(HEADING_CLASSES.h2).toContain(`text-[${HEADING_SCALE.h2.mobileSize}px]`);
-    expect(HEADING_CLASSES.h2).toContain(`md:text-[${HEADING_SCALE.h2.size}px]`);
-    expect(HEADING_CLASSES.h3).toContain(`text-[${HEADING_SCALE.h3.mobileSize}px]`);
-    expect(HEADING_CLASSES.h3).toContain(`md:text-[${HEADING_SCALE.h3.size}px]`);
-    expect(HEADING_CLASSES.h4).toContain(`text-[${HEADING_SCALE.h4.mobileSize}px]`);
-    expect(HEADING_CLASSES.h4).toContain(`md:text-[${HEADING_SCALE.h4.size}px]`);
+  it('HEADING_CLASSES clamp endpoints stay in sync with HEADING_SCALE for h1–h5', () => {
+    // For each level, the clamp min equals HEADING_SCALE.hN.mobileSize (in rem)
+    // and the clamp max equals HEADING_SCALE.hN.size (in rem). Single source
+    // of truth: the numeric scale defines the mobile floor and desktop ceiling;
+    // the class string only chooses how the interior viewport range scales.
+    const remOf = (px: number) => `${px / 16}rem`;
+    for (const level of ['h1', 'h2', 'h3', 'h4', 'h5'] as const) {
+      const cls = HEADING_CLASSES[level];
+      const scale = HEADING_SCALE[level];
+      expect(cls).toMatch(new RegExp(`text-\\[clamp\\(${remOf(scale.mobileSize)}\\b`));
+      expect(cls).toMatch(new RegExp(`,${remOf(scale.size)}\\)\\]`));
+    }
   });
 });
 

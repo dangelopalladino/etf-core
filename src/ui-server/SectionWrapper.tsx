@@ -12,12 +12,16 @@ interface SectionWrapperProps {
    */
   maxWidth?: 'narrow' | 'default' | 'wide' | 'full';
   /**
-   * Vertical padding.
-   * - `tight` — `py-8 md:py-12` (Added in v1.6.0)
-   * - `compact` — `py-12 md:py-16`
-   * - `default` — `py-16 md:py-24`
-   * - `spacious` — `py-20 md:py-28` (Added in v1.6.0)
-   * - `generous` — `py-24 md:py-32`
+   * Vertical padding. Fluid via `clamp()` — scales smoothly between mobile
+   * and desktop instead of stepping at the `md:` breakpoint.
+   * - `tight`    — `clamp(1.5rem, 4vw, 3rem)`   (24 → 48px)
+   * - `compact`  — `clamp(2rem,   5vw, 4rem)`   (32 → 64px)
+   * - `default`  — `clamp(3rem,   7vw, 6rem)`   (48 → 96px)
+   * - `spacious` — `clamp(4rem,   9vw, 7rem)`   (64 → 112px)
+   * - `generous` — `clamp(5rem,  10vw, 8rem)`   (80 → 128px)
+   *
+   * Mobile baselines reduced from the v1.6.x breakpoint-ladder values as
+   * part of the mobile-sizing remediation; desktop maxima preserved.
    */
   spacing?: 'tight' | 'compact' | 'default' | 'spacious' | 'generous';
   /** Background treatment. surface-strong uses SURFACE_TOKENS.ground for visible contrast. */
@@ -50,12 +54,15 @@ const MAX_WIDTH_MAP = {
   full: 'max-w-none',
 } as const;
 
+// Fluid section padding via clamp(). Mobile minima are intentionally lower
+// than the prior breakpoint-ladder values (24/32/48/64/80 vs. 32/48/64/80/96)
+// so 320–768px viewports breathe; desktop maxima match the prior `md:` values.
 const SPACING_MAP = {
-  tight: 'py-8 md:py-12',
-  compact: 'py-12 md:py-16',
-  default: 'py-16 md:py-24',
-  spacious: 'py-20 md:py-28',
-  generous: 'py-24 md:py-32',
+  tight:    'py-[clamp(1.5rem,4vw,3rem)]',
+  compact:  'py-[clamp(2rem,5vw,4rem)]',
+  default:  'py-[clamp(3rem,7vw,6rem)]',
+  spacious: 'py-[clamp(4rem,9vw,7rem)]',
+  generous: 'py-[clamp(5rem,10vw,8rem)]',
 } as const;
 
 const BG_MAP = {
