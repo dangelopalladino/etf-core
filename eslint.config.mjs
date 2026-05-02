@@ -56,9 +56,19 @@ export default tseslint.config(
     files: [
       'src/ui-client/BrandCta.tsx',
       'src/ui-client/CtaSection.tsx',
-      'src/ui-server/ServerTypography.tsx',
-      'src/ui-server/SectionWrapper.tsx',
+      'src/ui-client/LoadingState.tsx',
+      'src/ui-client/LockedGate.tsx',
+      'src/ui-client/SectionHeader.tsx',
+      'src/ui-client/SkeletonCard.tsx',
+      'src/ui-server/Card.tsx',
+      'src/ui-server/EmptyState.tsx',
+      'src/ui-server/Eyebrow.tsx',
       'src/ui-server/Hero.tsx',
+      'src/ui-server/Kicker.tsx',
+      'src/ui-server/NoticeCard.tsx',
+      'src/ui-server/SectionWrapper.tsx',
+      'src/ui-server/ServerTypography.tsx',
+      'src/ui-server/Stat.tsx',
     ],
     rules: {
       'no-restricted-syntax': [
@@ -90,6 +100,18 @@ export default tseslint.config(
         {
           selector: "TemplateElement[value.raw=/(^|\\\\s)(md:|lg:|xl:)?text-\\\\[\\\\d+px\\\\]/]",
           message: "Inline `text-[Npx]` is banned in migrated primitives. Consume HEADING_CLASSES/HERO_CLASSES/DISPLAY_CLASSES (fluid clamp() since v1.7.x).",
+        },
+        {
+          // v1.11.0 — hex literals in className arbitrary values are banned
+          // in migrated primitives. Use SURFACE_TOKENS / BORDER_TOKENS /
+          // BLUEPRINT_SHADOWS or semantic Tailwind utilities (border-border,
+          // bg-surface-raised, etc.). Hex belongs in src/tokens/, not ui-*.
+          selector: "Literal[value=/(border|bg|text|ring)-\\\\[#[0-9A-Fa-f]{3,8}\\\\]/]",
+          message: "Hex literals in className arbitrary values are banned in migrated primitives. Use SURFACE_TOKENS / BORDER_TOKENS / BLUEPRINT_SHADOWS or semantic Tailwind utilities.",
+        },
+        {
+          selector: "TemplateElement[value.raw=/(border|bg|text|ring)-\\\\[#[0-9A-Fa-f]{3,8}\\\\]/]",
+          message: "Hex literals in className arbitrary values are banned in migrated primitives. Use SURFACE_TOKENS / BORDER_TOKENS / BLUEPRINT_SHADOWS or semantic Tailwind utilities.",
         },
       ],
     },

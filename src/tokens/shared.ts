@@ -581,6 +581,18 @@ export const FLUID_TYPE_TAILWIND = {
  * Requires Tailwind v4. Both downstream consumers (ETFtestSite, etfframework)
  * are on v4 today.
  */
+// ─── Off-grid replacements (added v1.11.0) ──────────────────────────────
+// Fluid Tailwind class strings used by the off-grid sweep in v1.11.0.
+// Mirror FLUID_TYPE_SCALE math (375 → 1440 viewport bracket) but for
+// purpose-built primitives where the foundation `text-{xs|sm|...}` tokens
+// would be ambiguous (Stat numbers, Kicker labels).
+
+/** Kicker / small-label fluid class — 12px → 14px between 375 and 1440. */
+export const KICKER_CLASS = 'text-[clamp(0.75rem,0.188vw+0.706rem,0.875rem)] font-bold uppercase tracking-[0.08em]';
+
+/** Stat-value fluid class — 32px → 48px between 375 and 1440. */
+export const STAT_NUMBER_CLASS = 'text-[clamp(2rem,1.502vw+1.648rem,3rem)] font-bold leading-[1.1] tabular-nums';
+
 export function buildThemeBlock(): string {
   return [
     '@theme {',

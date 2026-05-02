@@ -1,6 +1,6 @@
 import React from 'react';
 import type { RadiusKey, SpaceKey } from '../tokens/shared';
-import { radius, space } from '../tokens/shared';
+import { radius, space, SURFACE_TOKENS, BORDER_TOKENS } from '../tokens/shared';
 
 type AsTag = 'div' | 'article' | 'section' | 'aside' | 'li';
 
@@ -20,9 +20,9 @@ export interface CardProps {
 }
 
 const TONE_BG: Record<NonNullable<CardProps['tone']>, string> = {
-  default: '#F5EFE6',
-  raised:  '#FAF5EE',
-  ground:  '#EDE6DA',
+  default: SURFACE_TOKENS.default,
+  raised:  SURFACE_TOKENS.raised,
+  ground:  SURFACE_TOKENS.ground,
 };
 
 /**
@@ -62,7 +62,7 @@ export function Card({
         padding: px,
         borderRadius: radiusPx,
         backgroundColor: TONE_BG[tone],
-        borderColor: border ? '#E5DDD4' : undefined,
+        borderColor: border ? BORDER_TOKENS.default : undefined,
       }}
     >
       {children}

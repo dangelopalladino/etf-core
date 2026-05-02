@@ -1,4 +1,5 @@
 import React from 'react';
+import { KICKER_CLASS, STAT_NUMBER_CLASS } from '../tokens/shared';
 
 export interface StatProps {
   children: React.ReactNode;
@@ -48,7 +49,7 @@ export function Stat({ children, className = '' }: StatProps) {
 export function StatValue({ children, className = '' }: StatValueProps) {
   return (
     <dd
-      className={`text-[32px] md:text-[40px] lg:text-[48px] font-bold leading-[1.1] tabular-nums [overflow-wrap:anywhere] m-0 ${className}`.trim()}
+      className={`${STAT_NUMBER_CLASS} [overflow-wrap:anywhere] m-0 ${className}`.trim()}
     >
       {children}
     </dd>
@@ -58,7 +59,7 @@ export function StatValue({ children, className = '' }: StatValueProps) {
 export function StatLabel({ children, className = '' }: StatLabelProps) {
   return (
     <dt
-      className={`text-[12px] md:text-[13px] font-semibold uppercase tracking-[0.08em] text-text-secondary m-0 ${className}`.trim()}
+      className={`${KICKER_CLASS} text-text-secondary m-0 ${className}`.trim()}
     >
       {children}
     </dt>

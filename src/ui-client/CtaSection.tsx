@@ -30,7 +30,7 @@ interface CtaSectionProps {
 const VARIANT_CLASSES = {
   dark: 'text-center p-6 sm:p-10 md:p-16 rounded-[20px] relative overflow-hidden shadow-md mb-12 md:mb-16 bg-primary',
   light: 'text-center bg-surface-ground border border-border p-6 sm:p-10 md:p-16 rounded-[20px] relative overflow-hidden shadow-sm mb-12 md:mb-16',
-  minimal: 'text-center pt-10 sm:pt-14 pb-6 sm:pb-8 border-t border-border bg-surface-ground rounded-2xl mb-12 md:mb-16 px-4 sm:px-6',
+  minimal: 'text-center py-[clamp(2rem,5vw,4rem)] border-t border-border bg-surface-ground rounded-2xl mb-12 md:mb-16 px-4 sm:px-6',
 } as const;
 
 export default function CtaSection({

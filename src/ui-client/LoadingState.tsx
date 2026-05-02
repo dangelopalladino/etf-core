@@ -62,7 +62,7 @@ export function LoadingState({
         />
       </svg>
       {visibleLabel ? (
-        <span className="text-[13px] md:text-[14px] leading-[1.4]">{visibleLabel}</span>
+        <span className="text-xs md:text-sm leading-[1.4]">{visibleLabel}</span>
       ) : (
         <span className="sr-only">Loading</span>
       )}

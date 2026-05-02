@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useCallback, useEffect, useId, useRef } from 'react';
+import { HEADING_CLASSES, BLUEPRINT_SHADOWS } from '../tokens/shared';
 
 export interface LockedGateProps {
   children: React.ReactNode;
@@ -125,12 +126,15 @@ export function LockedGate({
         onKeyDown={handleKeyDown}
         className="absolute inset-0 flex items-center justify-center p-4"
       >
-        <div className="w-full max-w-[320px] md:max-w-[420px] lg:max-w-[480px] p-5 md:p-6 lg:p-8 rounded-[12px] bg-white border border-[#E5DDD4] shadow-[0_8px_24px_rgba(58,54,50,0.12)] flex flex-col gap-3 md:gap-4">
-          <h2 id={titleId} className="text-[18px] md:text-[20px] font-semibold leading-[1.25] m-0">
+        <div
+          className="w-full max-w-[320px] md:max-w-[420px] lg:max-w-[480px] p-5 md:p-6 lg:p-8 rounded-[12px] bg-white border border-border flex flex-col gap-3 md:gap-4"
+          style={{ boxShadow: BLUEPRINT_SHADOWS.overlay }}
+        >
+          <h2 id={titleId} className={`${HEADING_CLASSES.h4} font-semibold m-0`}>
             {title}
           </h2>
           {body ? (
-            <div className="text-[14px] md:text-[15px] leading-[1.5] text-text-secondary">
+            <div className="text-sm leading-[1.5] text-text-secondary">
               {body}
             </div>
           ) : null}

@@ -39,11 +39,11 @@ export function SkeletonCard({
   return (
     <div
       aria-hidden="true"
-      className={`w-full p-3 md:p-4 rounded-[8px] border border-[#E5DDD4] bg-[#FAF5EE] ${className}`.trim()}
+      className={`w-full p-3 md:p-4 rounded-[8px] border border-border bg-surface-raised ${className}`.trim()}
     >
       {withMedia ? (
         <div
-          className="w-full rounded-[6px] bg-[#EDE6DA] motion-safe:animate-pulse mb-3 md:mb-4"
+          className="w-full rounded-[6px] bg-surface-ground motion-safe:animate-pulse mb-3 md:mb-4"
           style={{ aspectRatio: mediaAspect }}
         />
       ) : null}
@@ -51,7 +51,7 @@ export function SkeletonCard({
         {Array.from({ length: lines }).map((_, i) => (
           <div
             key={i}
-            className="h-3 rounded-[4px] bg-[#EDE6DA] motion-safe:animate-pulse"
+            className="h-3 rounded-[4px] bg-surface-ground motion-safe:animate-pulse"
             style={{ width: i === lines - 1 ? '60%' : '100%' }}
           />
         ))}

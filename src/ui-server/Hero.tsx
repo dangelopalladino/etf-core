@@ -67,7 +67,7 @@ export function Hero({
         </p>
       ) : null}
       {(primary || secondary) ? (
-        <div className="flex flex-wrap items-center gap-3 mt-1 md:mt-2">
+        <div className="flex flex-wrap items-center gap-3 mt-2">
           {primary}
           {secondary}
         </div>
