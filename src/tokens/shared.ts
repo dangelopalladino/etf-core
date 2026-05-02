@@ -155,6 +155,22 @@ export const fonts = {
   serif: "'Source Serif 4', Georgia, serif",
 } as const;
 
+/**
+ * AntD v6 base theme — numeric component tokens consumed by the
+ * brand-specific theme configs (`6id.ts`, `etfframework.ts`).
+ *
+ * AntD v6 theme tokens are NUMERIC ONLY. `controlHeight`, `borderRadius`,
+ * `paddingInline`, `fontSize*` etc. cannot accept `clamp()` strings or any
+ * CSS expression. Component fluid scaling reaches AntD-rendered surfaces
+ * only via outer wrapper `className` (see `SectionHeader.tsx` for the
+ * pattern). Do NOT push fluid expressions into `token.fontSize*` or
+ * `components.{Button,Input,...}` here — see `FLUID_TYPE_SCALE` and the
+ * fluid contract block at the end of this file.
+ *
+ * The numeric anchors used below are surfaced as `CONTROL_HEIGHT_TOKENS`
+ * (sm=32, md=40, lg=48, touch=44). `Button.controlHeight: 44` matches
+ * `BrandCta size='middle'` and the WCAG minimum touch target.
+ */
 export const baseThemeConfig: ThemeConfig = {
   token: {
     colorPrimary:       '#2D7A7B',

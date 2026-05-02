@@ -11,7 +11,18 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html):
 
 ## [Unreleased]
 
-### Added — Fluid type + spacing contract (v1.9.0 candidate)
+### Changed — Wire primitives to fluid contract (v1.10.0 candidate)
+
+**Behavior change** in this repo: `SectionWrapper` outer X-padding is now fluid by default.
+
+- `SectionWrapper` (`src/ui-server/SectionWrapper.tsx`) — new `paddingX?: 'fluid' | 'static' | 'none'` prop, default `'fluid'`. The `'fluid'` value applies `px-[clamp(1.25rem, 5.634vw - 0.071rem, 5rem)]` (matches `FLUID_SPACING_SCALE.sectionPx`, 20 → 80px between 375 and 1440 viewports). `'static'` is the legacy `px-4 sm:px-6` escape hatch; `'none'` is `px-0`. `maxWidth='full'` continues to force no horizontal padding regardless. Mobile (320–375) unchanged at 20px; desktop (≥1440) grows from 24 to 80px (+56px gutters at the upper anchor).
+- `SectionHeader` (`src/ui-client/SectionHeader.tsx`) — `hero` / `breakdown` / `compact` title classes now derive from `HEADING_CLASSES.h1 / h2 / h3` via a new `forceTitle()` helper that prepends `!` (AntD important-class composition). Replaces the prior `text-[Npx] md:text-[Mpx] lg:text-[Kpx]` breakpoint ladders with fluid clamp(). Computed font-size at endpoint viewports is unchanged; intermediate viewports scale smoothly. Hero variant's small-viewport tracking collapses from `-0.02em` to `-0.03em` (matches the prior `lg:` anchor). `manifesto` and `display` variants intentionally retain custom clamp literals — JSDoc updated to call out the deviation from `DISPLAY_CLASSES`.
+- `ServerText` (`src/ui-server/ServerTypography.tsx`) — JSDoc cross-reference added pointing `body` variant readers to the fluid contract paste block. No code change; `text-base` continues to resolve through the consumer's `@theme` block.
+- `baseThemeConfig` (`src/tokens/shared.ts`) — JSDoc cross-reference + AntD numeric-only constraint warning added directly above the export. Prevents future contributors from attempting to push `clamp()` strings into AntD theme tokens.
+
+## [1.9.0] — 2026-05-02
+
+### Added — Fluid type + spacing contract
 
 **Tokens (`@dangelopalladino/etf-core/tokens/shared`)** — pure additive; zero existing exports modified.
 
