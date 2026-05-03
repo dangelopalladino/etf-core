@@ -1,0 +1,394 @@
+{
+  "$schema": "https://impeccable.style/schema/design.json",
+  "version": "1.0.0",
+  "package": "@dangelopalladino/etf-core",
+  "packageVersion": "1.11.1",
+  "northStar": "The Athletic Periodical",
+  "northStarDescription": "Editorial spine that holds two voices on one press — Players' Tribune long-form crossed with the Bloomberg Terminal manual. Disciplined typographic hierarchy, confident asymmetry, zero decoration.",
+  "bundles": ["shared", "6id", "etfframework"],
+  "elevationPhilosophy": "hairline-borders-default-overlay-shadow-only",
+
+  "colors": {
+    "shared": {
+      "brand": {
+        "teal": { "hex": "#2D7A7B", "name": "Brand Teal", "role": "AntD colorPrimary fallback" },
+        "terracotta": { "hex": "#C27B5C", "name": "Warm Terracotta", "role": "AntD colorLink fallback" },
+        "gold": { "hex": "#C9A96E", "name": "Brand Gold", "role": "Decorative — badges, certifications" }
+      },
+      "surface": {
+        "ground": { "hex": "#EDE6DA", "name": "Surface Ground" },
+        "default": { "hex": "#F5EFE6", "name": "Surface Default" },
+        "raised": { "hex": "#FAF5EE", "name": "Surface Raised" },
+        "elevated": { "hex": "#FFFFFF", "name": "Surface Elevated" }
+      },
+      "border": {
+        "subtle": { "hex": "#F0E8DF", "name": "Border Subtle" },
+        "default": { "hex": "#E5DDD4", "name": "Border Default" },
+        "emphasis": { "hex": "#D4CBC0", "name": "Border Emphasis" }
+      },
+      "text": {
+        "primary": { "hex": "#3A3632", "name": "Brand Foreground" },
+        "secondary": { "hex": "#6B6560", "name": "Brand Text Secondary" },
+        "muted": { "hex": "#A8A29E", "name": "Brand Text Muted" }
+      },
+      "status": {
+        "urgent":  { "bg": "#FDF2F0", "border": "#E8C4BE", "text": "#B83A2A" },
+        "caution": { "bg": "#FDF8EE", "border": "#E8D9B8", "text": "#9A7B3C" },
+        "info":    { "bg": "#F0F7F7", "border": "#B8D8D8", "text": "#1F6060" },
+        "success": { "bg": "#F2F8F4", "border": "#B8D8C0", "text": "#2D7A42" },
+        "neutral": { "bg": "#F5F2EE", "border": "#DDD6CC", "text": "#6B6560" }
+      },
+      "score": {
+        "urgent":     { "hex": "#E74C3C", "name": "Urgent Red", "range": "0-10" },
+        "developing": { "hex": "#C27B5C", "name": "Developing Terracotta", "range": "11-17" },
+        "strong":     { "hex": "#4BA86A", "name": "Strong Sage", "range": "18-25" }
+      }
+    },
+    "6id": {
+      "surface": {
+        "page":      { "hex": "#F7F8FA", "name": "Soft Off-White" },
+        "card":      { "hex": "#FFFFFF", "name": "Pure Surface" },
+        "navy":      { "hex": "#0D1B3E", "name": "Deep Navy Anchor" },
+        "navySoft":  { "hex": "#142554", "name": "Navy Soft" }
+      },
+      "text": {
+        "primary":     { "hex": "#0D1B3E", "name": "Deep Navy Anchor" },
+        "body":        { "hex": "#1E1E2E", "name": "Near Black" },
+        "muted":       { "hex": "#6B7280", "name": "Slate Muted" },
+        "faint":       { "hex": "#9CA3AF", "name": "Faint Slate" },
+        "onNavy":      { "hex": "#FFFFFF", "name": "On Navy" },
+        "onNavyMuted": { "rgba": "rgba(255,255,255,0.72)", "name": "On Navy Muted" },
+        "onNavyFaint": { "rgba": "rgba(255,255,255,0.48)", "name": "On Navy Faint" }
+      },
+      "interactive": {
+        "action":        { "hex": "#1877F2", "name": "Electric Cobalt", "role": "Primary CTA" },
+        "actionHover":   { "hex": "#1466D4", "name": "Electric Cobalt Hover" },
+        "actionPress":   { "hex": "#1158B8", "name": "Electric Cobalt Press" },
+        "actionAlt":     { "hex": "#0EA5E9", "name": "Bright Teal Alt" },
+        "actionAltHover":{ "hex": "#0B8FCC", "name": "Bright Teal Alt Hover" }
+      },
+      "status": {
+        "danger":       { "hex": "#DC2626", "name": "Danger" },
+        "dangerHover":  { "hex": "#B91C1C", "name": "Danger Hover" },
+        "success":      { "hex": "#059669", "name": "Success" },
+        "successHover": { "hex": "#047857", "name": "Success Hover" },
+        "warning":      { "hex": "#B45309", "name": "Warning" }
+      },
+      "border": {
+        "hairline":  { "hex": "#ECEDF0", "name": "Navy 8% on White" },
+        "soft":      { "hex": "#E2E4E8", "name": "Navy 12% on White" },
+        "strong":    { "hex": "#D8DBE0", "name": "Navy 16% on White" },
+        "onNavy":    { "rgba": "rgba(255,255,255,0.12)", "name": "White Veil 12%" }
+      },
+      "identity": {
+        "signal":   { "hex": "#1B4FD8", "name": "Deep Cobalt",   "label": "01 Signal" },
+        "compass":  { "hex": "#D97706", "name": "Burnt Amber",   "label": "02 Compass" },
+        "sentinel": { "hex": "#0F766E", "name": "Forest Teal",   "label": "03 Sentinel" },
+        "anchor":   { "hex": "#6D28D9", "name": "Slate Violet",  "label": "04 Anchor" },
+        "momentum": { "hex": "#B45309", "name": "Warm Gold",     "label": "05 Momentum" },
+        "catalyst": { "hex": "#059669", "name": "Vivid Emerald", "label": "06 Catalyst" }
+      },
+      "identityWashes": {
+        "signal":   "#F2F5FE",
+        "compass":  "#FDF6EE",
+        "sentinel": "#EEF6F5",
+        "anchor":   "#F4F0FC",
+        "momentum": "#FCF5EB",
+        "catalyst": "#EDF7F2"
+      }
+    },
+    "etfframework": {
+      "brand": {
+        "forest":     { "hex": "#1A3D2B", "name": "Deep Forest" },
+        "forestMid":  { "hex": "#2D6A4F", "name": "Forest Mid" },
+        "forestDeep": { "hex": "#0F2A1D", "name": "Deepest Forest" }
+      },
+      "surface": {
+        "warmWhite": { "hex": "#FAFAF8", "name": "Warm White" },
+        "white":     { "hex": "#FFFFFF", "name": "Pure Surface" },
+        "stone":     { "hex": "#F2F1ED", "name": "Stone Band" }
+      },
+      "text": {
+        "charcoal":  { "hex": "#1C1C1E", "name": "Charcoal" },
+        "gray":      { "hex": "#6B7280", "name": "Slate" },
+        "grayLight": { "hex": "#9CA3AF", "name": "Faint Slate" }
+      },
+      "cta": {
+        "gold":       { "hex": "#B07B2A", "name": "Aged Brass" },
+        "goldHover":  { "hex": "#8E6321", "name": "Aged Brass Hover" },
+        "goldSoft":   { "hex": "#D4A859", "name": "Soft Brass" }
+      },
+      "status": {
+        "emerald":     { "hex": "#059669", "name": "Emerald" },
+        "emeraldSoft": { "hex": "#D1FAE5", "name": "Emerald Wash" },
+        "red":         { "hex": "#B91C1C", "name": "Deep Red" },
+        "redSoft":     { "hex": "#FEE2E2", "name": "Red Wash" },
+        "amber":       { "hex": "#D97706", "name": "Burnt Amber" }
+      },
+      "ecosystem": {
+        "navy":    { "hex": "#0D1B3E", "name": "Ecosystem Navy" },
+        "navyMid": { "hex": "#1E2D5C", "name": "Ecosystem Navy Mid" }
+      },
+      "border": {
+        "default":      { "hex": "#E5E7EB", "name": "Hairline" },
+        "strong":       { "hex": "#D1D5DB", "name": "Hairline Strong" },
+        "onDark":       { "rgba": "rgba(255,255,255,0.12)", "name": "White Veil 12%" }
+      }
+    }
+  },
+
+  "focusRings": {
+    "etfframework": { "color": "#B07B2A", "width": 3, "offset": 2, "shadow": "0 0 0 3px rgba(176,123,42,0.25)" },
+    "6id":          { "color": "#1877F2", "width": 3, "offset": 2, "shadow": "0 0 0 3px rgba(24,119,242,0.30)" },
+    "shared":       { "color": "#3A3632", "width": 2, "offset": 2, "shadow": "0 0 0 2px rgba(58,54,50,0.35)" }
+  },
+
+  "typography": {
+    "fonts": {
+      "body":    "'General Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+      "display": "'General Sans', Georgia, 'Times New Roman', serif",
+      "serif":   "'Source Serif 4', Georgia, serif",
+      "mono":    "'JetBrains Mono', Menlo, Monaco, Consolas, monospace"
+    },
+    "weights": [400, 500, 600],
+    "fluidScale": {
+      "xs":   { "clamp": "clamp(0.75rem, 0.094vw + 0.728rem, 0.8125rem)", "px": [12, 13] },
+      "sm":   { "clamp": "clamp(0.875rem, 0.188vw + 0.831rem, 1rem)",     "px": [14, 16] },
+      "base": { "clamp": "clamp(1rem, 0.188vw + 0.956rem, 1.125rem)",     "px": [16, 18] },
+      "lg":   { "clamp": "clamp(1.125rem, 0.563vw + 0.993rem, 1.5rem)",   "px": [18, 24] },
+      "xl":   { "clamp": "clamp(1.5rem, 1.127vw + 1.236rem, 2.25rem)",    "px": [24, 36] },
+      "2xl":  { "clamp": "clamp(2rem, 1.878vw + 1.560rem, 3.25rem)",      "px": [32, 52] }
+    },
+    "headings": {
+      "h1": { "class": "text-[clamp(1.875rem,1.2rem+2.4vw,2.75rem)]", "px": [30, 44], "tracking": "-0.03em", "lineHeight": 1.15 },
+      "h2": { "class": "text-[clamp(1.5rem,1.1rem+1.4vw,1.875rem)]",  "px": [24, 30], "tracking": null,      "lineHeight": 1.20 },
+      "h3": { "class": "text-[clamp(1.25rem,1rem+0.85vw,1.5rem)]",    "px": [20, 24], "tracking": null,      "lineHeight": 1.25 },
+      "h4": { "class": "text-[clamp(1rem,0.85rem+0.55vw,1.25rem)]",   "px": [16, 20], "tracking": null,      "lineHeight": 1.30 },
+      "h5": { "class": "text-[clamp(0.875rem,0.8rem+0.25vw,1rem)]",   "px": [14, 16], "tracking": null,      "lineHeight": 1.40 }
+    },
+    "display": {
+      "sm": { "class": "text-[clamp(40px,6vw,64px)]", "px": [40, 64], "tracking": "-0.04em", "lineHeight": 1.02 },
+      "md": { "class": "text-[clamp(48px,7vw,80px)]", "px": [48, 80], "tracking": "-0.04em", "lineHeight": 1.02 },
+      "lg": { "class": "text-[clamp(56px,8vw,96px)]", "px": [56, 96], "tracking": "-0.04em", "lineHeight": 1.02 }
+    },
+    "hero": {
+      "title":    { "class": "text-[clamp(1.75rem,1.2rem+2.5vw,3.25rem)]", "px": [28, 52], "tracking": "-0.02em", "lineHeight": 1.1 },
+      "subtitle": { "class": "text-[clamp(0.9375rem,0.875rem+0.25vw,1.125rem)]", "px": [15, 18], "lineHeight": 1.5 },
+      "eyebrow":  { "class": "text-[clamp(0.6875rem,0.65rem+0.1vw,0.75rem)]", "px": [11, 12], "weight": 600, "uppercase": true, "tracking": "0.1em" }
+    },
+    "kicker": { "class": "text-[clamp(0.75rem,0.188vw+0.706rem,0.875rem)]", "px": [12, 14], "weight": 700, "uppercase": true, "tracking": "0.08em" },
+    "statNumber": { "class": "text-[clamp(2rem,1.502vw+1.648rem,3rem)]", "px": [32, 48], "weight": 700, "lineHeight": 1.1, "feature": "tabular-nums" },
+    "perBundle": {
+      "6id": {
+        "philosophy": "1.25 major-third on 16px base, sans display, JetBrains Mono for eyebrow + data",
+        "scale": {
+          "display": { "px": 80, "lineHeight": 1.05, "weight": 600, "tracking": "-0.02em" },
+          "h1":      { "px": 52, "lineHeight": 1.05, "weight": 600, "tracking": "-0.02em" },
+          "h2":      { "px": 40, "lineHeight": 1.20, "weight": 600, "tracking": "-0.01em" },
+          "h3":      { "px": 32, "lineHeight": 1.20, "weight": 600 },
+          "h4":      { "px": 24, "lineHeight": 1.20, "weight": 600 },
+          "lead":    { "px": 18, "lineHeight": 1.60, "weight": 400 },
+          "body":    { "px": 16, "lineHeight": 1.60, "weight": 400 },
+          "small":   { "px": 14, "lineHeight": 1.45, "weight": 400 },
+          "eyebrow": { "px": 12, "lineHeight": 1.40, "weight": 500, "tracking": "0.12em", "uppercase": true, "font": "mono" },
+          "data":    { "px": 32, "lineHeight": 1.20, "weight": 500, "tracking": "-0.01em", "font": "mono" }
+        }
+      },
+      "etfframework": {
+        "philosophy": "Serif display ramp (Source Serif 4), sans body (General Sans)",
+        "scale": {
+          "display": { "px": 64, "lineHeight": 1.10, "weight": 600, "tracking": "-0.025em", "font": "serif" },
+          "h1":      { "px": 48, "lineHeight": 1.10, "weight": 600, "tracking": "-0.020em", "font": "serif" },
+          "h2":      { "px": 36, "lineHeight": 1.25, "weight": 600, "tracking": "-0.018em", "font": "serif" },
+          "h3":      { "px": 24, "lineHeight": 1.25, "weight": 600, "tracking": "-0.015em", "font": "serif" },
+          "h4":      { "px": 20, "lineHeight": 1.25, "weight": 600, "font": "serif" },
+          "bodyLg":  { "px": 18, "lineHeight": 1.65, "weight": 400, "font": "body" },
+          "body":    { "px": 16, "lineHeight": 1.65, "weight": 400, "font": "body" },
+          "small":   { "px": 14, "lineHeight": 1.50, "weight": 400, "font": "body" },
+          "eyebrow": { "px": 12, "lineHeight": 1.40, "weight": 600, "tracking": "0.14em", "uppercase": true, "font": "body" }
+        }
+      }
+    }
+  },
+
+  "spacing": {
+    "scale": [0, 4, 8, 12, 16, 20, 24, 32, 40, 48, 56, 64, 80, 96, 120],
+    "fluid": {
+      "sectionY":   { "clamp": "clamp(3rem, 4.507vw + 1.944rem, 6rem)", "px": [48, 96] },
+      "sectionX":   { "clamp": "clamp(1.25rem, 5.634vw - 0.071rem, 5rem)", "px": [20, 80] },
+      "card":       { "clamp": "clamp(1rem, 1.502vw + 0.648rem, 2rem)", "px": [16, 32] },
+      "gapMd":      { "clamp": "clamp(1rem, 1.502vw + 0.648rem, 2rem)", "px": [16, 32] },
+      "gapSection": { "clamp": "clamp(3rem, 4.507vw + 1.944rem, 6rem)", "px": [48, 96] }
+    },
+    "container": "min(100% - 2rem, 72rem)",
+    "widths": {
+      "6id":          { "marketing": 1200, "app": 1040, "reading": 640 },
+      "etfframework": { "container": 1200, "navHeight": 72 }
+    }
+  },
+
+  "radii": {
+    "shared":       { "none": 0, "sm": 4, "md": 8,  "lg": 12, "xl": 20 },
+    "6id":          { "sm": 6,  "md": 10, "lg": 14, "xl": 20, "pill": 999 },
+    "etfframework": { "sm": 4,  "md": 6,  "lg": 10, "pill": 999 }
+  },
+
+  "controlHeights": { "sm": 32, "md": 40, "lg": 48, "touch": 44 },
+
+  "breakpoints": { "base": 0, "sm": 640, "md": 768, "lg": 1024, "xl": 1280 },
+
+  "elevation": {
+    "philosophy": "hairline-borders-default-overlay-shadow-only",
+    "tiers": {
+      "surface":   { "z": 0, "shadow": "none" },
+      "container": { "z": 1, "shadow": "none", "border": "hairline" },
+      "overlay":   { "z": 2, "shadow": "navy-tinted-md" }
+    },
+    "shadows": {
+      "blueprint": {
+        "none":    "none",
+        "subtle":  "0 1px 3px rgba(0,0,0,0.04)",
+        "overlay": "0 8px 24px rgba(58,54,50,0.12)"
+      },
+      "6id": {
+        "xs": "0 1px 2px rgba(13,27,62,0.06)",
+        "sm": "0 2px 4px rgba(13,27,62,0.06), 0 1px 2px rgba(13,27,62,0.04)",
+        "md": "0 6px 16px rgba(13,27,62,0.08), 0 2px 4px rgba(13,27,62,0.04)",
+        "lg": "0 16px 32px rgba(13,27,62,0.10), 0 4px 8px rgba(13,27,62,0.04)",
+        "xl": "0 28px 56px rgba(13,27,62,0.14), 0 8px 16px rgba(13,27,62,0.06)"
+      },
+      "etfframework": {
+        "sm":    "0 1px 2px rgba(13,27,62,0.06)",
+        "md":    "0 4px 12px rgba(13,27,62,0.08)",
+        "lg":    "0 16px 40px rgba(13,27,62,0.12)",
+        "focus": "0 0 0 3px rgba(176,123,42,0.25)"
+      },
+      "deprecated": {
+        "note": "SHADOW_TOKENS warm-tinted ramp retained for v1.x binary compatibility. Migrate to BLUEPRINT_SHADOWS or bundle-specific ramp."
+      }
+    }
+  },
+
+  "motion": {
+    "philosophy": "restrained",
+    "durations": { "fast": 120, "base": 180, "slow": 280, "reveal": 600 },
+    "impeccable": {
+      "ease": "cubic-bezier(0.22, 1, 0.36, 1)",
+      "durations": { "fast": "160ms", "base": "320ms", "slow": "560ms" },
+      "keyframesAllowlist": ["fadeSlide", "textRise", "fadeUp"]
+    },
+    "perBundle": {
+      "6id": {
+        "fast": 150, "base": 200, "slow": 350, "reveal": 600,
+        "easeOut": "cubic-bezier(0.2, 0, 0, 1)",
+        "easeStd": "cubic-bezier(0.4, 0, 0.2, 1)"
+      },
+      "etfframework": {
+        "fast": 120, "base": 180, "slow": 280, "counter": 600,
+        "ease": "cubic-bezier(0.2, 0, 0, 1)"
+      }
+    },
+    "rules": {
+      "animateProperties": ["transform", "opacity"],
+      "neverAnimate": ["width", "height", "padding", "margin"],
+      "collapseHeight": "use grid-template-rows",
+      "easings": "exponential easeOut only — no bounce, no elastic",
+      "loadingSpinners": false,
+      "scrollLinkedAnimations": false,
+      "respectsPrefersReducedMotion": true
+    }
+  },
+
+  "components": {
+    "server": {
+      "Card":            { "padding": 16, "radius": 8, "tone": "default", "border": true, "shadow": "none", "polymorphic": true },
+      "ServerHeading":   { "levels": [1, 2, 3, 4], "weights": ["bold", "semibold"], "fluid": true },
+      "ServerText":      { "variants": ["body", "secondary", "muted", "eyebrow", "caption"] },
+      "Hero":            { "split": false, "level": 1, "padding": "fluid 40-80", "gap": "fluid 24-32" },
+      "NoticeCard":      { "padding": "fluid 12-20", "radius": 8, "leftStripe": false, "tones": ["urgent","caution","info","success","neutral","locked","loading"] },
+      "Stat":            { "valueClass": "STAT_NUMBER_CLASS", "labelClass": "KICKER_CLASS" },
+      "Stack":           { "direction": "vertical", "gap": "spacing-key" },
+      "Cluster":         { "direction": "horizontal", "gap": "spacing-key" },
+      "SectionWrapper":  { "py": "fluid 48-96", "px": "fluid 20-80" },
+      "IconBadge":       { "tone": "status" },
+      "Eyebrow":         { "color": "accent", "uppercase": true, "tracking": "0.1em" },
+      "Kicker":          { "class": "KICKER_CLASS" },
+      "EmptyState":      { "centered": true, "tone": "neutral" }
+    },
+    "client": {
+      "BrandCta":       { "weight": ["standard", "editorial"], "size": ["middle", "large"], "icon": "ArrowRightOutlined" },
+      "CtaSection":     { "layouts": ["stacked", "inline", "responsive"] },
+      "SectionHeader":  { "fluid": true },
+      "StatusBadge":    { "variants": ["pill", "subtle", "text-only"], "sizes": ["sm", "md"], "dot": "optional" },
+      "ScoreBar":       { "colors": "SCORE_COLORS", "revealStagger": "60ms", "revealDuration": "400ms" },
+      "MetricPanel":    { "tiers": ["icon", "label", "value"] },
+      "SkeletonCard":   { "matches": "Card" },
+      "LockedGate":     { "overlay": true },
+      "LoadingState":   { "spinner": false, "textFirst": true }
+    },
+    "antdOverrides": {
+      "shared": {
+        "Button": { "borderRadius": 9999, "controlHeight": 44, "controlHeightLG": 52, "paddingInline": 28, "fontWeight": 600 },
+        "Card":   { "borderRadiusLG": 12, "paddingLG": 32 },
+        "Input":  { "borderRadius": 8, "controlHeight": 44, "paddingInline": 16 },
+        "Modal":  { "borderRadiusLG": 12 },
+        "note":   "Pill button radius is legacy default; bundle overrides authoritative."
+      },
+      "6id": {
+        "Button":     { "borderRadius": 10, "controlHeight": 44, "controlHeightLG": 52, "paddingInline": 24, "fontWeight": 600 },
+        "Card":       { "borderRadiusLG": 14, "paddingLG": 24 },
+        "Input":      { "borderRadius": 10, "controlHeight": 44, "paddingInline": 16 },
+        "Modal":      { "borderRadiusLG": 20 },
+        "Menu":       { "itemBorderRadius": 6 },
+        "Tabs":       { "inkBarColor": "#1877F2", "itemActiveColor": "#0D1B3E", "itemSelectedColor": "#0D1B3E" },
+        "Progress":   { "defaultColor": "#1877F2" }
+      },
+      "etfframework": {
+        "Button":     { "borderRadius": 6, "controlHeight": 48, "controlHeightLG": 56, "controlHeightSM": 36, "paddingInline": 22, "fontWeight": 600, "primaryShadow": "sm" },
+        "Card":       { "borderRadiusLG": 10, "paddingLG": 32 },
+        "Input":      { "borderRadius": 6, "controlHeight": 48, "paddingInline": 14 },
+        "Modal":      { "borderRadiusLG": 10 },
+        "Menu":       { "itemBorderRadius": 4 },
+        "Tabs":       { "inkBarColor": "#B07B2A", "itemActiveColor": "#0F2A1D", "itemSelectedColor": "#0F2A1D" },
+        "Progress":   { "defaultColor": "#B07B2A" }
+      }
+    }
+  },
+
+  "icons": {
+    "library": "@ant-design/icons",
+    "variant": "Outlined",
+    "banned": ["Lucide", "Phosphor", "Font Awesome", "Material Icons", "@ant-design/icons TwoTone"]
+  },
+
+  "characterAxes": {
+    "buttons": "per-bundle: 6id rounded 10px / etfframework subtle 6px; no new pill buttons",
+    "inputs": "subtle 6-10px radius, 44-48px tall",
+    "cards": "hairline border, 10-14px radius per bundle, no shadow",
+    "motion": "restrained 120-180ms, easeOut, reveals only at earned moments"
+  },
+
+  "rules": {
+    "absoluteBans": {
+      "leftRightStripeBorder": "border-left or border-right > 1px on cards/lists/callouts/alerts",
+      "gradientText": "background-clip: text + gradient background",
+      "gradients": "linear, radial, mesh, conic on any surface",
+      "glassmorphism": "backdrop-filter blur, glass cards, decorative glow borders",
+      "dropShadowsOnCards": "Cards stay flat; shadow reserved for overlay tier",
+      "stockPhotography": "ever",
+      "loadingSpinners": "use text",
+      "scrollLinkedAnimations": "ban",
+      "rainbowDataViz": "score uses single bundle accent at varying opacity",
+      "moralColorCoding": "no red-bad/green-good on score values",
+      "pureBlackOrWhite": "always tint toward bundle hue"
+    },
+    "headlineDiscipline": "exactly one accent-color word per headline",
+    "trademarkDiscipline": "mark trademarks on first use per page; subsequent occurrences unmarked",
+    "brandBibleConflicts": {
+      "blueShade": "brand-bible specifies #2D5BFF; implementation uses #1877F2 (Electric Cobalt) — implementation is canonical for code today",
+      "signalYellow": "brand-bible specifies #F5C518; not exported in tokens — do not introduce ad-hoc",
+      "buttonRadius": "brand-bible specifies 4px sharp; implementation ships 10px (6id) / 6px (etf) — implementation is canonical",
+      "shadowBan": "brand-bible bans drop shadows; implementation uses shadow on overlay tier only — DESIGN.md locks at overlay-only"
+    }
+  }
+}
