@@ -1,10 +1,10 @@
 import 'server-only';
 import type { GenerateDraftInput, SeoDraft } from './types';
 import { SeoDraftError } from './types';
-import { chat, resolveModel } from './groq-client';
+import { generateGeminiCompletion, resolveGeminiModel } from './gemini-client';
 import { build6idDraftPrompt } from './prompts/6id-draft';
 import { buildEtfDraftPrompt } from './prompts/etf-draft';
-import { validateDraftShape, DRAFT_JSON_SCHEMA } from './validate';
+import { validateDraftShape, GEMINI_DRAFT_SCHEMA } from './validate';
 
 function defaultMinCitations(brand: GenerateDraftInput['brand'], override?: number): number {
   if (typeof override === 'number') return Math.max(0, override);
@@ -12,8 +12,8 @@ function defaultMinCitations(brand: GenerateDraftInput['brand'], override?: numb
 }
 
 export async function generateDraft(input: GenerateDraftInput): Promise<SeoDraft> {
-  if (!process.env.GROQ_API_KEY) {
-    throw new SeoDraftError('GROQ_API_KEY is not set');
+  if (!process.env.GEMINI_API_KEY) {
+    throw new SeoDraftError('GEMINI_API_KEY is not set');
   }
   const minCitations = defaultMinCitations(input.brand, input.minCitations);
   const effectiveInput: GenerateDraftInput = { ...input, minCitations };
@@ -22,11 +22,11 @@ export async function generateDraft(input: GenerateDraftInput): Promise<SeoDraft
       ? buildEtfDraftPrompt(effectiveInput)
       : build6idDraftPrompt(effectiveInput);
 
-  const { content, model } = await chat({
+  const { content, model } = await generateGeminiCompletion({
     system,
     user,
-    model: resolveModel(input.model),
-    jsonSchema: { name: 'seo_draft', schema: DRAFT_JSON_SCHEMA },
+    model: resolveGeminiModel(input.model),
+    responseSchema: GEMINI_DRAFT_SCHEMA,
   });
 
   let parsed: unknown;
@@ -37,10 +37,13 @@ export async function generateDraft(input: GenerateDraftInput): Promise<SeoDraft
   }
 
   if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
-    (parsed as Record<string, unknown>).model = model;
-    if (!(parsed as Record<string, unknown>).generatedAt) {
-      (parsed as Record<string, unknown>).generatedAt = new Date().toISOString();
-    }
+    const obj = parsed as Record<string, unknown>;
+    obj.model = model;
+    if (!obj.generatedAt) obj.generatedAt = new Date().toISOString();
+    // jsonLd is no longer LLM-produced. Initialize to {} so the SeoDraft
+    // shape is satisfied; the brand adapter overwrites this deterministically
+    // before persistence.
+    obj.jsonLd = {};
   }
 
   return validateDraftShape(parsed, { brand: input.brand, minCitations }, content);

@@ -3,7 +3,8 @@
  *
  * Server-only consumers: API routes, cron handlers, server actions.
  * Never import from a `'use client'` file — this surface depends on
- * `groq-sdk`, `jose`, and (optionally) `@react-email/*` + `resend`.
+ * `@google/genai`, `groq-sdk`, `jose`, and (optionally) `@react-email/*`
+ * + `resend`.
  */
 
 export type Brand = '6id' | 'etf';
@@ -29,6 +30,12 @@ export interface SeoDraft {
   metaDescription: string;
   slug: string;
   bodyMarkdown: string;
+  /**
+   * Adapter-built schema.org JSON-LD. The LLM no longer produces this —
+   * `generate-draft` initializes it to `{}` and the brand adapter
+   * (`enrichJsonLd` for ETF, `enrich6idJsonLd` for 6id) overwrites it
+   * with a deterministic shape before persistence.
+   */
   jsonLd: Record<string, unknown>;
   citations: Citation[];
   sources: SourceMeta[];
@@ -42,6 +49,8 @@ export interface GenerateDraftInput {
   topic: string;
   targetKeywords?: string[];
   audienceNotes?: string;
+  /** Optional inline-formatted evidence string injected into the user prompt. */
+  evidence?: string;
   minCitations?: number;
   model?: string;
 }
@@ -85,6 +94,25 @@ export type SendApprovalEmailResult =
 export interface DraftPromptParts {
   system: string;
   user: string;
+}
+
+export type LintCategory =
+  | 'kill_list'
+  | 'sentence_too_long'
+  | 'paragraph_too_long'
+  | 'missing_section'
+  | 'missing_citation'
+  | 'missing_trademark'
+  | 'missing_athlete_link';
+
+export interface LintWarning {
+  category: LintCategory;
+  message: string;
+  evidence?: string;
+}
+
+export interface LintReport {
+  warnings: LintWarning[];
 }
 
 export class SeoDraftError extends Error {
