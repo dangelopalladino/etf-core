@@ -21,6 +21,7 @@ export type ProductType =
   | 'way_forward_money'
   // Books
   | 'book_motion'
+  | 'book_motion_bump'
   | 'book_understanding_the_crash'
   | 'book_family_playbook'
   | 'book_family_bundle'
@@ -58,7 +59,10 @@ export const PRICE_MAP: Record<ProductType, PriceEntry> = {
   way_forward_body:          { envVar: 'STRIPE_PRICE_WAY_FORWARD_BODY',           amountUsd: 2.99,  mode: 'payment' },
   way_forward_money:         { envVar: 'STRIPE_PRICE_WAY_FORWARD_MONEY',          amountUsd: 2.99,  mode: 'payment' },
 
-  book_motion:                  { envVar: 'STRIPE_PRICE_BOOK_MOTION',            amountUsd: 19.99, mode: 'payment' },
+  book_motion:                  { envVar: 'STRIPE_PRICE_BOOK_MOTION',            amountUsd: 9.99,  mode: 'payment' },
+  // Checkout-only order-bump SKU offered alongside Core Code Archetype (premium_results).
+  // Never sold on a standalone product page — must only appear as a checkout add-on.
+  book_motion_bump:             { envVar: 'STRIPE_PRICE_BOOK_MOTION_BUMP',       amountUsd: 7.99,  mode: 'payment' },
   // Both checkout routes use STRIPE_PRICE_BOOK_UTC (not STRIPE_PRICE_BOOK_UNDERSTANDING_CRASH).
   book_understanding_the_crash: { envVar: 'STRIPE_PRICE_BOOK_UTC',               amountUsd: 9.99,  mode: 'payment' },
   book_family_playbook:         { envVar: 'STRIPE_PRICE_BOOK_FAMILY_PLAYBOOK',   amountUsd: 9.99,  mode: 'payment' },
@@ -87,6 +91,7 @@ export function resolvePriceId(productType: ProductType): string | null {
 
 export const BOOK_PRODUCT_TYPES = new Set<ProductType>([
   'book_motion',
+  'book_motion_bump',
   'book_understanding_the_crash',
   'book_family_playbook',
   'book_family_bundle',

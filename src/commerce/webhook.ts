@@ -261,6 +261,46 @@ async function handleCheckoutCompleted(
     }
   }
 
+  // Order-bump fulfillment. Sites pass `metadata.bumpProductType` when a
+  // checkout-only add-on (e.g. `book_motion_bump` alongside `premium_results`)
+  // is included as a second line item. We record a second purchase row and
+  // fulfill the bump as a book.
+  const bumpProductType = metadata.bumpProductType || null;
+  if (
+    bumpProductType &&
+    BOOK_PRODUCT_TYPES.has(bumpProductType as never) &&
+    customerEmail
+  ) {
+    const { error: bumpInsertErr } = await supabase.from('purchases').insert([
+      {
+        email: customerEmail,
+        product: bumpProductType,
+        stripe_session_id: session.id,
+        assessment_id: assessmentId,
+        origin_site: originSite,
+        cohort,
+      },
+    ]);
+    if (bumpInsertErr) {
+      console.error('🔴 Failed to save bump purchase to Supabase:', bumpInsertErr);
+    } else {
+      console.log(`✅ Recorded bump purchase for ${customerEmail} (product: ${bumpProductType})`);
+    }
+
+    try {
+      const result = await sendBookFulfillmentEmail({
+        email: customerEmail,
+        productKey: bumpProductType as BookProductType,
+      });
+      if (result.error) {
+        console.error(`🔴 Bump fulfillment failed for ${customerEmail}:`, result.error);
+      }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      console.error(`🔴 Bump fulfillment threw for ${customerEmail}:`, msg);
+    }
+  }
+
   return { ok: true, status: 'processed' };
 }
 

@@ -197,10 +197,25 @@ export function getBookBySlug(slug: string): BookContent | null {
 
 export const BOOK_PRODUCT_NAMES: Record<string, string> = {
   book_motion: 'Motion — Volume 1',
+  book_motion_bump: 'Motion — Volume 1',
   book_understanding_the_crash: 'Understanding the Crash',
   book_family_playbook: 'The Family Playbook',
   book_family_bundle: 'Family Bundle (Understanding the Crash + The Family Playbook)',
 };
+
+/**
+ * Maps checkout-only bump SKUs to the canonical book they fulfill.
+ * `book_motion_bump` grants the same PDF as `book_motion` — the bump is a
+ * pricing variant, not a separate product. Fulfillment, entitlements, and
+ * download resolution all dereference through this map.
+ */
+export const BOOK_PRODUCT_ALIASES: Partial<Record<BookProductType, BookProductType>> = {
+  book_motion_bump: 'book_motion',
+};
+
+export function resolveBookProductKey(productKey: BookProductType): BookProductType {
+  return BOOK_PRODUCT_ALIASES[productKey] ?? productKey;
+}
 
 // `BOOK_PRODUCT_TYPES` lives in `commerce/priceMap.ts` (canonical Stripe ledger).
 // Re-exported here for content-side consumers that prefer to import from

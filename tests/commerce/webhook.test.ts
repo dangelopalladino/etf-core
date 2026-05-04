@@ -201,6 +201,54 @@ describe('handleStripeEvent', () => {
     expect((purchaseInsert?.payload as any[])[0].origin_site).toBe('etfframework');
   });
 
+  it('records a second purchase row and fulfills the bump when bumpProductType is set', async () => {
+    const supabase = makeSupabaseMock();
+    const event: Stripe.Event = {
+      id: 'evt_bump',
+      type: 'checkout.session.completed',
+      data: { object: {
+        id: 'sess_bump',
+        metadata: {
+          productType: 'premium_results',
+          bumpProductType: 'book_motion_bump',
+          origin_site: '6identities',
+        },
+        customer_details: { email: 'buyer@example.com' },
+      } as Stripe.Checkout.Session },
+    } as never;
+    const result = await handleStripeEvent(event, supabase, { stripe: stripeMock });
+    expect(result.ok).toBe(true);
+    const purchaseInserts = supabase._calls.filter(
+      (c: any) => c.table === 'purchases' && c.op === 'insert'
+    );
+    expect(purchaseInserts).toHaveLength(2);
+    const products = purchaseInserts.map((c: any) => c.payload[0].product);
+    expect(products).toContain('premium_results');
+    expect(products).toContain('book_motion_bump');
+  });
+
+  it('ignores bumpProductType when it is not a known book product', async () => {
+    const supabase = makeSupabaseMock();
+    const event: Stripe.Event = {
+      id: 'evt_bad_bump',
+      type: 'checkout.session.completed',
+      data: { object: {
+        id: 'sess_bad_bump',
+        metadata: {
+          productType: 'premium_results',
+          bumpProductType: 'not_a_real_product',
+          origin_site: '6identities',
+        },
+        customer_details: { email: 'buyer@example.com' },
+      } as Stripe.Checkout.Session },
+    } as never;
+    await handleStripeEvent(event, supabase, { stripe: stripeMock });
+    const purchaseInserts = supabase._calls.filter(
+      (c: any) => c.table === 'purchases' && c.op === 'insert'
+    );
+    expect(purchaseInserts).toHaveLength(1);
+  });
+
   it('rejects non-soft-launch cohort metadata as null', async () => {
     const supabase = makeSupabaseMock();
     const event: Stripe.Event = {
