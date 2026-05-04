@@ -1,6 +1,6 @@
 import 'server-only';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
-import { BOOKS, type BookContent } from '../content/books';
+import { BOOKS, resolveBookProductKey, type BookContent } from '../content/books';
 import { issueDownloadToken } from './download-tokens';
 
 /**
@@ -121,7 +121,8 @@ export async function resolveBookDownloads(
   email: string,
   origin?: string
 ): Promise<BookDownload[]> {
-  const book = Object.values(BOOKS).find((b) => b.productKey === productKey);
+  const canonicalKey = resolveBookProductKey(productKey);
+  const book = Object.values(BOOKS).find((b) => b.productKey === canonicalKey);
   if (!book) return [];
 
   const resolveOne = async (
@@ -147,7 +148,9 @@ export async function resolveBookDownloads(
     return results.filter((r): r is BookDownload => r !== null);
   }
 
-  const one = await resolveOne(productKey, book.title);
+  // Bump SKUs alias to a canonical book's PDF — issue tokens against the
+  // canonical key so storage paths and entitlement checks line up.
+  const one = await resolveOne(canonicalKey, book.title);
   return one ? [one] : [];
 }
 
@@ -168,6 +171,11 @@ export async function hasBookEntitlement(
   const owned = data.map((p: { product: string }) => p.product);
 
   if (owned.includes(productKey)) return true;
+
+  // Bump SKUs grant the canonical book they alias.
+  if (productKey === 'book_motion' && owned.includes('book_motion_bump')) {
+    return true;
+  }
 
   if (owned.includes('book_family_bundle')) {
     if (

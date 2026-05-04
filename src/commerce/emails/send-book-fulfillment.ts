@@ -3,6 +3,7 @@ import { Resend } from 'resend';
 import {
   BOOKS,
   BOOK_PRODUCT_NAMES,
+  resolveBookProductKey,
   type BookContent,
 } from '../../content/books';
 import { resolveBookDownloads } from '../downloads';
@@ -74,7 +75,8 @@ export async function sendBookFulfillmentEmail(opts: {
     return { error: 'Missing email address' };
   }
 
-  const book = Object.values(BOOKS).find((b) => b.productKey === productKey);
+  const canonicalKey = resolveBookProductKey(productKey);
+  const book = Object.values(BOOKS).find((b) => b.productKey === canonicalKey);
   if (!book) {
     return { error: `Unknown productKey: ${productKey}` };
   }

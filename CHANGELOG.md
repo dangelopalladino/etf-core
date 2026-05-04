@@ -11,6 +11,40 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html):
 
 ## [Unreleased]
 
+### Added — Motion order-bump SKU (release boundary for 6id Step 7)
+
+Adds the etf-core release boundary 6identities.com needs before it can wire the
+checkout-only Motion order bump alongside Core Code Archetype (`premium_results`).
+
+- **New `ProductType`: `book_motion_bump`** (`src/commerce/priceMap.ts`) — env
+  `STRIPE_PRICE_BOOK_MOTION_BUMP`, `$7.99`, mode `payment`. Added to
+  `BOOK_PRODUCT_TYPES` so it routes through the existing book fulfillment path.
+  This is a **checkout-only SKU** — it must never have a standalone product
+  page; it only appears as a Stripe Checkout add-on.
+- **`book_motion` price corrected** from `$19.99` → `$9.99` to match the
+  canonical price in `src/content/books.ts` (`BOOKS.motion.price`). Stripe is
+  the source of truth at runtime; this fixes a documentation drift in the
+  ledger only.
+- **Content alias layer** (`src/content/books.ts`) — `BOOK_PRODUCT_ALIASES` and
+  `resolveBookProductKey()` map bump SKUs to the canonical book they fulfill.
+  `book_motion_bump` → `book_motion`. Fulfillment, download resolution, and
+  entitlement checks all dereference through this map so the bump grants the
+  same PDF without duplicating book content.
+- **Webhook bump branch** (`src/commerce/webhook.ts`) — when
+  `session.metadata.bumpProductType` is set and is a member of
+  `BOOK_PRODUCT_TYPES`, the handler inserts a second `purchases` row for the
+  bump and dispatches book fulfillment for it, in addition to the primary
+  product fulfillment. Sites integrate by passing the bump as a second line
+  item plus `metadata.bumpProductType` on the same Checkout Session.
+- **Entitlement crossover** (`src/commerce/downloads.ts`) — `hasBookEntitlement`
+  treats a `book_motion_bump` purchase as granting `book_motion`.
+- **Tests** — two new `webhook.test.ts` cases cover (a) the bump path inserting
+  a second purchase row + triggering fulfillment, and (b) an unknown
+  `bumpProductType` being ignored without inserting a phantom row.
+
+Purely additive. No breaking changes. Sites pick up the boundary by bumping to
+this minor and consuming `book_motion_bump` from `priceMap.ts`.
+
 ### Changed — v1.11 ratchet completion + non-UI consistency sweep (v1.11.1 candidate)
 
 Closes the gaps left by the v1.11.0 release. The off-grid + hex sweep was correct in intent but its enforcement layer (the new ESLint regex selectors) was over-escaped — the rules silently matched literal `\s` / `\b` / `\[` / `\]` instead of whitespace / word-boundary / bracket characters, so every selector was effectively a no-op. v1.11.1 corrects the escaping, extends the migrated-primitive allowlist to the five audit-clean primitives v1.11.0 left out, finishes the mixed-step spacing sweep across the remaining ladders, and applies the same v1.11 token discipline to non-UI surfaces (commerce email templates, seo-automation email template, webhook).
