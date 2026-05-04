@@ -234,7 +234,7 @@ function splitSentences(paragraph: string): string[] {
   // false positives on common abbreviations because we don't enforce
   // anything that depends on exact sentence count besides "is this single
   // sentence too long".
-  return flat.split(/(?<=[.!?])\s+(?=[A-Z0-9"“(\[])/);
+  return flat.split(/(?<=[.!?])\s+(?=[A-Z0-9"“([])/);
 }
 
 function wordCount(s: string): number {
