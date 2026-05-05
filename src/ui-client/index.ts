@@ -12,3 +12,7 @@ export { SkeletonCard } from './SkeletonCard';
 export type { SkeletonCardProps } from './SkeletonCard';
 export { LockedGate } from './LockedGate';
 export type { LockedGateProps } from './LockedGate';
+
+// v1.13 additive — embedded Stripe Checkout mount.
+export { EmbeddedCheckout } from './EmbeddedCheckout';
+export type { EmbeddedCheckoutProps } from './EmbeddedCheckout';

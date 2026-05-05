@@ -11,6 +11,51 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html):
 
 ## [Unreleased]
 
+### Added — Embedded Stripe Checkout support (release boundary for both sites)
+
+Both consumer sites (6identities.com, etfframework.com) migrated their
+`/api/checkout` route from the hosted Stripe redirect (`session.url`) to
+**embedded checkout** (`ui_mode: 'embedded_page'`, response
+`{ clientSecret, sessionId }`, inline `<EmbeddedCheckout>` mount on a
+`/checkout` page, post-payment `/checkout/return` route). This release adds the
+shared contract — types, a thin server helper, and a client mount — that both
+sites consume.
+
+- **New module `@dangelopalladino/etf-core/commerce/checkout`** — server-only.
+  Exports:
+  - `EmbeddedCheckoutSessionResponse` and `CheckoutErrorResponse` types — the
+    canonical shape both sites' `/api/checkout` routes return.
+  - `CheckoutSessionStatus` — normalized subset of session fields the
+    `/checkout/return` page consults.
+  - `createEmbeddedCheckoutSession(stripe, params)` — thin wrapper that forces
+    `ui_mode: 'embedded_page'` and `return_url`, passes everything else
+    through, and returns `{ clientSecret, sessionId }`. Sites stay in charge
+    of price resolution, line-item shape, optional items (order bumps),
+    test-mode `price_data`, and metadata composition.
+  - `retrieveCheckoutSessionStatus(stripe, sessionId)` — return-page helper.
+  - `buildEmbeddedReturnUrl(siteUrl)` — centralizes the literal
+    `/checkout/return?session_id={CHECKOUT_SESSION_ID}` URL pattern.
+- **New client component `@dangelopalladino/etf-core/ui-client` →
+  `EmbeddedCheckout`** — wraps Stripe's `<EmbeddedCheckoutProvider>` +
+  `<EmbeddedCheckout>` with a memoized `loadStripe` cache (one promise per
+  publishable key, per page lifetime). Sites pass `publishableKey` + the
+  `clientSecret` they fetched from `/api/checkout`.
+- **Webhook (`commerce/webhook`) is unchanged.** Embedded sessions emit the
+  same `checkout.session.completed` and subscription lifecycle events as
+  hosted sessions; no changes were required.
+- **`PRICE_MAP` is unchanged.** All existing 6id and ETF SKUs (Way Forward
+  modules, Practitioner Credits, Extra Assessment Links, Implementer License,
+  books, premium results, etc.) already exist in the canonical price map and
+  work with embedded sessions as-is.
+
+Sites that consume the new module also need `@stripe/stripe-js` (≥4) and
+`@stripe/react-stripe-js` (≥3) installed. They are intentionally **not**
+declared as peer dependencies of etf-core because non-checkout consumers
+(brand, tokens, analytics) shouldn't have to install the Stripe browser SDK.
+
+Purely additive. No breaking changes. Downstream sites bump their
+`@dangelopalladino/etf-core` dependency to pick up the new module.
+
 ### Added — Motion order-bump SKU (release boundary for 6id Step 7)
 
 Adds the etf-core release boundary 6identities.com needs before it can wire the
