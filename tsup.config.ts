@@ -16,6 +16,8 @@ const sharedExternal = [
   'groq-sdk',
   '@react-email/components',
   '@react-email/render',
+  '@stripe/stripe-js',
+  '@stripe/react-stripe-js',
 ];
 
 const sharedBase = {
@@ -49,6 +51,7 @@ export default defineConfig([
       'commerce/index':       'src/commerce/index.ts',
       'commerce/webhook':     'src/commerce/webhook.ts',
       'commerce/priceMap':    'src/commerce/priceMap.ts',
+      'commerce/checkout':    'src/commerce/checkout.ts',
       'analytics/index':      'src/analytics/index.ts',
       'seo/index':            'src/seo/index.ts',
       'seo-automation/index': 'src/seo-automation/index.ts',
