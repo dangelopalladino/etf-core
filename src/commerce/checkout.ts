@@ -30,10 +30,23 @@ export interface CheckoutErrorResponse {
   error: string;
 }
 
+/**
+ * Stripe Checkout Session status values. Inlined as a string-literal union
+ * rather than referenced via `Stripe.Checkout.Session.Status` so that the
+ * emitted `.d.ts` doesn't depend on the consumer's installed stripe types
+ * resolving namespace lookups identically to ours during their `prepare`
+ * lifecycle (this caused downstream DTS bundling failures pre-1.14.2).
+ */
+export type CheckoutSessionStatusValue = 'complete' | 'expired' | 'open';
+export type CheckoutSessionPaymentStatusValue =
+  | 'no_payment_required'
+  | 'paid'
+  | 'unpaid';
+
 /** Subset of session fields the `/checkout/return` page consults. */
 export interface CheckoutSessionStatus {
-  status: Stripe.Checkout.Session.Status | null;
-  paymentStatus: Stripe.Checkout.Session.PaymentStatus | null;
+  status: CheckoutSessionStatusValue | null;
+  paymentStatus: CheckoutSessionPaymentStatusValue | null;
   metadata: Record<string, string> | null;
 }
 
@@ -102,8 +115,9 @@ export async function retrieveCheckoutSessionStatus(
 ): Promise<CheckoutSessionStatus> {
   const session = await stripe.checkout.sessions.retrieve(sessionId);
   return {
-    status: session.status ?? null,
-    paymentStatus: session.payment_status ?? null,
+    status: (session.status as CheckoutSessionStatusValue | null) ?? null,
+    paymentStatus:
+      (session.payment_status as CheckoutSessionPaymentStatusValue | null) ?? null,
     metadata: (session.metadata as Record<string, string> | null) ?? null,
   };
 }
