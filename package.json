@@ -112,6 +112,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
+    "prepare": "npm run build",
     "prepublishOnly": "npm run clean && npm run build",
     "e2e:cross-site": "playwright test",
     "dev:etf": "cd ../etfframework && npm run dev",
