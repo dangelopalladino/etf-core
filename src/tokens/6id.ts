@@ -59,28 +59,35 @@ export const SIX_ID_COLORS = {
 // ─── Identity Type Colors — saturated badge palette ────────────────────────
 // Used ONLY inside the type system (cards, badges, result screens).
 // Never leak into nav, body text, or chrome.
+//
+// Canonical naming per ETFtestSite/AGENTS.md §5 (Brand Palette Reference):
+// the fifth identity is `mirage` (MI · warm gold). `momentum` is kept as a
+// backward-compat alias of the legacy v1 name; do not remove until all
+// consumers (etfframework, ETFtestSite, etf-admin) drop the import.
 export const IDENTITY_COLORS = {
   signal:   '#1B4FD8',   // 01 · Deep cobalt    — direction
   compass:  '#D97706',   // 02 · Burnt amber    — drive
   sentinel: '#0F766E',   // 03 · Forest teal    — resilience
   anchor:   '#6D28D9',   // 04 · Slate violet   — introspection
-  momentum: '#B45309',   // 05 · Warm gold      — achievement
+  mirage:   '#B45309',   // 05 · Warm gold      — achievement
   catalyst: '#059669',   // 06 · Vivid emerald  — growth
-  mirage:   '#B45309',   // kept for backward compat (alias of momentum)
+  momentum: '#B45309',   // legacy v1 alias of `mirage` — do not remove yet
 } as const;
 
-/** Canonical identity type keys (excludes legacy `mirage` alias). */
-export type IdentityTypeKey = Exclude<keyof typeof IDENTITY_COLORS, 'mirage'>;
+/** Canonical identity type keys (excludes legacy `momentum` alias). */
+export type IdentityTypeKey = Exclude<keyof typeof IDENTITY_COLORS, 'momentum'>;
 
 // ─── Identity Washes — result-screen backdrops only ───────────────────────
 // 6% tint of the type color over white. Never used elsewhere.
+// `momentum` mirrors `mirage` for the same backward-compat reason as above.
 export const IDENTITY_WASHES = {
   signal:   '#F2F5FE',
   compass:  '#FDF6EE',
   sentinel: '#EEF6F5',
   anchor:   '#F4F0FC',
-  momentum: '#FCF5EB',
+  mirage:   '#FCF5EB',
   catalyst: '#EDF7F2',
+  momentum: '#FCF5EB',  // legacy alias
 } as const;
 
 // ─── Type Scale — 1.25 major-third on a 16px base ─────────────────────────
