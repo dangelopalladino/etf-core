@@ -115,11 +115,14 @@ describe('tokens/6id', () => {
     expect(SIX_ID_COLORS.action).not.toMatch(/^var\(/);
   });
 
-  it('IDENTITY_WASHES exposes tint colors for all six identity types', () => {
+  it('IDENTITY_WASHES exposes tint colors for all six identity types plus momentum compat alias', () => {
+    // Same shape as IDENTITY_COLORS — canonical six + the legacy `momentum`
+    // alias of `mirage`. Both keys carry the same hex (#FCF5EB) for the wash.
     expect(Object.keys(IDENTITY_WASHES).sort()).toEqual([
-      'anchor', 'catalyst', 'compass', 'momentum', 'sentinel', 'signal',
+      'anchor', 'catalyst', 'compass', 'mirage', 'momentum', 'sentinel', 'signal',
     ]);
     expect(IDENTITY_WASHES.signal).toBe('#F2F5FE');
+    expect(IDENTITY_WASHES.mirage).toBe(IDENTITY_WASHES.momentum);
   });
 
   it('SIX_ID_RADII has expected pixel values', () => {
