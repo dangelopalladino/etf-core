@@ -15,13 +15,13 @@ import { test, expect } from '@playwright/test';
  * cross-domain handoff that the Phase 11 architecture must preserve.
  */
 
-const SIX_ID_URL = process.env.SIX_ID_URL || 'https://www.6identities.com';
+const SIX_ID_URL = process.env.SIX_ID_URL || 'https://6identities.com';
 const ETF_URL = process.env.ETFFRAMEWORK_URL || 'https://etfframework.com';
 
 test('Flow A: 6id assessment → premium paywall → cross-domain to etfframework book', async ({ page }) => {
   // Step 1 — land on 6id home
   await page.goto(SIX_ID_URL);
-  await expect(page).toHaveURL(new RegExp(SIX_ID_URL));
+  await expect(page).toHaveURL(/6identities\.com/);
 
   // Verify GA4 cross-domain linker is present (essential for Phase 11 D4)
   const gtagPresent = await page.evaluate(() => typeof (window as any).gtag === 'function');

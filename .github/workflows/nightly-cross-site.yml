@@ -24,7 +24,7 @@ jobs:
 
       - name: Run cross-site flows
         env:
-          SIX_ID_URL: ${{ vars.SIX_ID_URL || 'https://www.6identities.com' }}
+          SIX_ID_URL: ${{ vars.SIX_ID_URL || 'https://6identities.com' }}
           ETFFRAMEWORK_URL: ${{ vars.ETFFRAMEWORK_URL || 'https://etfframework.com' }}
           CROSS_SITE_FULL_FLOW: ${{ vars.CROSS_SITE_FULL_FLOW || '0' }}
         run: npx playwright test
