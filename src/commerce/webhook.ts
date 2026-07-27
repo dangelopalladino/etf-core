@@ -81,10 +81,10 @@ async function handleCheckoutCompleted(
     metadata.origin_site === '6identities' || metadata.origin_site === 'etfframework'
       ? metadata.origin_site
       : (opts.originSiteFallback === 'six-identities'
-          ? '6identities'
-          : opts.originSiteFallback === 'etfframework'
-            ? 'etfframework'
-            : null);
+        ? '6identities'
+        : opts.originSiteFallback === 'etfframework'
+          ? 'etfframework'
+          : null);
 
   const cohort =
     typeof metadata.cohort === 'string' && metadata.cohort.startsWith('soft-launch-')
@@ -199,7 +199,7 @@ async function handleCheckoutCompleted(
 
     const referralCode = metadata.referralCode || null;
     if (referralCode) {
-      await processReferral({ supabase, referralCode, customerEmail, sessionId: session.id });
+      await processReferral({ supabase, referralCode, customerEmail, sessionId: session.id, amountTotal: session.amount_total });
     }
 
     return { ok: true, status: 'processed' };
@@ -309,8 +309,9 @@ async function processReferral(args: {
   referralCode: string;
   customerEmail: string;
   sessionId: string;
+  amountTotal: number | null;
 }): Promise<void> {
-  const { supabase, referralCode, customerEmail, sessionId } = args;
+  const { supabase, referralCode, customerEmail, sessionId, amountTotal } = args;
   const { data: referralLink } = await supabase
     .from('referral_links')
     .select('user_id')
@@ -323,15 +324,28 @@ async function processReferral(args: {
     return;
   }
 
+  // Calculate 10% of the sale
+  const creditAmount = amountTotal ? Math.round(amountTotal * 0.10) : 2500;
+
+  // Check if they have a Stripe Connect account
+  const { data: account } = await supabase
+    .from('user_referral_accounts')
+    .select('stripe_connect_account_id, stripe_connect_status')
+    .eq('user_id', referralLink.user_id)
+    .maybeSingle();
+
+  const hasStripeConnect = account?.stripe_connect_account_id && account.stripe_connect_status === 'active';
+
   const { data: referral, error: refError } = await supabase
     .from('referrals')
     .insert({
       referrer_id: referralLink.user_id,
       referee_email: customerEmail,
       referee_stripe_session_id: sessionId,
-      status: 'completed',
-      credit_amount: REFERRAL_CREDIT_CENTS,
+      status: hasStripeConnect ? 'credited' : 'completed', // 'credited' means payout handled by Stripe
+      credit_amount: creditAmount,
       completed_at: new Date().toISOString(),
+      ...(hasStripeConnect ? { credited_at: new Date().toISOString() } : {})
     })
     .select('id')
     .single();
@@ -341,29 +355,35 @@ async function processReferral(args: {
     return;
   }
 
-  const { error: creditError } = await supabase
-    .from('renewal_credits')
-    .insert({
-      user_id: referralLink.user_id,
-      referral_id: referral.id,
-      amount: REFERRAL_CREDIT_CENTS,
-    });
-  if (creditError) console.error('🔴 Failed to create renewal credit:', creditError);
+  // If no Stripe Connect, issue store credit as fallback
+  if (!hasStripeConnect) {
+    const { error: creditError } = await supabase
+      .from('renewal_credits')
+      .insert({
+        user_id: referralLink.user_id,
+        referral_id: referral.id,
+        amount: creditAmount,
+      });
+    if (creditError) console.error('🔴 Failed to create renewal credit:', creditError);
+  }
 
   const { data: referrerProfile } = await supabase
     .from('professional_profiles')
     .select('email')
     .eq('id', referralLink.user_id)
-    .single();
+    .maybeSingle();
 
-  if (referrerProfile?.email) {
+  const referrerEmail = referrerProfile?.email;
+
+  if (referrerEmail) {
     await supabase.from('pending_notifications').insert({
-      recipient_email: referrerProfile.email,
+      recipient_email: referrerEmail,
       notification_type: 'referral_credit_earned',
       payload: {
         refereeEmail: customerEmail,
-        creditAmount: REFERRAL_CREDIT_CENTS,
+        creditAmount: creditAmount,
         referralCode,
+        payoutMethod: hasStripeConnect ? 'stripe_connect' : 'store_credit'
       },
     });
   }
