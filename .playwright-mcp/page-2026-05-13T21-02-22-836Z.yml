@@ -1,0 +1,47 @@
+- generic [active] [ref=e1]:
+  - link "Skip to main content" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=e3]:
+    - navigation [ref=e4]:
+      - link "6 Identities home" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img [ref=e6]:
+          - generic [ref=e8]: "6"
+        - generic [ref=e9]: Identities
+      - generic [ref=e10]:
+        - link "Types" [ref=e11] [cursor=pointer]:
+          - /url: /types
+        - link "For Professionals" [ref=e12] [cursor=pointer]:
+          - /url: /professionals
+        - button "Resources" [ref=e13] [cursor=pointer]:
+          - generic [ref=e14]: Resources
+        - link "Partners" [ref=e15] [cursor=pointer]:
+          - /url: /partners
+        - link "Earn" [ref=e16] [cursor=pointer]:
+          - /url: /referrals
+        - link "About" [ref=e17] [cursor=pointer]:
+          - /url: /about
+      - generic [ref=e18]:
+        - button "Sign in" [ref=e19] [cursor=pointer]:
+          - generic [ref=e20]: Sign in
+        - link "arrow-right Take the test" [ref=e21] [cursor=pointer]:
+          - /url: /assessment
+          - img "arrow-right" [ref=e23]:
+            - img [ref=e24]
+          - generic [ref=e26]: Take the test
+    - status [ref=e28]:
+      - img [ref=e30]:
+        - img [ref=e31]
+      - paragraph [ref=e34]: Loading assessment…
+  - dialog "Cookie consent" [ref=e35]:
+    - generic [ref=e36]:
+      - generic [ref=e37]:
+        - text: We use analytics to understand how people use this tool.
+        - link "Privacy policy" [ref=e38] [cursor=pointer]:
+          - /url: /privacy
+        - text: .
+      - generic [ref=e39]:
+        - button "Decline" [ref=e40] [cursor=pointer]:
+          - generic [ref=e41]: Decline
+        - button "Accept" [ref=e42] [cursor=pointer]:
+          - generic [ref=e43]: Accept

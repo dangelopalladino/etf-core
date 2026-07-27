@@ -1,0 +1,257 @@
+- generic [active] [ref=e1]:
+  - link "Skip to main content" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - link "ETF Framework home" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e6]: ETF
+        - generic [ref=e9]: Framework
+      - button "Open menu" [ref=e11] [cursor=pointer]:
+        - img [ref=e12]
+  - main [ref=e13]:
+    - generic [ref=e14]:
+      - generic [ref=e18]:
+        - generic [ref=e19]:
+          - generic [ref=e20]: The ETF Framework · est. 2024
+          - heading "An operating system for athletes rebuilding identity after the game ends." [level=1] [ref=e21]
+          - paragraph [ref=e22]: ETF is a structured, evidence-based framework for the transition out of elite sport — eight components of research, language, and practice tools used by clinicians, sport-psychology professionals, and performance coaches. Free to read. Optional certification for practitioners.
+          - generic [ref=e23]:
+            - link "Explore the framework" [ref=e24] [cursor=pointer]:
+              - /url: /methodology
+              - generic [ref=e25]: Explore the framework
+              - img [ref=e27]:
+                - img [ref=e28]
+            - link "file-text Read the research" [ref=e30] [cursor=pointer]:
+              - /url: /research/evidence-base
+              - generic [ref=e31]:
+                - img "file-text" [ref=e32]:
+                  - img [ref=e33]
+                - text: Read the research
+          - link "Practitioner? View certification →" [ref=e35] [cursor=pointer]:
+            - /url: /certification
+        - generic [ref=e36]:
+          - generic [ref=e37]:
+            - generic [ref=e38]: Eight-module framework
+            - generic [ref=e39]: Research, language, and practice tools
+          - generic [ref=e40]:
+            - generic [ref=e41]: 90-day implementation cycle
+            - generic [ref=e42]: Outcomes measured per cohort
+          - generic [ref=e43]:
+            - generic [ref=e44]: Peer-reviewed research base
+            - generic [ref=e45]: Twelve citations in the foundation paper
+          - generic [ref=e46]:
+            - generic [ref=e47]: Field-tested protocol
+            - generic [ref=e48]: Used by clinicians and coaches across the U.S.
+          - link "View evidence documentation →" [ref=e50] [cursor=pointer]:
+            - /url: /research/evidence-base
+      - generic [ref=e52]:
+        - generic [ref=e53]: Research foundation
+        - generic [ref=e54]:
+          - generic [ref=e55]: Built on peer-reviewed research
+          - generic [ref=e56]: Brewer, Van Raalte & Linder (1993)
+          - generic [ref=e57]: Lavallee & Wylleman (2000)
+          - generic [ref=e58]: Stambulova (2017)
+          - generic [ref=e59]: Park, Lavallee & Tod (2013)
+          - generic [ref=e60]: 12 foundational citations
+      - generic [ref=e62]:
+        - generic [ref=e63]:
+          - generic [ref=e64]: Curriculum overview
+          - heading "Six modules. About twenty self-paced hours." [level=2] [ref=e65]
+          - paragraph [ref=e66]:
+            - text: The ETF Certified Practitioner
+            - superscript [ref=e67]: ™
+            - generic [ref=e68]: trademark
+            - text: program runs as six sequential modules — roughly twenty self-paced hours of reading, practice, and graded checks — followed by a written case assessment. Each module builds practitioner competency in athlete-transition work.
+        - generic [ref=e69]:
+          - generic [ref=e70]:
+            - generic [ref=e71]: "01"
+            - generic [ref=e72]:
+              - heading "The Problem & The Framework" [level=3] [ref=e73]
+              - paragraph [ref=e74]: Why athletic career transition is a systems failure, and how the ETF differs from standard approaches.
+            - generic [ref=e75]: 2–3 hr
+          - generic [ref=e76]:
+            - generic [ref=e77]: "02"
+            - generic [ref=e78]:
+              - heading "The 6 Identities Assessment & Compound Code" [level=3] [ref=e79]
+              - paragraph [ref=e80]: "The three-layer diagnostic system: Transition Types, Core Code Archetypes, and the Formation Code."
+            - generic [ref=e81]: 3–4 hr
+          - generic [ref=e82]:
+            - generic [ref=e83]: "03"
+            - generic [ref=e84]:
+              - heading "The Eight Components — Deep Dive" [level=3] [ref=e85]
+              - paragraph [ref=e86]: Practitioner-level command of every ETF component — its tools, scoring systems, and delivery rationale.
+            - generic [ref=e87]: 4–5 hr
+          - generic [ref=e88]:
+            - generic [ref=e89]: "04"
+            - generic [ref=e90]:
+              - heading "Step-by-Step Delivery Protocol" [level=3] [ref=e91]
+              - paragraph [ref=e92]: The complete 20–24 session engagement arc and the structure of each key session.
+            - generic [ref=e93]: 3–4 hr
+          - generic [ref=e94]:
+            - generic [ref=e95]: "05"
+            - generic [ref=e96]:
+              - heading "Population Protocols, Scope & Ethics" [level=3] [ref=e97]
+              - paragraph [ref=e98]: Population-specific adaptations, contraindications, ethical boundaries, and referral requirements.
+            - generic [ref=e99]: 2–3 hr
+          - generic [ref=e100]:
+            - generic [ref=e101]: "06"
+            - generic [ref=e102]:
+              - heading "Building Your ETF Practice" [level=3] [ref=e103]
+              - paragraph [ref=e104]: The business, positioning, and ongoing professional requirements of certified practice — plus the written case assessment.
+            - generic [ref=e105]: 1–2 hr
+        - link "Full curriculum details and prerequisites →" [ref=e107] [cursor=pointer]:
+          - /url: /certification
+      - blockquote [ref=e110]:
+        - paragraph [ref=e111]: “
+        - paragraph [ref=e112]: I lost a friend after his career ended. No one called it a system failure. No one named what had actually collapsed. The sport structure that had organized his entire life was gone, and nothing replaced it. That’s the gap the framework exists to close.
+        - generic [ref=e113]:
+          - paragraph [ref=e114]: D’Angelo Palladino
+          - paragraph [ref=e115]: Founder, ETF Framework · Former football athlete · Creator of the 6 Identities® system
+      - generic [ref=e118]:
+        - generic [ref=e119]:
+          - generic [ref=e120]: Institutional impact · 90-day cohort
+          - heading "The framework is measured, not asserted." [level=2] [ref=e121]
+          - paragraph [ref=e122]: Every certified practitioner reports cohort outcomes on a 90-day cycle. Aggregated, anonymized data is available to institutional partners through the Outcomes Dashboard.
+          - generic [ref=e123]:
+            - link "Institutional inquiry" [ref=e124] [cursor=pointer]:
+              - /url: /value-and-impact
+              - generic [ref=e125]: Institutional inquiry
+              - img [ref=e127]:
+                - img [ref=e128]
+            - link "View methodology" [ref=e130] [cursor=pointer]:
+              - /url: /methodology
+              - img [ref=e132]:
+                - img [ref=e133]
+              - generic [ref=e135]: View methodology
+        - generic [ref=e136]:
+          - generic [ref=e137]:
+            - generic [ref=e138]: 90-day
+            - paragraph [ref=e139]: Outcome reporting cycle per certified practitioner
+          - generic [ref=e140]:
+            - generic [ref=e141]: "8"
+            - paragraph [ref=e142]: Framework components, each with defined instruments
+          - generic [ref=e143]:
+            - generic [ref=e144]: "12"
+            - paragraph [ref=e145]: Peer-reviewed citations in the foundation paper
+          - generic [ref=e146]:
+            - generic [ref=e147]: 40 hrs
+            - paragraph [ref=e148]: Graded curriculum before the credential is issued
+      - generic [ref=e151]:
+        - generic [ref=e152]:
+          - generic [ref=e153]: Frequently asked
+          - heading "Common questions from practitioners and institutions." [level=2] [ref=e154]
+        - list [ref=e155]:
+          - listitem [ref=e156]:
+            - group [ref=e157]:
+              - generic "Who is the Executable Transition Framework™ for?" [ref=e158] [cursor=pointer]:
+                - generic [ref=e159]: Who is the Executable Transition Framework™ for?
+                - img [ref=e161]
+          - listitem [ref=e163]:
+            - group [ref=e164]:
+              - generic "How long does certification take?" [ref=e165] [cursor=pointer]:
+                - generic [ref=e166]: How long does certification take?
+                - img [ref=e168]
+          - listitem [ref=e170]:
+            - group [ref=e171]:
+              - generic "Is the framework evidence-based?" [ref=e172] [cursor=pointer]:
+                - generic [ref=e173]: Is the framework evidence-based?
+                - img [ref=e175]
+          - listitem [ref=e177]:
+            - group [ref=e178]:
+              - generic "How is this different from 6identities.com?" [ref=e179] [cursor=pointer]:
+                - generic [ref=e180]: How is this different from 6identities.com?
+                - img [ref=e182]
+          - listitem [ref=e184]:
+            - group [ref=e185]:
+              - generic "Is ETF a replacement for therapy?" [ref=e186] [cursor=pointer]:
+                - generic [ref=e187]: Is ETF a replacement for therapy?
+                - img [ref=e189]
+      - generic [ref=e193]:
+        - generic [ref=e194]:
+          - generic [ref=e195]: Enrollment
+          - heading "Earn the ETF™ Certified Practitioner credential." [level=2] [ref=e196]
+          - list "What's included" [ref=e197]:
+            - listitem [ref=e198]: Eight-module self-paced curriculum
+            - listitem [ref=e199]: Listing in the public Partner Network registry
+            - listitem [ref=e200]: Referral commission on certified enrollments
+            - listitem [ref=e201]: Quarterly continuing-education updates
+            - listitem [ref=e202]: Practitioner portal access
+        - generic [ref=e203]:
+          - generic [ref=e204]: $99
+          - generic [ref=e205]: one-time · no subscription
+          - link "Enroll — $99" [ref=e207] [cursor=pointer]:
+            - /url: /certification
+            - generic [ref=e208]: Enroll — $99
+          - paragraph [ref=e209]: Instant access. 30-day refund policy.
+  - contentinfo [ref=e210]:
+    - generic [ref=e211]:
+      - generic [ref=e212]:
+        - generic [ref=e213]:
+          - link "ETF Framework home" [ref=e214] [cursor=pointer]:
+            - /url: /
+            - generic [ref=e215]: ETF
+            - generic [ref=e218]: Framework
+          - paragraph [ref=e219]: The professional certification arm of the ETF ecosystem. Evidence-based, peer-reviewed, institutionally recognized.
+          - generic [ref=e220]:
+            - link "X" [ref=e221] [cursor=pointer]:
+              - /url: https://x.com
+            - link "LinkedIn" [ref=e222] [cursor=pointer]:
+              - /url: https://www.linkedin.com
+            - link "Substack" [ref=e223] [cursor=pointer]:
+              - /url: https://6identities.substack.com
+        - generic [ref=e224]:
+          - paragraph [ref=e225]: Practitioners
+          - generic [ref=e226]:
+            - link "Curriculum" [ref=e227] [cursor=pointer]:
+              - /url: /certification
+            - link "Research foundation" [ref=e228] [cursor=pointer]:
+              - /url: /research/evidence-base
+            - link "Verify credential" [ref=e229] [cursor=pointer]:
+              - /url: /directory
+            - link "Partner network" [ref=e230] [cursor=pointer]:
+              - /url: /our-network
+            - link "Continuing education" [ref=e231] [cursor=pointer]:
+              - /url: /certification
+        - generic [ref=e232]:
+          - paragraph [ref=e233]: Institutional
+          - generic [ref=e234]:
+            - link "For universities" [ref=e235] [cursor=pointer]:
+              - /url: /value-and-impact
+            - link "For professional teams" [ref=e236] [cursor=pointer]:
+              - /url: /value-and-impact
+            - link "Outcomes dashboard" [ref=e237] [cursor=pointer]:
+              - /url: /value-and-impact
+            - link "Athlete associations" [ref=e238] [cursor=pointer]:
+              - /url: /value-and-impact
+        - generic [ref=e239]:
+          - paragraph [ref=e240]: Organization
+          - generic [ref=e241]:
+            - link "About" [ref=e242] [cursor=pointer]:
+              - /url: /about
+            - link "Contact" [ref=e243] [cursor=pointer]:
+              - /url: /contact
+            - link "Careers" [ref=e244] [cursor=pointer]:
+              - /url: /careers
+            - link "Privacy" [ref=e245] [cursor=pointer]:
+              - /url: /privacy
+            - link "Terms" [ref=e246] [cursor=pointer]:
+              - /url: /terms
+      - separator [ref=e247]
+      - generic [ref=e248]:
+        - generic [ref=e249]: © 2026 ETF Framework. All rights reserved.
+        - generic [ref=e250]:
+          - link "Privacy" [ref=e251] [cursor=pointer]:
+            - /url: /privacy
+          - link "Terms" [ref=e252] [cursor=pointer]:
+            - /url: /terms
+          - link "Sibling product · 6identities.com →" [ref=e253] [cursor=pointer]:
+            - /url: https://6identities.com
+      - link "Take the 6 Identities assessment →" [ref=e255] [cursor=pointer]:
+        - /url: https://6identities.com/assessment?ref=etfframework
+      - paragraph [ref=e256]:
+        - text: We improve our products and advertising by using Microsoft Clarity to see how you use our website. By using our site, you agree that we and Microsoft can collect and use this data. Our
+        - link "privacy statement" [ref=e257] [cursor=pointer]:
+          - /url: /privacy
+        - text: has more details.
+  - alert [ref=e258]

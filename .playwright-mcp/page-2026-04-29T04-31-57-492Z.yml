@@ -1,0 +1,280 @@
+- generic [active] [ref=e1]:
+  - link "Skip to main content" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=e3]:
+    - navigation [ref=e4]:
+      - link "6 Identities home" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img [ref=e6]:
+          - generic [ref=e8]: "6"
+        - generic [ref=e9]: Identities
+      - generic [ref=e10]:
+        - link "Types" [ref=e11] [cursor=pointer]:
+          - /url: /types
+        - link "About" [ref=e12] [cursor=pointer]:
+          - /url: /about
+        - link "For Professionals" [ref=e13] [cursor=pointer]:
+          - /url: /professionals
+        - button "Resources" [ref=e14] [cursor=pointer]:
+          - generic [ref=e15]: Resources
+      - generic [ref=e16]:
+        - button "Sign In" [ref=e17] [cursor=pointer]:
+          - generic [ref=e18]: Sign In
+        - link "arrow-right Take the Assessment" [ref=e19] [cursor=pointer]:
+          - /url: /assessment
+          - img "arrow-right" [ref=e21]:
+            - img [ref=e22]
+          - generic [ref=e24]: Take the Assessment
+    - main [ref=e26]:
+      - generic [ref=e31]:
+        - generic [ref=e32]: An identity intelligence tool
+        - heading "Who are you now?" [level=1] [ref=e33]
+        - paragraph [ref=e34]: For athletes whose careers are over. 32 questions, 8 minutes — six identity components measured. Results in plain English.
+        - generic [ref=e35]:
+          - button "arrow-right Take the assessment" [ref=e37] [cursor=pointer]:
+            - img "arrow-right" [ref=e39]:
+              - img [ref=e40]
+            - generic [ref=e42]: Take the assessment
+          - button "arrow-right How it works" [ref=e44] [cursor=pointer]:
+            - img "arrow-right" [ref=e46]:
+              - img [ref=e47]
+            - generic [ref=e49]: How it works
+        - generic [ref=e50]:
+          - generic [ref=e51]:
+            - generic [ref=e52]: "32"
+            - text: questions
+          - generic [ref=e53]:
+            - generic [ref=e54]: 8 min
+            - text: typical time
+          - generic [ref=e55]:
+            - generic [ref=e56]: 90 days
+            - text: between retakes
+      - generic [ref=e59]:
+        - generic [ref=e60]:
+          - generic [ref=e61]: The problem
+          - heading "The sport ended. The structure didn't." [level=2] [ref=e62]
+          - generic [ref=e63]: Training, reflex, identity locked to performance — all of it keeps running. It shows up in the next career, the next relationship, the stretch in between. Nobody names it right, so nothing fits.
+        - note "time-sensitive callout" [ref=e64]:
+          - img [ref=e65]:
+            - img [ref=e66]
+          - generic [ref=e69]:
+            - heading "Q7" [level=3] [ref=e70]
+            - paragraph [ref=e72]: "'Which matters more — being known for what you did, or what you're doing?' Most athletes answer 'what you did' in most cases."
+      - generic [ref=e75]:
+        - generic [ref=e76]:
+          - generic [ref=e77]: The six identities
+          - heading "Six patterns. Yours sits in the mix." [level=2] [ref=e78]
+        - generic [ref=e79]:
+          - link "TYPE 01 · COMPASS High awareness, no direction." [ref=e80] [cursor=pointer]:
+            - /url: /types/compass
+            - generic [ref=e83]:
+              - generic [ref=e84]: TYPE 01 · COMPASS
+              - heading "High awareness, no direction." [level=3] [ref=e85]
+          - link "TYPE 02 · MOMENTUM Winning at the wrong game." [ref=e86] [cursor=pointer]:
+            - /url: /types/momentum
+            - generic [ref=e89]:
+              - generic [ref=e90]: TYPE 02 · MOMENTUM
+              - heading "Winning at the wrong game." [level=3] [ref=e91]
+          - link "TYPE 03 · SENTINEL Functioning but alone." [ref=e92] [cursor=pointer]:
+            - /url: /types/sentinel
+            - generic [ref=e95]:
+              - generic [ref=e96]: TYPE 03 · SENTINEL
+              - heading "Functioning but alone." [level=3] [ref=e97]
+          - link "TYPE 04 · SIGNAL In the hardest phase." [ref=e98] [cursor=pointer]:
+            - /url: /types/signal
+            - generic [ref=e101]:
+              - generic [ref=e102]: TYPE 04 · SIGNAL
+              - heading "In the hardest phase." [level=3] [ref=e103]
+          - link "TYPE 05 · ANCHOR Comfortable but stuck." [ref=e104] [cursor=pointer]:
+            - /url: /types/anchor
+            - generic [ref=e107]:
+              - generic [ref=e108]: TYPE 05 · ANCHOR
+              - heading "Comfortable but stuck." [level=3] [ref=e109]
+          - link "TYPE 06 · CATALYST Already in motion." [ref=e110] [cursor=pointer]:
+            - /url: /types/catalyst
+            - generic [ref=e113]:
+              - generic [ref=e114]: TYPE 06 · CATALYST
+              - heading "Already in motion." [level=3] [ref=e115]
+      - generic [ref=e118]:
+        - generic [ref=e119]:
+          - generic [ref=e120]: How it works
+          - heading "A pattern map, not a coaching session." [level=2] [ref=e121]
+          - generic [ref=e122]: There are six identity patterns athletes run after sport ends. Name yours, and you can work with the pattern instead of under it.
+        - generic [ref=e123]:
+          - generic [ref=e124]:
+            - generic [ref=e125]: STEP 01
+            - heading "Answer 32 items." [level=3] [ref=e126]
+            - paragraph [ref=e127]: Five-point scale. One question at a time, no timer.
+          - generic [ref=e128]:
+            - generic [ref=e129]: STEP 02
+            - heading "Get your six scores." [level=3] [ref=e130]
+            - paragraph [ref=e131]: Each identity component scored against athletes in transition.
+          - generic [ref=e132]:
+            - generic [ref=e133]: STEP 03
+            - heading "Retake every 90 days." [level=3] [ref=e134]
+            - paragraph [ref=e135]: Identity isn't static. Track your profile as life after sport builds.
+      - generic [ref=e138]:
+        - generic [ref=e139]:
+          - generic [ref=e140]: What you get
+          - heading "Three steps. One path." [level=2] [ref=e141]
+        - generic [ref=e142]:
+          - link "Free Assessment Map your pattern in under 10 minutes. No signup. Start the assessment →" [ref=e143] [cursor=pointer]:
+            - /url: /assessment
+            - generic [ref=e145]:
+              - img [ref=e147]:
+                - img [ref=e148]
+              - heading "Free Assessment" [level=3] [ref=e150]
+              - generic [ref=e151]: Map your pattern in under 10 minutes. No signup.
+              - generic [ref=e153]: Start the assessment →
+          - link "Core Code Archetype The deeper driver underneath your pattern. $9.99. Reveal my Archetype →" [ref=e154] [cursor=pointer]:
+            - /url: /premium
+            - generic [ref=e156]:
+              - img [ref=e158]:
+                - img [ref=e159]
+              - heading "Core Code Archetype" [level=3] [ref=e161]
+              - generic [ref=e162]: The deeper driver underneath your pattern. $9.99.
+              - generic [ref=e164]: Reveal my Archetype →
+          - link "Full Package 90-Day Starter Plan, AI Advisor, full PDF. $29.99. Get the Full Package →" [ref=e165] [cursor=pointer]:
+            - /url: /full-package
+            - generic [ref=e167]:
+              - img [ref=e169]:
+                - img [ref=e170]
+              - heading "Full Package" [level=3] [ref=e172]
+              - generic [ref=e173]: 90-Day Starter Plan, AI Advisor, full PDF. $29.99.
+              - generic [ref=e175]: Get the Full Package →
+      - generic [ref=e178]:
+        - heading "What this is not" [level=2] [ref=e179]
+        - paragraph [ref=e181]:
+          - text: Not therapy. Not coaching. 6 Identities
+          - superscript [ref=e182]: ®
+          - generic [ref=e183]: registered trademark
+          - text: is a self-reflection inventory — name the pattern first, then correct it.
+      - generic [ref=e186]:
+        - generic [ref=e187]:
+          - heading "Start where the pattern is." [level=2] [ref=e188]
+          - generic [ref=e189]: Ten minutes. No signup. An inventory, not a pitch.
+        - button "arrow-right Start the assessment" [ref=e193] [cursor=pointer]:
+          - img "arrow-right" [ref=e195]:
+            - img [ref=e196]
+          - generic [ref=e198]: Start the assessment
+      - generic [ref=e200]:
+        - generic [ref=e201]:
+          - heading "Get Motion in your inbox." [level=3] [ref=e202]
+          - generic [ref=e203]: A short, practical newsletter on life after sport. Free. No spam.
+        - generic [ref=e204]:
+          - generic [ref=e205]:
+            - img "mail" [ref=e207]:
+              - img [ref=e208]
+            - textbox "Email address" [ref=e210]:
+              - /placeholder: you@example.com
+          - button "Subscribe" [ref=e211] [cursor=pointer]:
+            - generic [ref=e212]: Subscribe
+        - generic [ref=e213]: By subscribing, you agree to receive emails from 6 Identities. Unsubscribe anytime.
+      - generic [ref=e215]:
+        - generic [ref=e216]:
+          - generic [ref=e217]:
+            - link "6 Identities home" [ref=e218] [cursor=pointer]:
+              - /url: /
+              - img [ref=e219]:
+                - generic [ref=e221]: "6"
+              - strong [ref=e223]: Identities
+            - generic [ref=e224]: The athlete transition self-reflection tool built for life after sport. Research-informed, athlete-specific, and structured for practical next steps.
+            - link "Built on the Executable Transition Framework (ETF™) →" [ref=e225] [cursor=pointer]:
+              - /url: /about
+          - generic [ref=e226]:
+            - generic [ref=e227]:
+              - generic [ref=e228]: Assessment
+              - generic [ref=e229]:
+                - link "Take the Assessment" [ref=e230] [cursor=pointer]:
+                  - /url: /assessment
+                - link "How It Works" [ref=e231] [cursor=pointer]:
+                  - /url: /methodology
+            - generic [ref=e232]:
+              - generic [ref=e233]: Types
+              - generic [ref=e234]:
+                - link "Compass" [ref=e235] [cursor=pointer]:
+                  - /url: /types/compass
+                - link "Momentum" [ref=e236] [cursor=pointer]:
+                  - /url: /types/momentum
+                - link "Sentinel" [ref=e237] [cursor=pointer]:
+                  - /url: /types/sentinel
+                - link "Signal" [ref=e238] [cursor=pointer]:
+                  - /url: /types/signal
+                - link "Anchor" [ref=e239] [cursor=pointer]:
+                  - /url: /types/anchor
+                - link "Catalyst" [ref=e240] [cursor=pointer]:
+                  - /url: /types/catalyst
+            - generic [ref=e241]:
+              - generic [ref=e242]: Books
+              - generic [ref=e243]:
+                - link "All Books" [ref=e244] [cursor=pointer]:
+                  - /url: /books
+                - link "Motion" [ref=e245] [cursor=pointer]:
+                  - /url: /resources/motion
+                - link "Understanding the Crash" [ref=e246] [cursor=pointer]:
+                  - /url: /resources/understanding-the-crash
+                - link "Family Playbook" [ref=e247] [cursor=pointer]:
+                  - /url: /resources/family-playbook
+                - link "Family Bundle" [ref=e248] [cursor=pointer]:
+                  - /url: /resources/family-bundle
+            - generic [ref=e249]:
+              - generic [ref=e250]: Resources
+              - generic [ref=e251]:
+                - link "Articles" [ref=e252] [cursor=pointer]:
+                  - /url: /articles
+                - link "Newsletter" [ref=e253] [cursor=pointer]:
+                  - /url: https://6identities.substack.com
+                - link "Knowledge Base" [ref=e254] [cursor=pointer]:
+                  - /url: /knowledgebase
+                - link "Methodology" [ref=e255] [cursor=pointer]:
+                  - /url: /methodology
+            - generic [ref=e256]:
+              - generic [ref=e257]: For Professionals
+              - generic [ref=e258]:
+                - link "Practitioner Portal" [ref=e259] [cursor=pointer]:
+                  - /url: /professionals
+                - link "Directory" [ref=e260] [cursor=pointer]:
+                  - /url: /directory
+            - generic [ref=e261]:
+              - generic [ref=e262]: Company
+              - generic [ref=e263]:
+                - link "About" [ref=e264] [cursor=pointer]:
+                  - /url: /about
+                - link "Partners" [ref=e265] [cursor=pointer]:
+                  - /url: /partners
+                - link "Careers" [ref=e266] [cursor=pointer]:
+                  - /url: https://etfframework.com/careers
+                - link "FAQ" [ref=e267] [cursor=pointer]:
+                  - /url: /faq
+                - link "Contact" [ref=e268] [cursor=pointer]:
+                  - /url: /contact
+        - generic [ref=e270]: "Legal Disclaimer: 6 Identities is a structured self-reflection and development system designed for pattern identification and personal development. It is not therapy, a medical diagnosis, or a psychological evaluation. All data is provided for educational and self-development purposes within the Executable Transition Framework methodology."
+        - generic [ref=e272]:
+          - text: We improve our products and advertising by using Microsoft Clarity to see how you use our website. By using our site, you agree that we and Microsoft can collect and use this data. Our
+          - link "privacy statement" [ref=e273] [cursor=pointer]:
+            - /url: /privacy
+          - text: has more details.
+        - generic [ref=e274]:
+          - generic [ref=e275]: © 2026 6 Identities. All rights reserved.
+          - generic [ref=e276]:
+            - link "Privacy" [ref=e277] [cursor=pointer]:
+              - /url: /privacy
+            - link "Terms" [ref=e278] [cursor=pointer]:
+              - /url: /terms
+            - link "Disclosures" [ref=e279] [cursor=pointer]:
+              - /url: /disclosures
+  - dialog "Cookie consent" [ref=e280]:
+    - generic [ref=e281]:
+      - generic [ref=e282]:
+        - text: We use analytics to understand how people use this tool.
+        - link "Privacy policy" [ref=e283] [cursor=pointer]:
+          - /url: /privacy
+        - text: .
+      - generic [ref=e284]:
+        - button "Decline" [ref=e285] [cursor=pointer]:
+          - generic [ref=e286]: Decline
+        - button "Accept" [ref=e287] [cursor=pointer]:
+          - generic [ref=e288]: Accept
+  - button "Open Next.js Dev Tools" [ref=e294] [cursor=pointer]:
+    - img [ref=e295]
+  - alert [ref=e298]
