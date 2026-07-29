@@ -46,14 +46,14 @@ export const BOOKS: Record<BookSlug, BookContent> = {
   motion: {
     slug: 'motion',
     productKey: 'book_motion',
-    title: 'Motion',
+    title: 'Motion™ [VERIFY: availability date]',
     subtitle: 'Take Control of Your Life After Sports — Volume 1',
     author: "D'Angelo Palladino",
     price: 9.99,
-    tagline: 'A replacement operating system for the former athlete.',
+    tagline: 'A manual for building momentum when you have no structure and no team. Stop thinking your way out of the transition. Move.',
     description: [
       'The last game ends, and the structure that organized your entire life disappears overnight. The alarm, the teammates, the coaches, the scoreboard — gone. What remains is you, without the context that made you make sense.',
-      'Motion is not a motivational book. It is not a therapy workbook. It is not a career-transition guide. It is a replacement operating system for former athletes, built around two integrated systems: the 6 Identities inventory and the Executable Transition Framework (ETF™).',
+      'Motion is not a motivational book. It is not a therapy workbook. It is not a career-transition guide. It is a manual for building momentum when you have no structure and no team. Stop thinking your way out of the transition. Move.',
       'The 6 Identities tells you exactly which of six types you are currently operating in, what internal engine is driving your behavior, and what formation context shaped how you arrived here. The ETF™ takes it from there — eight components that rebuild identity, relationships, community, daily structure, and execution on top of the permanent foundation your athletic career already built.',
     ],
     toc: [
