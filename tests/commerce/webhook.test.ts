@@ -265,3 +265,257 @@ describe('handleStripeEvent', () => {
     expect((purchaseInsert?.payload as any[])[0].cohort).toBeNull();
   });
 });
+
+// ── Referral processing (implementer_cert + metadata.referralCode) ─────────
+//
+// These use a more flexible per-table mock than makeSupabaseMock above,
+// since processReferral touches referral_links, user_referral_accounts,
+// professional_profiles, referrals, renewal_credits, and pending_notifications
+// in a single pass.
+
+type Row = Record<string, unknown> | null;
+
+function makeTable(defaultData: Row) {
+  const calls: { insert: unknown[][]; update: unknown[][]; delete: unknown[][] } = {
+    insert: [],
+    update: [],
+    delete: [],
+  };
+  const result = { data: defaultData, error: null };
+  const chain: any = {
+    select: (..._args: unknown[]) => chain,
+    insert: (...args: unknown[]) => {
+      calls.insert.push(args);
+      return chain;
+    },
+    update: (...args: unknown[]) => {
+      calls.update.push(args);
+      return chain;
+    },
+    delete: (...args: unknown[]) => {
+      calls.delete.push(args);
+      return chain;
+    },
+    eq: (..._args: unknown[]) => chain,
+    in: (..._args: unknown[]) => chain,
+    order: (..._args: unknown[]) => chain,
+    limit: (..._args: unknown[]) => chain,
+    single: async () => result,
+    maybeSingle: async () => result,
+    then: (resolve: (v: unknown) => unknown) => Promise.resolve(result).then(resolve),
+    calls,
+  };
+  return chain;
+}
+
+let referralTables: Record<string, ReturnType<typeof makeTable>>;
+
+function makeReferralSupabase() {
+  return {
+    from: (table: string) => {
+      if (!referralTables[table]) referralTables[table] = makeTable(null);
+      return referralTables[table];
+    },
+  };
+}
+
+function makeCertCheckoutEvent(
+  metadata: Record<string, string>,
+  customerEmail = 'referee@example.com',
+) {
+  return {
+    id: `evt_${Math.random().toString(36).slice(2)}`,
+    type: 'checkout.session.completed',
+    data: {
+      object: {
+        id: 'cs_cert_1',
+        metadata,
+        customer_details: { email: customerEmail },
+        customer_email: customerEmail,
+        amount_total: 49900,
+      } as Stripe.Checkout.Session,
+    },
+  } as unknown as Stripe.Event;
+}
+
+describe('processReferral (via implementer_cert checkout.session.completed)', () => {
+  beforeEach(() => {
+    referralTables = {
+      processed_webhook_events: makeTable(null),
+      referral_links: makeTable({ user_id: 'referrer-1' }),
+      purchases: makeTable({ id: 'purchase-1', fulfillment_sent_at: new Date().toISOString() }),
+      professional_profiles: makeTable({ email: 'referrer@example.com' }),
+      user_referral_accounts: makeTable(null),
+      referrals: makeTable({ id: 'referral-1' }),
+      renewal_credits: makeTable(null),
+      pending_notifications: makeTable(null),
+    };
+  });
+
+  it('issues a 10%-of-sale renewal credit for a valid, non-self referral', async () => {
+    const supabase = makeReferralSupabase();
+    const event = makeCertCheckoutEvent({
+      productType: 'implementer_cert',
+      referralCode: 'VALIDCODE',
+    });
+
+    const result = await handleStripeEvent(event, supabase as never, { stripe: stripeMock });
+    expect(result.ok).toBe(true);
+
+    const referralInsert = referralTables.referrals.calls.insert[0]?.[0] as Record<string, unknown>;
+    expect(referralInsert).toMatchObject({
+      referrer_id: 'referrer-1',
+      referee_email: 'referee@example.com',
+      status: 'completed',
+      credit_amount: 4990, // 10% of amount_total (49900)
+    });
+
+    const creditInsert = referralTables.renewal_credits.calls.insert[0]?.[0] as Record<string, unknown>;
+    expect(creditInsert).toMatchObject({ user_id: 'referrer-1', amount: 4990 });
+  });
+
+  it('still issues store credit even when the referrer has an active Stripe Connect account (no transfer_data wired up yet)', async () => {
+    referralTables.user_referral_accounts = makeTable({
+      stripe_connect_account_id: 'acct_referrer',
+      stripe_connect_status: 'active',
+    });
+    const supabase = makeReferralSupabase();
+    const event = makeCertCheckoutEvent({
+      productType: 'implementer_cert',
+      referralCode: 'CONNECTCODE',
+    });
+
+    await handleStripeEvent(event, supabase as never, { stripe: stripeMock });
+
+    // Regression guard: previously this branch skipped renewal_credits
+    // whenever hasStripeConnect was true, silently paying the referrer $0
+    // since no checkout attaches a real transfer_data for cert referrals.
+    expect(referralTables.renewal_credits.calls.insert).toHaveLength(1);
+  });
+
+  it('does not issue a credit when the referral code is inactive/unknown', async () => {
+    referralTables.referral_links = makeTable(null);
+    const supabase = makeReferralSupabase();
+    const event = makeCertCheckoutEvent({
+      productType: 'implementer_cert',
+      referralCode: 'DEADCODE',
+    });
+
+    await handleStripeEvent(event, supabase as never, { stripe: stripeMock });
+
+    expect(referralTables.referrals.calls.insert).toHaveLength(0);
+    expect(referralTables.renewal_credits.calls.insert).toHaveLength(0);
+  });
+
+  it('blocks self-referral by buyer userId match', async () => {
+    const supabase = makeReferralSupabase();
+    const event = makeCertCheckoutEvent({
+      productType: 'implementer_cert',
+      referralCode: 'SELFCODE',
+      userId: 'referrer-1', // same as referral_links.user_id
+    });
+
+    await handleStripeEvent(event, supabase as never, { stripe: stripeMock });
+
+    expect(referralTables.referrals.calls.insert).toHaveLength(0);
+    expect(referralTables.renewal_credits.calls.insert).toHaveLength(0);
+  });
+
+  it('blocks self-referral by matching referrer email (unauthenticated checkout)', async () => {
+    referralTables.professional_profiles = makeTable({ email: 'Referrer@Example.com' });
+    const supabase = makeReferralSupabase();
+    const event = makeCertCheckoutEvent(
+      { productType: 'implementer_cert', referralCode: 'EMAILSELF' },
+      'referrer@example.com', // same email, different case
+    );
+
+    await handleStripeEvent(event, supabase as never, { stripe: stripeMock });
+
+    expect(referralTables.referrals.calls.insert).toHaveLength(0);
+    expect(referralTables.renewal_credits.calls.insert).toHaveLength(0);
+  });
+
+  it('never calls processReferral when metadata has no referralCode', async () => {
+    const supabase = makeReferralSupabase();
+    const event = makeCertCheckoutEvent({ productType: 'implementer_cert' });
+
+    await handleStripeEvent(event, supabase as never, { stripe: stripeMock });
+
+    expect(referralTables.referrals.calls.insert).toHaveLength(0);
+  });
+});
+
+// ── Refund clawback (charge.refunded) ───────────────────────────────────────
+
+function makeRefundEvent(overrides: Partial<{ paymentIntent: string | null; amountRefunded: number }> = {}) {
+  const { paymentIntent = 'pi_test_1', amountRefunded = 4990 } = overrides;
+  return {
+    id: `evt_refund_${Math.random().toString(36).slice(2)}`,
+    type: 'charge.refunded',
+    data: {
+      object: {
+        id: 'ch_test_1',
+        payment_intent: paymentIntent,
+        amount_refunded: amountRefunded,
+      } as Stripe.Charge,
+    },
+  } as unknown as Stripe.Event;
+}
+
+describe('handleChargeRefunded (charge.refunded)', () => {
+  let listSessionsMock: ReturnType<typeof vi.fn>;
+  let refundStripeMock: any;
+
+  beforeEach(() => {
+    referralTables = {
+      processed_webhook_events: makeTable(null),
+      referrals: makeTable({ id: 'referral-1' }),
+      renewal_credits: makeTable(null),
+    };
+    listSessionsMock = vi.fn(async () => ({ data: [{ id: 'cs_cert_1' }] }));
+    refundStripeMock = {
+      checkout: { sessions: { list: listSessionsMock, listLineItems: vi.fn() } },
+    };
+  });
+
+  it('claws back the unapplied renewal credit for the matching referral', async () => {
+    const supabase = makeReferralSupabase();
+    const event = makeRefundEvent();
+
+    const result = await handleStripeEvent(event, supabase as never, { stripe: refundStripeMock });
+
+    expect(result.ok).toBe(true);
+    expect(listSessionsMock).toHaveBeenCalledWith({ payment_intent: 'pi_test_1', limit: 1 });
+    expect(referralTables.renewal_credits.calls.delete).toHaveLength(1);
+  });
+
+  it('does nothing when the charge has no payment_intent', async () => {
+    const supabase = makeReferralSupabase();
+    const event = makeRefundEvent({ paymentIntent: null });
+
+    await handleStripeEvent(event, supabase as never, { stripe: refundStripeMock });
+
+    expect(listSessionsMock).not.toHaveBeenCalled();
+    expect(referralTables.renewal_credits.calls.delete).toHaveLength(0);
+  });
+
+  it('does nothing when no checkout session resolves from the payment_intent', async () => {
+    listSessionsMock.mockResolvedValueOnce({ data: [] });
+    const supabase = makeReferralSupabase();
+    const event = makeRefundEvent();
+
+    await handleStripeEvent(event, supabase as never, { stripe: refundStripeMock });
+
+    expect(referralTables.renewal_credits.calls.delete).toHaveLength(0);
+  });
+
+  it('does nothing when no referral matches the resolved session', async () => {
+    referralTables.referrals = makeTable(null);
+    const supabase = makeReferralSupabase();
+    const event = makeRefundEvent();
+
+    await handleStripeEvent(event, supabase as never, { stripe: refundStripeMock });
+
+    expect(referralTables.renewal_credits.calls.delete).toHaveLength(0);
+  });
+});

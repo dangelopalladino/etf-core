@@ -62,6 +62,10 @@ export async function handleStripeEvent(
     return handleSubscriptionLifecycle(event, supabase);
   }
 
+  if (event.type === 'charge.refunded') {
+    return handleChargeRefunded(event, supabase, opts);
+  }
+
   return { ok: true, status: 'processed' };
 }
 
@@ -199,7 +203,14 @@ async function handleCheckoutCompleted(
 
     const referralCode = metadata.referralCode || null;
     if (referralCode) {
-      await processReferral({ supabase, referralCode, customerEmail, sessionId: session.id, amountTotal: session.amount_total });
+      await processReferral({
+        supabase,
+        referralCode,
+        customerEmail,
+        buyerUserId: userId,
+        sessionId: session.id,
+        amountTotal: session.amount_total,
+      });
     }
 
     return { ok: true, status: 'processed' };
@@ -308,10 +319,12 @@ async function processReferral(args: {
   supabase: SupabaseClient;
   referralCode: string;
   customerEmail: string;
+  /** Buyer's own account id, if authenticated. Used for the self-referral guard. */
+  buyerUserId: string | null;
   sessionId: string;
   amountTotal: number | null;
 }): Promise<void> {
-  const { supabase, referralCode, customerEmail, sessionId, amountTotal } = args;
+  const { supabase, referralCode, customerEmail, buyerUserId, sessionId, amountTotal } = args;
   const { data: referralLink } = await supabase
     .from('referral_links')
     .select('user_id')
@@ -324,47 +337,14 @@ async function processReferral(args: {
     return;
   }
 
-  // Calculate 10% of the sale
-  const creditAmount = amountTotal ? Math.round(amountTotal * 0.10) : 2500;
-
-  // Check if they have a Stripe Connect account
-  const { data: account } = await supabase
-    .from('user_referral_accounts')
-    .select('stripe_connect_account_id, stripe_connect_status')
-    .eq('user_id', referralLink.user_id)
-    .maybeSingle();
-
-  const hasStripeConnect = account?.stripe_connect_account_id && account.stripe_connect_status === 'active';
-
-  const { data: referral, error: refError } = await supabase
-    .from('referrals')
-    .insert({
-      referrer_id: referralLink.user_id,
-      referee_email: customerEmail,
-      referee_stripe_session_id: sessionId,
-      status: hasStripeConnect ? 'credited' : 'completed', // 'credited' means payout handled by Stripe
-      credit_amount: creditAmount,
-      completed_at: new Date().toISOString(),
-      ...(hasStripeConnect ? { credited_at: new Date().toISOString() } : {})
-    })
-    .select('id')
-    .single();
-
-  if (refError) {
-    console.error('🔴 Failed to record referral:', refError);
+  // Self-referral guard: a referrer cannot earn credit from their own
+  // purchase. Checked against the buyer's authenticated account id first
+  // (authoritative when present); falls back to an email match against the
+  // referrer's own profile so an unauthenticated checkout using the
+  // referrer's own email is also blocked.
+  if (buyerUserId && buyerUserId === referralLink.user_id) {
+    console.warn(`⚠️ Referral code ${referralCode} used by its own owner (user ${buyerUserId}) — skipping credit`);
     return;
-  }
-
-  // If no Stripe Connect, issue store credit as fallback
-  if (!hasStripeConnect) {
-    const { error: creditError } = await supabase
-      .from('renewal_credits')
-      .insert({
-        user_id: referralLink.user_id,
-        referral_id: referral.id,
-        amount: creditAmount,
-      });
-    if (creditError) console.error('🔴 Failed to create renewal credit:', creditError);
   }
 
   const { data: referrerProfile } = await supabase
@@ -375,18 +355,140 @@ async function processReferral(args: {
 
   const referrerEmail = referrerProfile?.email;
 
+  if (
+    referrerEmail &&
+    customerEmail &&
+    referrerEmail.toLowerCase() === customerEmail.toLowerCase()
+  ) {
+    console.warn(`⚠️ Referral code ${referralCode} used with referrer's own email (${customerEmail}) — skipping credit`);
+    return;
+  }
+
+  // Calculate 10% of the sale
+  const creditAmount = amountTotal ? Math.round(amountTotal * 0.10) : REFERRAL_CREDIT_CENTS;
+
+  // NOTE: Stripe Connect payout for cert-purchase referrals is not wired up
+  // on the checkout side yet — neither 6id's nor etfframework's checkout
+  // attaches `transfer_data` for `implementer_cert` sessions. Until that
+  // ships, always issue the `renewal_credits` store-credit ledger entry
+  // regardless of Connect status, so a referrer with Connect enabled isn't
+  // silently credited $0. `payoutMethod` below stays informational only.
+  const { data: account } = await supabase
+    .from('user_referral_accounts')
+    .select('stripe_connect_account_id, stripe_connect_status')
+    .eq('user_id', referralLink.user_id)
+    .maybeSingle();
+
+  const hasStripeConnect = Boolean(
+    account?.stripe_connect_account_id && account.stripe_connect_status === 'active',
+  );
+
+  const { data: referral, error: refError } = await supabase
+    .from('referrals')
+    .insert({
+      referrer_id: referralLink.user_id,
+      referee_email: customerEmail,
+      referee_stripe_session_id: sessionId,
+      status: 'completed',
+      credit_amount: creditAmount,
+      completed_at: new Date().toISOString(),
+    })
+    .select('id')
+    .single();
+
+  if (refError) {
+    console.error('🔴 Failed to record referral:', refError);
+    return;
+  }
+
+  const { error: creditError } = await supabase
+    .from('renewal_credits')
+    .insert({
+      user_id: referralLink.user_id,
+      referral_id: referral.id,
+      amount: creditAmount,
+    });
+  if (creditError) console.error('🔴 Failed to create renewal credit:', creditError);
+
   if (referrerEmail) {
     await supabase.from('pending_notifications').insert({
       recipient_email: referrerEmail,
       notification_type: 'referral_credit_earned',
       payload: {
         refereeEmail: customerEmail,
-        creditAmount: creditAmount,
+        creditAmount,
         referralCode,
-        payoutMethod: hasStripeConnect ? 'stripe_connect' : 'store_credit'
+        payoutMethod: hasStripeConnect ? 'stripe_connect' : 'store_credit',
       },
     });
   }
+}
+
+/**
+ * Claws back an unapplied referral store credit when the underlying
+ * cert-purchase charge is refunded. Charges don't carry the originating
+ * Checkout Session id directly, so we resolve it via the shared
+ * PaymentIntent (Stripe's documented correlation path) before looking up
+ * the `referrals` row recorded at `referee_stripe_session_id`.
+ *
+ * Already-applied credits (`renewal_credits.applied = true`) are left
+ * alone — once a credit has been redeemed against an invoice, clawing it
+ * back needs a real accounting entry, not a silent delete. That's a
+ * follow-up, not handled here.
+ */
+async function handleChargeRefunded(
+  event: Stripe.Event,
+  supabase: SupabaseClient,
+  opts: HandleStripeEventOpts,
+): Promise<HandleStripeEventResult> {
+  const charge = event.data.object as Stripe.Charge;
+  const paymentIntentId =
+    typeof charge.payment_intent === 'string' ? charge.payment_intent : charge.payment_intent?.id;
+
+  if (!paymentIntentId) {
+    return { ok: true, status: 'processed' };
+  }
+
+  let sessionId: string | null = null;
+  try {
+    const sessions = await opts.stripe.checkout.sessions.list({
+      payment_intent: paymentIntentId,
+      limit: 1,
+    });
+    sessionId = sessions.data[0]?.id ?? null;
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : String(err);
+    console.error(`🔴 Failed to resolve checkout session for refunded charge ${charge.id}:`, msg);
+    return { ok: true, status: 'processed' };
+  }
+
+  if (!sessionId) {
+    return { ok: true, status: 'processed' };
+  }
+
+  const { data: referral } = await supabase
+    .from('referrals')
+    .select('id')
+    .eq('referee_stripe_session_id', sessionId)
+    .maybeSingle();
+
+  if (!referral) {
+    return { ok: true, status: 'processed' };
+  }
+
+  const { error: clawbackError } = await supabase
+    .from('renewal_credits')
+    .delete()
+    .eq('referral_id', referral.id)
+    .eq('applied', false);
+
+  if (clawbackError) {
+    console.error(`🔴 Failed to claw back renewal credit for referral ${referral.id}:`, clawbackError);
+  } else {
+    console.log(`✅ Clawed back unapplied renewal credit for refunded referral ${referral.id}`);
+  }
+
+  return { ok: true, status: 'processed' };
 }
 
 async function handleSubscriptionLifecycle(
